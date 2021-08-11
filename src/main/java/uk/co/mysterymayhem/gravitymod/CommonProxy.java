@@ -13,7 +13,6 @@ import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.RegistryEvent;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.registry.EntityEntry;
-import net.minecraftforge.fml.common.registry.GameRegistry;
 import net.minecraftforge.fml.common.registry.VillagerRegistry;
 import uk.co.mysterymayhem.gravitymod.common.capabilities.gravitydirection.GravityDirectionCapability;
 import uk.co.mysterymayhem.gravitymod.common.config.ConfigHandler;
@@ -24,8 +23,7 @@ import uk.co.mysterymayhem.gravitymod.common.listeners.GravityManagerCommon;
 import uk.co.mysterymayhem.gravitymod.common.listeners.ItemStackUseListener;
 import uk.co.mysterymayhem.gravitymod.common.listeners.LootTableListener;
 import uk.co.mysterymayhem.gravitymod.common.packets.PacketHandler;
-import uk.co.mysterymayhem.gravitymod.common.registries.*;
-import uk.co.mysterymayhem.gravitymod.common.world.generation.ore.Generator;
+import uk.co.mysterymayhem.gravitymod.common.registries.ModItems;
 import uk.co.mysterymayhem.mystlib.setup.registries.AbstractIFMLStagedRegistry;
 import uk.co.mysterymayhem.mystlib.setup.registries.AbstractModObjectRegistry;
 import uk.co.mysterymayhem.mystlib.setup.registries.AbstractRegistrableModObjectRegistry;
@@ -62,7 +60,6 @@ public class CommonProxy extends AbstractIFMLStagedRegistry<AbstractModObjectReg
     public void init() {
         super.init();
         this.registerListeners();
-        GameRegistry.registerWorldGenerator(Generator.INSTANCE, 0);
     }
 
     public void registerListeners() {
@@ -71,7 +68,6 @@ public class CommonProxy extends AbstractIFMLStagedRegistry<AbstractModObjectReg
         MinecraftForge.EVENT_BUS.register(ItemGravityDust.BlockBreakListener.class);
         MinecraftForge.EVENT_BUS.register(EntityFloatingItem.class);
         MinecraftForge.EVENT_BUS.register(LootTableListener.class);
-        MinecraftForge.EVENT_BUS.register(Generator.class);
         MinecraftForge.EVENT_BUS.register(ConfigHandler.class);
         this.createSidedEventListeners().forEach(MinecraftForge.EVENT_BUS::register);
 //        MinecraftForge.EVENT_BUS.register(new DebugHelperListener());
@@ -88,11 +84,6 @@ public class CommonProxy extends AbstractIFMLStagedRegistry<AbstractModObjectReg
     @Override
     protected void addToCollection(ArrayList<AbstractModObjectRegistry<?,?>> modObjects) {
         modObjects.add(new ModItems());
-        modObjects.add(new ModBlocks());
-        modObjects.add(new ModEntities());
-        modObjects.add(new ModTileEntities());
-        modObjects.add(new ModGUIs());
-        modObjects.add(new ModPotions());
     }
 
     @SubscribeEvent

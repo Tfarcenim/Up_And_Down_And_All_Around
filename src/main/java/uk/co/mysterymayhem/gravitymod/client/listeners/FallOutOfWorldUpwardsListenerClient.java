@@ -19,7 +19,6 @@ import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import uk.co.mysterymayhem.gravitymod.common.config.ConfigHandler;
 import uk.co.mysterymayhem.gravitymod.common.listeners.FallOutOfWorldUpwardsListenerCommon;
-import uk.co.mysterymayhem.gravitymod.common.registries.StaticPotions;
 
 import java.util.WeakHashMap;
 
@@ -33,25 +32,6 @@ public class FallOutOfWorldUpwardsListenerClient extends FallOutOfWorldUpwardsLi
     private static final WeakHashMap<Entity, int[]> freezeTicks = new WeakHashMap<>();
     private static final ResourceLocation ICE_TEXTURE_LOCATION = new ResourceLocation("textures/blocks/ice.png");
     private static final ResourceLocation PACKED_ICE_TEXTURE_LOCATION = new ResourceLocation("textures/blocks/ice_packed.png");
-
-    @Override
-    protected void processSidedPlayer(EntityPlayer player) {
-        if (player.world.isRemote) {
-            this.processClientPlayer(player);
-        }
-        else {
-            this.processServerPlayer(player);
-        }
-    }
-
-    private void processClientPlayer(EntityPlayer player) {
-        if (player.isPotionActive(StaticPotions.FREEZING)) {
-            this.incrementFreezeCounter(player);
-        }
-        else {
-            this.decrementFreezeCounter(player);
-        }
-    }
 
     @SubscribeEvent
     public void onRenderOverlayPre(RenderGameOverlayEvent.Post event) {
@@ -108,7 +88,7 @@ public class FallOutOfWorldUpwardsListenerClient extends FallOutOfWorldUpwardsLi
     }
 
     @Override
-    public Integer getSpecialAir(EntityPlayer player) {
+    public int getSpecialAir(EntityPlayer player) {
         if (player.world.isRemote) {
             return clientMap.get(player);
         }

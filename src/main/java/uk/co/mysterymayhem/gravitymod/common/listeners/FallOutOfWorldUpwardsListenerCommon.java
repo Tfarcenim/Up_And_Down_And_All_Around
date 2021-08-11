@@ -6,7 +6,6 @@ import net.minecraft.util.DamageSource;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.gameevent.TickEvent;
 import uk.co.mysterymayhem.gravitymod.common.config.ConfigHandler;
-import uk.co.mysterymayhem.gravitymod.common.registries.StaticPotions;
 
 import java.util.Random;
 import java.util.WeakHashMap;
@@ -61,41 +60,6 @@ public class FallOutOfWorldUpwardsListenerCommon {
      * @param player whose worldObj is NOT remote
      */
     protected void processServerPlayer(EntityPlayer player) {
-        double posY = player.posY;
-        //TODO: Find out if there's a better way to refresh the potion effect
-        if (posY > ConfigHandler.yHeightNoAir) {
-            player.addPotionEffect(new PotionEffect(StaticPotions.ASPHYXIATION, 32767, 0, false, false));
-        }
-        else {
-            PotionEffect activePotionEffect = player.getActivePotionEffect(StaticPotions.ASPHYXIATION);
-            if (activePotionEffect != null && activePotionEffect.getDuration() == 32766) {
-                player.removePotionEffect(StaticPotions.ASPHYXIATION);
-            }
-        }
-
-        if (posY > ConfigHandler.yHeightFreeze) {
-            player.addPotionEffect(new PotionEffect(StaticPotions.FREEZING, 32767, 0, false, false));
-        }
-        else {
-            PotionEffect activePotionEffect = player.getActivePotionEffect(StaticPotions.FREEZING);
-            if (activePotionEffect != null && activePotionEffect.getDuration() == 32766) {
-                player.removePotionEffect(StaticPotions.FREEZING);
-            }
-        }
-
-        if (posY > ConfigHandler.yHeightBoil) {
-            player.addPotionEffect(new PotionEffect(StaticPotions.BLOODBOIL, 32767, 0, false, false));
-        }
-        else {
-            PotionEffect activePotionEffect = player.getActivePotionEffect(StaticPotions.BLOODBOIL);
-            if (activePotionEffect != null && activePotionEffect.getDuration() == 32766) {
-                player.removePotionEffect(StaticPotions.BLOODBOIL);
-            }
-        }
-
-        if (posY > ConfigHandler.yHeightInstantDeath) {
-            player.attackEntityFrom(randomFromArray(SOURCES_OUTERSPACE), Float.MAX_VALUE);
-        }
     }
 
     /**
@@ -114,33 +78,7 @@ public class FallOutOfWorldUpwardsListenerCommon {
             this.processSidedPlayer(player);
 
             // Set and get special air
-            if (player.isPotionActive(StaticPotions.ASPHYXIATION)) {
-                Integer specialAirBox = this.getSpecialAir(player);
-                int specialAir;
-                if (specialAirBox == null) {
-                    specialAir = player.getAir();
-                }
-                else {
-                    specialAir = specialAirBox;
-                }
-
-                // Decrease air
-                specialAir--;
-
-
-                if (specialAir <= -20)
-                {
-                    this.setSpecialAir(player, 0);
-
-                    player.attackEntityFrom(randomFromArray(SOURCES_ASPHYXIATION), 2.0F);
-                }
-                else {
-                    this.setSpecialAir(player, specialAir);
-                }
-            }
-            else {
-                this.setSpecialAir(player, 300);
-            }
+            this.setSpecialAir(player, 300);
         }
     }
 
@@ -151,7 +89,7 @@ public class FallOutOfWorldUpwardsListenerCommon {
         this.serverMap.put(player, air);
     }
 
-    public Integer getSpecialAir(EntityPlayer player) {
+    public int getSpecialAir(EntityPlayer player) {
         return this.serverMap.get(player);
     }
 

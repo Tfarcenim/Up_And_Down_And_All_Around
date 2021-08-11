@@ -52,7 +52,6 @@ public class GravityMod {
     public static final String USER_FRIENDLY_NAME = "Up And Down And All Around";
     public static final String GUI_FACTORY = "uk.co.mysterymayhem.gravitymod.client.config.GravityModGuiFactory";
 
-    public static final EnumRarity RARITY_WEAK = EnumHelper.addRarity("WEAK_GRAVITY", TextFormatting.WHITE, "Weak Strength");
     public static final EnumRarity RARITY_NORMAL = EnumHelper.addRarity("NORMAL_GRAVITY", TextFormatting.DARK_PURPLE, "Normal Strength");
     public static final EnumRarity RARITY_STRONG = EnumHelper.addRarity("STRONG_GRAVITY", TextFormatting.BLUE, "Strong Strength");
 

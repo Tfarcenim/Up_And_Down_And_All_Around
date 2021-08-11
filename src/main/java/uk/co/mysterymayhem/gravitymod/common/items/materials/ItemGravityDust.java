@@ -26,7 +26,6 @@ import uk.co.mysterymayhem.gravitymod.GravityMod;
 import uk.co.mysterymayhem.gravitymod.common.config.ConfigHandler;
 import uk.co.mysterymayhem.gravitymod.common.entities.EntityFloatingItem;
 import uk.co.mysterymayhem.gravitymod.common.registries.IGravityModItem;
-import uk.co.mysterymayhem.gravitymod.common.registries.StaticBlocks;
 import uk.co.mysterymayhem.gravitymod.common.registries.StaticItems;
 
 import javax.annotation.Nullable;
@@ -213,25 +212,6 @@ public class ItemGravityDust extends Item implements IGravityModItem<ItemGravity
 
                 IBlockState blockState = event.getState();
                 Block block = blockState.getBlock();
-                if (block == StaticBlocks.GRAVITY_ORE) {
-                    // If the harvester is a fake player, nothing special happens to the drops
-                    // If the harvester is a normal player, the gravity dust is spawned as special items
-                    if (!(event.getHarvester() instanceof FakePlayer)) {
-                        List<ItemStack> drops = event.getDrops();
-                        BlockPos pos = event.getPos();
-                        World world = event.getWorld();
-                        for (ListIterator<ItemStack> iterator = drops.listIterator(); iterator.hasNext(); /**/) {
-                            ItemStack next = iterator.next();
-                            if (next != null && next.getItem() == StaticItems.GRAVITY_DUST) {
-                                iterator.remove();
-                                for (int i = 0; i < next.getCount(); i++) {
-                                    BlockBreakListener.spawnAsSpecialEntity(world, pos, new ItemStack(StaticItems.GRAVITY_DUST));
-                                }
-                            }
-                        }
-                    }
-                    return;
-                }
 
                 ItemStack heldItemMainhand = harvester.getHeldItemMainhand();
 
@@ -358,14 +338,12 @@ public class ItemGravityDust extends Item implements IGravityModItem<ItemGravity
             ItemStack itemFromBlock = block.getPickBlock(blockState, null, world, pos, player);
 
             // OreDictionary will throw an exception if the Item from a Block is null
-            if (itemFromBlock != null) {
-                int[] oreIDs = OreDictionary.getOreIDs(itemFromBlock);
+            int[] oreIDs = OreDictionary.getOreIDs(itemFromBlock);
 
-                for (int oreID : oreIDs) {
-                    String oreName = OreDictionary.getOreName(oreID);
-                    if (ACCEPTABLE_BLOCK_ORE_NAMES.contains(oreName)) {
-                        return true;
-                    }
+            for (int oreID : oreIDs) {
+                String oreName = OreDictionary.getOreName(oreID);
+                if (ACCEPTABLE_BLOCK_ORE_NAMES.contains(oreName)) {
+                    return true;
                 }
             }
             return false;
