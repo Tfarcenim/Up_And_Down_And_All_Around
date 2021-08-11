@@ -17,8 +17,7 @@ import net.minecraftforge.fml.common.registry.VillagerRegistry;
 import uk.co.mysterymayhem.gravitymod.common.capabilities.gravitydirection.GravityDirectionCapability;
 import uk.co.mysterymayhem.gravitymod.common.config.ConfigHandler;
 import uk.co.mysterymayhem.gravitymod.common.entities.EntityFloatingItem;
-import uk.co.mysterymayhem.gravitymod.common.items.materials.ItemGravityDust;
-import uk.co.mysterymayhem.gravitymod.common.listeners.FallOutOfWorldUpwardsListenerCommon;
+import uk.co.mysterymayhem.gravitymod.common.items.materials.BlockBreakListener;
 import uk.co.mysterymayhem.gravitymod.common.listeners.GravityManagerCommon;
 import uk.co.mysterymayhem.gravitymod.common.listeners.ItemStackUseListener;
 import uk.co.mysterymayhem.gravitymod.common.listeners.LootTableListener;
@@ -65,20 +64,15 @@ public class CommonProxy extends AbstractIFMLStagedRegistry<AbstractModObjectReg
     public void registerListeners() {
         MinecraftForge.EVENT_BUS.register(this.getGravityManager());
         MinecraftForge.EVENT_BUS.register(ItemStackUseListener.class);
-        MinecraftForge.EVENT_BUS.register(ItemGravityDust.BlockBreakListener.class);
+        MinecraftForge.EVENT_BUS.register(BlockBreakListener.class);
         MinecraftForge.EVENT_BUS.register(EntityFloatingItem.class);
         MinecraftForge.EVENT_BUS.register(LootTableListener.class);
         MinecraftForge.EVENT_BUS.register(ConfigHandler.class);
-        this.createSidedEventListeners().forEach(MinecraftForge.EVENT_BUS::register);
 //        MinecraftForge.EVENT_BUS.register(new DebugHelperListener());
     }
 
     public GravityManagerCommon getGravityManager() {
         return this.gravityManagerCommon;
-    }
-
-    public Collection<?> createSidedEventListeners() {
-        return Lists.newArrayList(new FallOutOfWorldUpwardsListenerCommon());
     }
 
     @Override

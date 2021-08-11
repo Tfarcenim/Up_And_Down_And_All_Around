@@ -12,7 +12,7 @@ import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import uk.co.mysterymayhem.gravitymod.GravityMod;
 import uk.co.mysterymayhem.gravitymod.asm.EntityPlayerWithGravity;
 import uk.co.mysterymayhem.gravitymod.common.capabilities.gravitydirection.GravityDirectionCapability;
-import uk.co.mysterymayhem.gravitymod.common.items.materials.ItemGravityDust;
+import uk.co.mysterymayhem.gravitymod.common.items.materials.BlockBreakListener;
 import uk.co.mysterymayhem.gravitymod.common.listeners.ItemStackUseListener;
 import uk.co.mysterymayhem.gravitymod.common.listeners.ItemStackUseListener.EnumItemStackUseCompat;
 import uk.co.mysterymayhem.gravitymod.common.listeners.LootTableListener;
@@ -378,9 +378,9 @@ public class ConfigHandler {
     }
 
     public static void processLateConfig() {
-        ItemGravityDust.BlockBreakListener.clearAcceptableBlocksAndDrops();
-        ItemGravityDust.BlockBreakListener.addBlocksFromConfig(gravityDustValidBlocksToDropFrom);
-        ItemGravityDust.BlockBreakListener.addDropsFromConfig(gravityDustValidDropsToSpawnAs);
+        BlockBreakListener.clearAcceptableBlocksAndDrops();
+        BlockBreakListener.addBlocksFromConfig(gravityDustValidBlocksToDropFrom);
+        BlockBreakListener.addDropsFromConfig(gravityDustValidDropsToSpawnAs);
         ItemStackUseListener.clearPrePostModifiers();
         processModCompatConfig(modCompatUseOnBlock, EnumItemStackUseCompat.BLOCK);
         processModCompatConfig(modCompatUseGeneral, EnumItemStackUseCompat.GENERAL);

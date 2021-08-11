@@ -13,8 +13,6 @@ import uk.co.mysterymayhem.gravitymod.common.items.armour.ItemGravityBoots;
 import uk.co.mysterymayhem.gravitymod.common.items.armour.ItemGravityChestplate;
 import uk.co.mysterymayhem.gravitymod.common.items.armour.ItemGravityHelmet;
 import uk.co.mysterymayhem.gravitymod.common.items.armour.ItemGravityLeggings;
-import uk.co.mysterymayhem.gravitymod.common.items.baubles.ItemGravityBauble;
-import uk.co.mysterymayhem.gravitymod.common.items.baubles.ItemGravityFieldGoggles;
 import uk.co.mysterymayhem.gravitymod.common.items.materials.*;
 import uk.co.mysterymayhem.gravitymod.common.items.misc.ItemCreativeTabIcon;
 import uk.co.mysterymayhem.gravitymod.common.items.tools.ItemGravityAnchor;
@@ -40,7 +38,6 @@ public class ModItems extends AbstractItemRegistry<IGravityModItem<?>, ArrayList
     static ItemPersonalGravityController personalGravityController;
     static ItemWeakGravityController weakGravityController;
     static ItemUltimateGravityController ultimateGravityController;
-    static ItemGravityBauble gravityBauble;
     static ItemGravityAnchor gravityAnchor;
     static ItemGravityIngot gravityIngot;
     static ItemGravityPearl gravityPearl;
@@ -51,7 +48,6 @@ public class ModItems extends AbstractItemRegistry<IGravityModItem<?>, ArrayList
     static ItemGravityChestplate gravityChestplate;
     static ItemGravityHelmet gravityHelmet;
     static ItemGravityLeggings gravityLeggings;
-    static ItemGravityFieldGoggles gravityFieldGoggles;
     static ItemDestabilisedGravityDust destabilisedGravityDust;
     static ItemRestabilisedGravityDust restabilisedGravityDust;
     static ItemStack liquidAntiMassBucket;
@@ -102,7 +98,6 @@ public class ModItems extends AbstractItemRegistry<IGravityModItem<?>, ArrayList
         modObjects.add(personalGravityController = new ItemPersonalGravityController());
         modObjects.add(weakGravityController = new ItemWeakGravityController());
         modObjects.add(ultimateGravityController = new ItemUltimateGravityController());
-        modObjects.add(gravityBauble = new ItemGravityBauble());
         modObjects.add(gravityAnchor = new ItemGravityAnchor());
         modObjects.add(gravityIngot = new ItemGravityIngot());
         modObjects.add(gravityPearl = new ItemGravityPearl());
@@ -113,7 +108,6 @@ public class ModItems extends AbstractItemRegistry<IGravityModItem<?>, ArrayList
         modObjects.add(gravityChestplate = new ItemGravityChestplate());
         modObjects.add(gravityHelmet = new ItemGravityHelmet());
         modObjects.add(gravityLeggings = new ItemGravityLeggings());
-        modObjects.add(gravityFieldGoggles = new ItemGravityFieldGoggles());
         modObjects.add(destabilisedGravityDust = new ItemDestabilisedGravityDust());
         modObjects.add(restabilisedGravityDust = new ItemRestabilisedGravityDust());
         modObjects.add(spacetimeDistorter = new ItemGravityDustInducer());

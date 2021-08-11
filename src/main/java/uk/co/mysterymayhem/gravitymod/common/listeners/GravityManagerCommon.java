@@ -1,7 +1,5 @@
 package uk.co.mysterymayhem.gravitymod.common.listeners;
 
-import baubles.api.BaublesApi;
-import baubles.api.cap.IBaublesItemHandler;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityTracker;
 import net.minecraft.entity.player.EntityPlayer;
@@ -33,7 +31,6 @@ import uk.co.mysterymayhem.gravitymod.common.capabilities.gravitydirection.Gravi
 import uk.co.mysterymayhem.gravitymod.common.capabilities.gravitydirection.IGravityDirectionCapability;
 import uk.co.mysterymayhem.gravitymod.common.config.ConfigHandler;
 import uk.co.mysterymayhem.gravitymod.common.items.materials.ItemArmourPaste;
-import uk.co.mysterymayhem.gravitymod.common.modsupport.ModSupport;
 import uk.co.mysterymayhem.gravitymod.common.packets.PacketHandler;
 import uk.co.mysterymayhem.gravitymod.common.packets.config.ModCompatConfigCheckMessage;
 import uk.co.mysterymayhem.gravitymod.common.packets.gravitychange.GravityChangeMessage;
@@ -68,28 +65,6 @@ public class GravityManagerCommon {
                     }
                 }
             }
-            if (ModSupport.isModLoaded(ModSupport.BAUBLES_MOD_ID)) {
-                IBaublesItemHandler baublesHandler = BaublesApi.getBaublesHandler(player);
-                int slots = baublesHandler.getSlots();
-                for (int i = 0; i < slots; i++) {
-                    ItemStack stack = baublesHandler.getStackInSlot(i);
-                    if (!stack.isEmpty()) {
-                        if (stack.getItem() instanceof IWeakGravityEnabler) {
-                            numNormalGravityEnablers += ConfigHandler.numNormalEnablersWeakEnablersCountsAs;
-                            if (numNormalGravityEnablers >= numRequired) {
-                                return true;
-                            }
-                        }
-                        // IWeakGravityEnablers cannot have paste applied to them, they're partially made of the paste
-                        else if (ItemArmourPaste.hasPasteTag(stack)) {
-                            if (++numNormalGravityEnablers >= numRequired) {
-                                return true;
-                            }
-                        }
-                    }
-                }
-
-            }
         }
         return false;
     }
@@ -109,19 +84,6 @@ public class GravityManagerCommon {
                         return true;
                     }
                 }
-            }
-            if (ModSupport.isModLoaded(ModSupport.BAUBLES_MOD_ID)) {
-                IBaublesItemHandler baublesHandler = BaublesApi.getBaublesHandler(player);
-                int slots = baublesHandler.getSlots();
-                for (int i = 0; i < slots; i++) {
-                    ItemStack stack = baublesHandler.getStackInSlot(i);
-                    if (!stack.isEmpty() && stack.getItem() instanceof IWeakGravityEnabler) {
-                        if (++numWeakGravityEnablers == numRequired) {
-                            return true;
-                        }
-                    }
-                }
-
             }
         }
         return false;

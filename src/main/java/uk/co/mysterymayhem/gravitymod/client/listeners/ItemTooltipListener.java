@@ -1,7 +1,5 @@
 package uk.co.mysterymayhem.gravitymod.client.listeners;
 
-import baubles.api.BaublesApi;
-import baubles.api.cap.IBaublesItemHandler;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.client.settings.KeyBinding;
@@ -17,7 +15,6 @@ import uk.co.mysterymayhem.gravitymod.api.IWeakGravityEnabler;
 import uk.co.mysterymayhem.gravitymod.common.config.ConfigHandler;
 import uk.co.mysterymayhem.gravitymod.common.items.materials.ItemArmourPaste;
 import uk.co.mysterymayhem.gravitymod.common.items.materials.ItemGravityDustInducer;
-import uk.co.mysterymayhem.gravitymod.common.modsupport.ModSupport;
 import uk.co.mysterymayhem.mystlib.util.KeyBindingUtil;
 
 import javax.annotation.Nonnull;
@@ -102,17 +99,6 @@ public class ItemTooltipListener {
                 numWeakGravityEnablers++;
             }
         }
-        if (ModSupport.isModLoaded(ModSupport.BAUBLES_MOD_ID)) {
-            IBaublesItemHandler baublesHandler = BaublesApi.getBaublesHandler(player);
-            int slots = baublesHandler.getSlots();
-            for (int i = 0; i < slots; i++) {
-                ItemStack stack = baublesHandler.getStackInSlot(i);
-                if (!stack.isEmpty() && stack.getItem() instanceof IWeakGravityEnabler) {
-                    numWeakGravityEnablers++;
-                }
-            }
-
-        }
         return numWeakGravityEnablers;
     }
 
@@ -124,17 +110,6 @@ public class ItemTooltipListener {
             if (stack != null && ItemArmourPaste.hasPasteTag(stack)) {
                 numNormalGravityEnablers++;
             }
-        }
-        if (ModSupport.isModLoaded(ModSupport.BAUBLES_MOD_ID)) {
-            IBaublesItemHandler baublesHandler = BaublesApi.getBaublesHandler(player);
-            int slots = baublesHandler.getSlots();
-            for (int i = 0; i < slots; i++) {
-                ItemStack stack = baublesHandler.getStackInSlot(i);
-                if (!stack.isEmpty() && ItemArmourPaste.hasPasteTag(stack)) {
-                    numNormalGravityEnablers++;
-                }
-            }
-
         }
         return numNormalGravityEnablers;
     }
@@ -152,22 +127,6 @@ public class ItemTooltipListener {
                     numNormalGravityEnablersIncludingWeakEnablers += ConfigHandler.numNormalEnablersWeakEnablersCountsAs;
                 }
             }
-        }
-        if (ModSupport.isModLoaded(ModSupport.BAUBLES_MOD_ID)) {
-            IBaublesItemHandler baublesHandler = BaublesApi.getBaublesHandler(player);
-            int slots = baublesHandler.getSlots();
-            for (int i = 0; i < slots; i++) {
-                ItemStack stack = baublesHandler.getStackInSlot(i);
-                if (!stack.isEmpty()) {
-                    if (ItemArmourPaste.hasPasteTag(stack)) {
-                        numNormalGravityEnablersIncludingWeakEnablers++;
-                    }
-                    else if (stack.getItem() instanceof IWeakGravityEnabler) {
-                        numNormalGravityEnablersIncludingWeakEnablers += ConfigHandler.numNormalEnablersWeakEnablersCountsAs;
-                    }
-                }
-            }
-
         }
         return numNormalGravityEnablersIncludingWeakEnablers;
     }

@@ -1,6 +1,5 @@
 package uk.co.mysterymayhem.gravitymod.common.items.materials;
 
-import baubles.api.IBauble;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.client.settings.KeyBinding;
@@ -64,7 +63,7 @@ public class ItemArmourPaste extends Item implements IGravityModItem<ItemArmourP
     }
 
     private static boolean isItemBauble(@Nullable Item item) {
-        return ModSupport.isModLoaded(ModSupport.BAUBLES_MOD_ID) && item instanceof IBauble;
+        return false;
     }
 
     @SideOnly(Side.CLIENT)
@@ -72,14 +71,8 @@ public class ItemArmourPaste extends Item implements IGravityModItem<ItemArmourP
     public void addInformation(ItemStack stack, World world, List<String> tooltip, ITooltipFlag advanced) {
         KeyBinding keyBindSneak = Minecraft.getMinecraft().gameSettings.keyBindSneak;
         if (KeyBindingUtil.isKeyPressed(keyBindSneak)) {
-            if (ModSupport.isModLoaded(ModSupport.BAUBLES_MOD_ID)) {
-                tooltip.add(I18n.format("mouseovertext.mysttmtgravitymod.armourpaste.infobaubles"));
-                tooltip.add(I18n.format("mouseovertext.mysttmtgravitymod.armourpaste.inforemovalbaubles"));
-            }
-            else {
-                tooltip.add(I18n.format("mouseovertext.mysttmtgravitymod.armourpaste.info"));
-                tooltip.add(I18n.format("mouseovertext.mysttmtgravitymod.armourpaste.inforemoval"));
-            }
+            tooltip.add(I18n.format("mouseovertext.mysttmtgravitymod.armourpaste.info"));
+            tooltip.add(I18n.format("mouseovertext.mysttmtgravitymod.armourpaste.inforemoval"));
         }
         else {
             tooltip.add(keyBindSneak.getDisplayName() + I18n.format("mouseovertext.mysttmtgravitymod.presskeyfordetails"));

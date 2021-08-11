@@ -1,7 +1,5 @@
 package uk.co.mysterymayhem.gravitymod.client.blocks.gravitygenerator;
 
-import baubles.api.BaublesApi;
-import baubles.api.cap.IBaublesItemHandler;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.entity.EntityPlayerSP;
 import net.minecraft.client.gui.ScaledResolution;
@@ -17,7 +15,6 @@ import net.minecraftforge.fml.common.gameevent.TickEvent;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import uk.co.mysterymayhem.gravitymod.api.IGravityFieldsVisible;
-import uk.co.mysterymayhem.gravitymod.common.modsupport.ModSupport;
 
 /**
  * Created by Mysteryem on 2017-01-25.
@@ -47,17 +44,6 @@ public class ClientTickListener {
                         cumulativeTickCount = DELAY_TICKS + 1;
                         playerCanSeeGravityFields = true;
                         return;
-                    }
-                }
-                if (ModSupport.isModLoaded(ModSupport.BAUBLES_MOD_ID)) {
-                    IBaublesItemHandler baublesHandler = BaublesApi.getBaublesHandler(thePlayer);
-                    int slots = baublesHandler.getSlots();
-                    for (int i = 0; i < slots; i++) {
-                        if (IGravityFieldsVisible.stackMakesFieldsVisible(baublesHandler.getStackInSlot(i))) {
-                            cumulativeTickCount = DELAY_TICKS + 1;
-                            playerCanSeeGravityFields = true;
-                            return;
-                        }
                     }
                 }
                 boolean foundInHand = false;

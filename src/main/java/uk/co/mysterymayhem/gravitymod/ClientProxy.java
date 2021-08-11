@@ -55,12 +55,6 @@ public class ClientProxy extends CommonProxy {
         MinecraftForge.EVENT_BUS.register(PlayerCameraListener.class);
         MinecraftForge.EVENT_BUS.register(EntityRenderListener.class);
         MinecraftForge.EVENT_BUS.register(ItemTooltipListener.class);
-        MinecraftForge.EVENT_BUS.register(FallOutOfWorldUpwardsListenerClient.class);
-    }
-
-    @Override
-    public Collection<?> createSidedEventListeners() {
-        return Lists.newArrayList(new FallOutOfWorldUpwardsListenerClient());
     }
 
     @Override
