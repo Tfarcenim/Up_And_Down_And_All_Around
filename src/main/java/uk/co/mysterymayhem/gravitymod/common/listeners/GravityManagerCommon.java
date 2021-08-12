@@ -30,7 +30,6 @@ import uk.co.mysterymayhem.gravitymod.asm.Hooks;
 import uk.co.mysterymayhem.gravitymod.common.capabilities.gravitydirection.GravityDirectionCapability;
 import uk.co.mysterymayhem.gravitymod.common.capabilities.gravitydirection.IGravityDirectionCapability;
 import uk.co.mysterymayhem.gravitymod.common.config.ConfigHandler;
-import uk.co.mysterymayhem.gravitymod.common.items.materials.ItemArmourPaste;
 import uk.co.mysterymayhem.gravitymod.common.packets.PacketHandler;
 import uk.co.mysterymayhem.gravitymod.common.packets.config.ModCompatConfigCheckMessage;
 import uk.co.mysterymayhem.gravitymod.common.packets.gravitychange.GravityChangeMessage;
@@ -54,12 +53,6 @@ public class GravityManagerCommon {
                     if (stack.getItem() instanceof IWeakGravityEnabler) {
                         numNormalGravityEnablers += ConfigHandler.numNormalEnablersWeakEnablersCountsAs;
                         if (numNormalGravityEnablers >= numRequired) {
-                            return true;
-                        }
-                    }
-                    // IWeakGravityEnablers cannot have paste applied to them, they're partially made of the paste
-                    else if (ItemArmourPaste.hasPasteTag(stack)) {
-                        if (++numNormalGravityEnablers >= numRequired) {
                             return true;
                         }
                     }
@@ -87,10 +80,6 @@ public class GravityManagerCommon {
             }
         }
         return false;
-    }
-
-    public EnumGravityDirection getGravityDirection(String playerName) {
-        return GravityDirectionCapability.getGravityDirection(playerName, FMLCommonHandler.instance().getMinecraftServerInstance().getEntityWorld());
     }
 
     public void handlePacket(GravityChangeMessage message, MessageContext context) {

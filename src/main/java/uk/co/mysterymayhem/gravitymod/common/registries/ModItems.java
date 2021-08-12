@@ -33,7 +33,6 @@ public class ModItems extends AbstractItemRegistry<IGravityModItem<?>, ArrayList
     static ItemGravityPearl gravityPearl;
     static ItemGravityDust gravityDust;
     static ItemSpacetimeAnomaly spacetimeAnomaly;
-    static ItemArmourPaste armourPaste;
     static ItemGravityBoots gravityBoots;
     static ItemGravityChestplate gravityChestplate;
     static ItemGravityHelmet gravityHelmet;
@@ -88,7 +87,6 @@ public class ModItems extends AbstractItemRegistry<IGravityModItem<?>, ArrayList
         modObjects.add(gravityPearl = new ItemGravityPearl());
         modObjects.add(gravityDust = new ItemGravityDust());
         modObjects.add(spacetimeAnomaly = new ItemSpacetimeAnomaly());
-        modObjects.add(armourPaste = new ItemArmourPaste());
         modObjects.add(gravityBoots = new ItemGravityBoots());
         modObjects.add(gravityChestplate = new ItemGravityChestplate());
         modObjects.add(gravityHelmet = new ItemGravityHelmet());

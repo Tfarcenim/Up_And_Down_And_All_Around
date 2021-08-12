@@ -7,7 +7,6 @@ import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.entity.EntityJoinWorldEvent;
-import net.minecraftforge.fml.client.FMLClientHandler;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.network.simpleimpl.MessageContext;
 import net.minecraftforge.fml.relauncher.Side;
@@ -27,14 +26,6 @@ import uk.co.mysterymayhem.gravitymod.common.packets.gravitychange.GravityChange
  */
 @SideOnly(Side.CLIENT)
 public class GravityManagerClient extends GravityManagerCommon {
-
-    @Override
-    public EnumGravityDirection getGravityDirection(String playerName) {
-        if (Minecraft.getMinecraft().player.getName().equals(playerName)) {
-            return this.getClientGravity();
-        }
-        return GravityDirectionCapability.getGravityDirection(playerName, FMLClientHandler.instance().getWorldClient());
-    }
 
     public EnumGravityDirection getClientGravity() {
         return GravityDirectionCapability.getGravityDirection(Minecraft.getMinecraft().player);

@@ -22,7 +22,6 @@ public class StaticItems {
     public static final ItemGravityPearl GRAVITY_PEARL;
     public static final ItemGravityDust GRAVITY_DUST;
     public static final ItemSpacetimeAnomaly SPACETIME_ANOMALY;
-    public static final ItemArmourPaste ARMOUR_PASTE;
     public static final ItemGravityBoots GRAVITY_BOOTS;
     public static final ItemGravityChestplate GRAVITY_CHESTPLATE;
     public static final ItemGravityHelmet GRAVITY_HELMET;
@@ -38,7 +37,6 @@ public class StaticItems {
             GRAVITY_PEARL = ModItems.gravityPearl;
             GRAVITY_DUST = ModItems.gravityDust;
             SPACETIME_ANOMALY = ModItems.spacetimeAnomaly;
-            ARMOUR_PASTE = ModItems.armourPaste;
             GRAVITY_BOOTS = ModItems.gravityBoots;
             GRAVITY_CHESTPLATE = ModItems.gravityChestplate;
             GRAVITY_HELMET = ModItems.gravityHelmet;

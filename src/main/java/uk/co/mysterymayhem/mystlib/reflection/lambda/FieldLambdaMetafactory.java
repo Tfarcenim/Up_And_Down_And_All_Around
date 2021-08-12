@@ -390,8 +390,5 @@ public class FieldLambdaMetafactory {
             return this.numMethodParameters;
         }
 
-        public int getReferenceKind() {
-            return this.referenceKind;
-        }
     }
 }

@@ -69,7 +69,6 @@ public class BlockBreakListener {
                     // storing to a local variable. It may be that extracting such fields from loops is unneeded.
                     Random worldRand = world.rand;
                     float dustDropChance = 0;
-                    boolean onlyOneValidAttemptPerBlock = true;
 
                     for (ListIterator<ItemStack> it = drops.listIterator(); it.hasNext(); ) {
                         ItemStack stack = it.next();

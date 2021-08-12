@@ -32,13 +32,6 @@ public interface IModPotion<T extends Potion & IModPotion<T>> extends IModObject
         return (T)this;
     }
 
-    default T setIconIndex(int index) {
-        T potion = this.getPotion();
-        int numIconsPerRow = this.getNumIconsPerRow();
-        ReflectionLambdas.Potion$setIconIndex.apply(potion, index % numIconsPerRow, index / numIconsPerRow);
-        return potion;
-    }
-
     default int getNumIconsPerRow() {
         return this.getTextureWidth() / this.getIconWidth();
     }

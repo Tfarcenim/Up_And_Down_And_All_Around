@@ -37,13 +37,7 @@ public class ReflectionLambdas {
     public static final Supplier<double[]> get_MathHelper$ASINE_TAB
             = buildStaticFieldGetter(Supplier.class, MathHelper.class, double[].class, "field_181164_e", "ASINE_TAB");
 
-    public static final ToIntFunction<EntityItem> get_EntityItem$health
-            = buildInstanceFieldGetter(ToIntFunction.class, EntityItem.class, int.class, "field_70291_e", "health");
-
     public static final ToIntFunction<EntityItem> get_EntityItem$age
             = buildInstanceFieldGetter(ToIntFunction.class, EntityItem.class, int.class, "field_70292_b", "age");
 
-    public static final IModPotion.PotionIntIntToPotion Potion$setIconIndex
-            = buildInstanceMethodLambda(IModPotion.PotionIntIntToPotion.class, Potion.class, MethodType.methodType(Potion.class, int.class, int.class),
-            "func_76399_b", "setIconIndex");
 }
