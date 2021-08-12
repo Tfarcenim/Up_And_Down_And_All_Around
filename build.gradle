@@ -95,7 +95,5 @@ processResources
 jar {
     manifest {
         attributes 'FMLAT': 'mysttmtgravitymod_at.cfg'
-        attributes 'FMLCorePluginContainsFMLMod': 'true'
-        attributes 'FMLCorePlugin': 'uk.co.mysterymayhem.gravitymod.asm.FMLLoadingPlugin'
     }
 }

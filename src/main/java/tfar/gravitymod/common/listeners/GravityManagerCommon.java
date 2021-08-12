@@ -22,7 +22,6 @@ import tfar.gravitymod.api.API;
 import tfar.gravitymod.api.EnumGravityDirection;
 import tfar.gravitymod.api.ITickOnMouseCursor;
 import tfar.gravitymod.api.events.GravityTransitionEvent;
-import tfar.gravitymod.asm.Hooks;
 import tfar.gravitymod.common.packets.PacketHandler;
 import tfar.gravitymod.common.packets.gravitychange.GravityChangeMessage;
 import tfar.gravitymod.common.capabilities.gravitydirection.GravityDirectionCapability;
@@ -116,7 +115,7 @@ public class GravityManagerCommon {
         }
     }
 
-    @SubscribeEvent(priority = EventPriority.LOWEST)
+    @SubscribeEvent(priority = EventPriority.LOW)
     public void onPlayerUpdateTickEnd(PlayerTickEvent event) {
         if (event.phase == TickEvent.Phase.END) {
             //Phase = END
@@ -138,11 +137,11 @@ public class GravityManagerCommon {
                     }
                 }
             }
-            Hooks.popMotionStack(event.player);
+            //Hooks.popMotionStack(event.player);
         }
     }
 
-    @SubscribeEvent(priority = EventPriority.HIGHEST)
+    @SubscribeEvent(priority = EventPriority.HIGH)
     public void onPlayerUpdateTickStart(PlayerTickEvent event) {
         if (event.phase == TickEvent.Phase.START) {
             IGravityDirectionCapability gravityCapability = GravityDirectionCapability.getGravityCapability(event.player);
@@ -208,7 +207,7 @@ public class GravityManagerCommon {
             }
             //decrements timeOut on both client and server
             gravityCapability.tickCommon();
-            Hooks.makeMotionRelative(event.player);
+            //Hooks.makeMotionRelative(event.player);
         }
     }
 

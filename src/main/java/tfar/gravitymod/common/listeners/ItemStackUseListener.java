@@ -2,24 +2,18 @@ package tfar.gravitymod.common.listeners;
 
 import gnu.trove.map.hash.TIntObjectHashMap;
 import net.minecraft.entity.EntityLivingBase;
+import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
-import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.event.entity.player.PlayerInteractEvent;
 import net.minecraftforge.fml.common.eventhandler.EventPriority;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.gameevent.TickEvent;
-import net.minecraftforge.fml.common.registry.ForgeRegistries;
 import net.minecraftforge.oredict.OreDictionary;
-import tfar.gravitymod.GravityMod;
-import tfar.gravitymod.asm.EntityPlayerWithGravity;
-import tfar.gravitymod.asm.Hooks;
-import tfar.gravitymod.common.events.ItemStackUseEvent;
 import tfar.gravitymod.common.modsupport.prepostmodifier.IPrePostModifier;
 
 import java.util.Arrays;
 import java.util.Comparator;
-import java.util.Objects;
 import java.util.TreeMap;
 
 //TODO: Build two separate hashcodes and sets of maps, one that's used in SSP and one that's used in SMP.
@@ -32,9 +26,9 @@ import java.util.TreeMap;
  */
 public class ItemStackUseListener {
 
-    public static final TreeMap<Item, TIntObjectHashMap<IPrePostModifier<EntityPlayerWithGravity>>> onItemRightClick_itemToPrePostModifier = new TreeMap<>(new ItemComparator());
-    public static final TreeMap<Item, TIntObjectHashMap<IPrePostModifier<EntityPlayerWithGravity>>> onItemUse_itemToPrePostModifier = new TreeMap<>(new ItemComparator());
-    public static final TreeMap<Item, TIntObjectHashMap<IPrePostModifier<EntityPlayerWithGravity>>> onPlayerStoppedUsing_itemToPrePostModifier = new TreeMap<>(new ItemComparator());
+    public static final TreeMap<Item, TIntObjectHashMap<IPrePostModifier<EntityPlayer>>> onItemRightClick_itemToPrePostModifier = new TreeMap<>(new ItemComparator());
+    public static final TreeMap<Item, TIntObjectHashMap<IPrePostModifier<EntityPlayer>>> onItemUse_itemToPrePostModifier = new TreeMap<>(new ItemComparator());
+    public static final TreeMap<Item, TIntObjectHashMap<IPrePostModifier<EntityPlayer>>> onPlayerStoppedUsing_itemToPrePostModifier = new TreeMap<>(new ItemComparator());
 
     private static int hashCode;
 
@@ -57,11 +51,11 @@ public class ItemStackUseListener {
         hashCode = hash;
     }
 
-    private static int getHashForMap(TreeMap<Item, TIntObjectHashMap<IPrePostModifier<EntityPlayerWithGravity>>> map) {
+    private static int getHashForMap(TreeMap<Item, TIntObjectHashMap<IPrePostModifier<EntityPlayer>>> map) {
         int hash = 1;
         for (Item itemKey : map.keySet()) {
             hash = 31 * hash + (itemKey == null ? 0 : itemKey.getRegistryName().hashCode());
-            TIntObjectHashMap<IPrePostModifier<EntityPlayerWithGravity>> prePostMap = map.get(itemKey);
+            TIntObjectHashMap<IPrePostModifier<EntityPlayer>> prePostMap = map.get(itemKey);
             if (prePostMap == null) {
                 hash = 31 * hash;
             }
@@ -70,7 +64,7 @@ public class ItemStackUseListener {
                 Arrays.sort(keysArray);
                 for (int nextKey : keysArray) {
                     hash = 31 * hash + nextKey;
-                    IPrePostModifier<EntityPlayerWithGravity> prePostModifier = prePostMap.get(nextKey);
+                    IPrePostModifier<EntityPlayer> prePostModifier = prePostMap.get(nextKey);
                     if (prePostModifier == null) {
                         hash = 31 * hash;
                     } else {
@@ -82,91 +76,15 @@ public class ItemStackUseListener {
         return hash;
     }
 
-    /**
-     * Along with onAnyItemStackUseEventPre, enforces a consistent state of absolute motion for other listening methods
-     * This usually results in no change at all
-     *
-     * @param event
-     */
-    @SubscribeEvent(priority = EventPriority.LOWEST)
-    public static void onAnyItemStackUseEventPost(ItemStackUseEvent event) {
-        if (event.phase == TickEvent.Phase.END) {
-            Hooks.popMotionStack(event.getEntityLiving());
-        }
-    }
-
-    /**
-     * Along with onAnyItemStackUseEventPost, enforces a consistent state of absolute motion for other listening methods
-     * This usually results in no change at all
-     *
-     * @param event
-     */
-    @SubscribeEvent(priority = EventPriority.HIGHEST)
-    public static void onAnyItemStackUseEventPre(ItemStackUseEvent event) {
-        if (event.phase == TickEvent.Phase.START) {
-            Hooks.makeMotionAbsolute(event.getEntityLiving());
-        }
-    }
-
-    @SubscribeEvent
-    public static void onItemUseGeneral(ItemStackUseEvent.OnUseGeneral event) {
-        EntityLivingBase entity;
-        if ((entity = event.getEntityLiving()) instanceof EntityPlayerWithGravity) {
-            EntityPlayerWithGravity player = (EntityPlayerWithGravity)entity;
-            IPrePostModifier<EntityPlayerWithGravity> prePostModifier = getPrePostModifier(onItemRightClick_itemToPrePostModifier, event);
-            if (prePostModifier != null) {
-                prePostModifier.modify(event.phase, player);
-            }
-        }
-    }
-
-    private static IPrePostModifier<EntityPlayerWithGravity> getPrePostModifier
-            (TreeMap<Item, TIntObjectHashMap<IPrePostModifier<EntityPlayerWithGravity>>> map, ItemStackUseEvent event) {
-        ItemStack stack = event.stack;
-        Item item = stack.getItem();
-        TIntObjectHashMap<IPrePostModifier<EntityPlayerWithGravity>> intMap = map.get(item);
-        if (intMap != null) {
-            IPrePostModifier<EntityPlayerWithGravity> prePostModifier = intMap.get(OreDictionary.WILDCARD_VALUE);
-            if (prePostModifier == null) {
-                prePostModifier = intMap.get(stack.getItemDamage());
-            }
-            return prePostModifier;
-        }
-        return null;
-    }
-
-    @SubscribeEvent
-    public static void onItemUseOnBlock(ItemStackUseEvent.OnUseOnBlock event) {
-        EntityLivingBase entity;
-        if ((entity = event.getEntityLiving()) instanceof EntityPlayerWithGravity) {
-            EntityPlayerWithGravity player = (EntityPlayerWithGravity)entity;
-            IPrePostModifier<EntityPlayerWithGravity> prePostModifier = getPrePostModifier(onItemUse_itemToPrePostModifier, event);
-            if (prePostModifier != null) {
-                prePostModifier.modify(event.phase, player);
-            }
-        }
-    }
-
-    @SubscribeEvent
-    public static void onPlayerStoppedUsingItem(ItemStackUseEvent.OnStoppedUsing event) {
-        EntityLivingBase entity;
-        if ((entity = event.getEntityLiving()) instanceof EntityPlayerWithGravity) {
-            EntityPlayerWithGravity player = (EntityPlayerWithGravity)entity;
-            IPrePostModifier<EntityPlayerWithGravity> prePostModifier = getPrePostModifier(onPlayerStoppedUsing_itemToPrePostModifier, event);
-            if (prePostModifier != null) {
-                prePostModifier.modify(event.phase, player);
-            }
-        }
-    }
 
     @SubscribeEvent(priority = EventPriority.HIGHEST, receiveCanceled = true)
     public static void onRightClickBlockHighest(PlayerInteractEvent.RightClickBlock event) {
-        Hooks.makeMotionAbsolute(event.getEntityPlayer());
+        //Hooks.makeMotionAbsolute(event.getEntityPlayer());
     }
 
     @SubscribeEvent(priority = EventPriority.LOWEST, receiveCanceled = true)
     public static void onRightClickBlockLowest(PlayerInteractEvent.RightClickBlock event) {
-        Hooks.popMotionStack(event.getEntityPlayer());
+        //Hooks.popMotionStack(event.getEntityPlayer());
     }
 
 
@@ -175,12 +93,12 @@ public class ItemStackUseListener {
 
     @SubscribeEvent(priority = EventPriority.HIGHEST, receiveCanceled = true)
     public static void onRightClickItemHighest(PlayerInteractEvent.RightClickItem event) {
-        Hooks.makeMotionAbsolute(event.getEntityPlayer());
+        //Hooks.makeMotionAbsolute(event.getEntityPlayer());
     }
 
     @SubscribeEvent(priority = EventPriority.LOWEST, receiveCanceled = true)
     public static void onRightClickItemLowest(PlayerInteractEvent.RightClickItem event) {
-        Hooks.popMotionStack(event.getEntityPlayer());
+       // Hooks.popMotionStack(event.getEntityPlayer());
     }
 
     public enum EnumItemStackUseCompat {

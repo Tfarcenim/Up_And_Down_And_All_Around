@@ -12,41 +12,6 @@ import tfar.gravitymod.common.capabilities.gravitydirection.IGravityDirectionCap
 public class GravityAxisAlignedBB extends AxisAlignedBB {
     private final IGravityDirectionCapability gravityCapability;
 
-    public GravityAxisAlignedBB(GravityAxisAlignedBB other, double x1, double y1, double z1, double x2, double y2, double z2) {
-        super(x1, y1, z1, x2, y2, z2);
-        this.gravityCapability = other.gravityCapability;
-    }
-
-    public GravityAxisAlignedBB(IGravityDirectionCapability gravityCapability, BlockPos pos) {
-        super(pos);
-        this.gravityCapability = gravityCapability;
-    }
-
-    public GravityAxisAlignedBB(GravityAxisAlignedBB other, BlockPos pos) {
-        super(pos);
-        this.gravityCapability = other.gravityCapability;
-    }
-
-    public GravityAxisAlignedBB(IGravityDirectionCapability gravityCapability, BlockPos pos1, BlockPos pos2) {
-        super(pos1, pos2);
-        this.gravityCapability = gravityCapability;
-    }
-
-    public GravityAxisAlignedBB(GravityAxisAlignedBB other, BlockPos pos1, BlockPos pos2) {
-        super(pos1, pos2);
-        this.gravityCapability = other.gravityCapability;
-    }
-
-    public GravityAxisAlignedBB(IGravityDirectionCapability gravityCapability, Vec3d p_i47144_1_, Vec3d p_i47144_2_) {
-        super(p_i47144_1_, p_i47144_2_);
-        this.gravityCapability = gravityCapability;
-    }
-
-    public GravityAxisAlignedBB(GravityAxisAlignedBB other, Vec3d p_i47144_1_, Vec3d p_i47144_2_) {
-        super(p_i47144_1_, p_i47144_2_);
-        this.gravityCapability = other.gravityCapability;
-    }
-
     public GravityAxisAlignedBB(IGravityDirectionCapability gravityCapability, AxisAlignedBB axisAlignedBB) {
         this(gravityCapability, axisAlignedBB.minX, axisAlignedBB.minY, axisAlignedBB.minZ, axisAlignedBB.maxX, axisAlignedBB.maxY, axisAlignedBB.maxZ);
     }
@@ -185,10 +150,6 @@ public class GravityAxisAlignedBB extends AxisAlignedBB {
 
     private double getCentreY() {
         return (this.minY + this.maxY) / 2d;
-    }
-
-    public AxisAlignedBB toVanilla() {
-        return new AxisAlignedBB(this.minX, this.minY, this.minZ, this.maxX, this.maxY, this.maxZ);
     }
 
 }

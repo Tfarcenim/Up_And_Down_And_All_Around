@@ -6,7 +6,8 @@
   "mixins": [
     "EntityPlayerSPAccess",
     "EntityPlayerWithGravityMP",
-    "EntityPlayerWithGravitySP"
+    "EntityPlayerWithGravitySP",
+    "WorldMixin"
   ],
   "client": [
   ],

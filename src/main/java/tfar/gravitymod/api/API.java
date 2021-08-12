@@ -4,7 +4,6 @@ import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
 import tfar.gravitymod.GravityMod;
-import tfar.gravitymod.asm.EntityPlayerWithGravity;
 import tfar.gravitymod.common.capabilities.gravitydirection.GravityDirectionCapability;
 import tfar.gravitymod.common.capabilities.gravitydirection.IGravityDirectionCapability;
 
@@ -77,13 +76,7 @@ public class API {
      */
     public static float getStandardEyeHeight(@Nonnull EntityLivingBase entityLivingBase) {
         // Should pretty much always be the case
-        if (entityLivingBase instanceof EntityPlayerWithGravity) {
-            return ((EntityPlayerWithGravity)entityLivingBase).super_getEyeHeight();
-        }
-        else {
-            // This probably shouldn't ever happen
-            return entityLivingBase.getEyeHeight();
-        }
+        return entityLivingBase.getEyeHeight();
     }
 
     /**
