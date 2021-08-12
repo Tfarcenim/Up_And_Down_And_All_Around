@@ -6,6 +6,8 @@ import net.minecraft.block.state.BlockStateContainer;
 import net.minecraft.block.state.IBlockState;
 
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
 import java.util.HashSet;
 import java.util.function.IntFunction;
 import java.util.function.ToIntFunction;
@@ -56,47 +58,27 @@ public abstract class AbstractMetaMapper<BLOCK extends Block> implements ToIntFu
         return this.block;
     }
 
-    public IProperty<?>[] getAllProperties() {
-        return this.allProperties;
-    }
-
-    public IProperty<?>[] getMetaProperties() {
-        return this.metaProperties;
-    }
-
     public static class MetaHelper {
         private final ArrayList<IProperty<?>> orderedMetaProperties = new ArrayList<>();
         private final HashSet<IProperty<?>> allProperties = new HashSet<>();
-
-        public static MetaHelper newHelper() {
-            return new MetaHelper();
-        }
 
         public static MetaHelper with(IProperty<?>[] metaProperties, IProperty<?>... nonMetaProperties) {
             return new MetaHelper().addMeta(metaProperties).addNonMeta(nonMetaProperties);
         }
 
         public MetaHelper addNonMeta(IProperty<?>... nonMetaProperties) {
-            for (IProperty<?> property : nonMetaProperties) {
-                this.allProperties.add(property);
-            }
+            this.allProperties.addAll(Arrays.asList(nonMetaProperties));
             return this;
         }
 
         public MetaHelper addMeta(IProperty<?>... metaProperties) {
-            for (IProperty<?> property : metaProperties) {
-                this.orderedMetaProperties.add(property);
-            }
+            Collections.addAll(this.orderedMetaProperties, metaProperties);
             this.allProperties.addAll(this.orderedMetaProperties);
             return this;
         }
 
         public static MetaHelper withMeta(IProperty<?>... metaProperties) {
             return new MetaHelper().addMeta(metaProperties);
-        }
-
-        public static MetaHelper withNonMeta(IProperty<?>... nonMetaProperties) {
-            return new MetaHelper().addNonMeta(nonMetaProperties);
         }
 
     }

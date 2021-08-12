@@ -16,7 +16,6 @@ public class GravityDirectionCapabilityImpl implements IGravityDirectionCapabili
     //
     private EnumGravityDirection pendingDirection;
     private int pendingPriority = GravityDirectionCapability.MIN_PRIORITY;
-    private boolean previouslySetPriorityWasDefault = true;
     // Updated when the direction changes. Used to do smooth transitions between
     private EnumGravityDirection prevDirection;
     // After changing gravity direction, there's a certain number of ticks that must occur before your gravity direction can change again, this is done so
@@ -62,11 +61,6 @@ public class GravityDirectionCapabilityImpl implements IGravityDirectionCapabili
     }
 
     @Override
-    public boolean timeoutComplete() {
-        return this.timeoutTicks == 0;
-    }
-
-    @Override
     public void setDirection(@Nonnull EnumGravityDirection direction) {
         this.updateDirection(direction);
         this.timeoutTicks = GravityDirectionCapability.DEFAULT_TIMEOUT;
@@ -107,11 +101,6 @@ public class GravityDirectionCapabilityImpl implements IGravityDirectionCapabili
     @Override
     public void setReverseTimeoutTicks(int reverseTimeoutTicks) {
         this.reverseTimeoutTicks = reverseTimeoutTicks;
-    }
-
-    @Override
-    public void setTimeoutTicks(int timeoutTicks) {
-        this.timeoutTicks = timeoutTicks;
     }
 
     @Override

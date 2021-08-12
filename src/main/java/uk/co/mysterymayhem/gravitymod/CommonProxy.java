@@ -75,53 +75,8 @@ public class CommonProxy extends AbstractIFMLStagedRegistry<AbstractModObjectReg
     }
 
     @SubscribeEvent
-    public void onRegisterBlocks(RegistryEvent.Register<Block> event) {
-        this.doRegister(registry -> registry.onRegisterBlocks(event));
-    }
-
-    @SubscribeEvent
     public void onRegisterItems(RegistryEvent.Register<Item> event) {
         this.doRegister(registry -> registry.onRegisterItems(event));
-    }
-
-    @SubscribeEvent
-    public void onRegisterPotions(RegistryEvent.Register<Potion> event) {
-        this.doRegister(registry -> registry.onRegisterPotions(event));
-    }
-
-    @SubscribeEvent
-    public void onRegisterBiomes(RegistryEvent.Register<Biome> event) {
-        this.doRegister(registry -> registry.onRegisterBiomes(event));
-    }
-
-    @SubscribeEvent
-    public void onRegisterSoundEvents(RegistryEvent.Register<SoundEvent> event) {
-        this.doRegister(registry -> registry.onRegisterSoundEvents(event));
-    }
-
-    @SubscribeEvent
-    public void onRegisterPotionTypes(RegistryEvent.Register<PotionType> event) {
-        this.doRegister(registry -> registry.onRegisterPotionTypes(event));
-    }
-
-    @SubscribeEvent
-    public void onRegisterEnchantments(RegistryEvent.Register<Enchantment> event) {
-        this.doRegister(registry -> registry.onRegisterEnchantments(event));
-    }
-
-    @SubscribeEvent
-    public void onRegisterIRecipes(RegistryEvent.Register<IRecipe> event) {
-        this.doRegister(registry -> registry.onRegisterIRecipes(event));
-    }
-
-    @SubscribeEvent
-    public void onRegisterVillagerProfessions(RegistryEvent.Register<VillagerRegistry.VillagerProfession> event) {
-        this.doRegister(registry -> registry.onRegisterVillagerProfessions(event));
-    }
-
-    @SubscribeEvent
-    public void onRegisterEntityEntries(RegistryEvent.Register<EntityEntry> event) {
-        this.doRegister(registry -> registry.onRegisterEntityEntries(event));
     }
 
     protected void doRegister(Consumer<AbstractRegistrableModObjectRegistry<?,?>> consumer) {

@@ -27,15 +27,11 @@ public interface IGravityDirectionCapability {
 
     void setReverseTimeoutTicks(int newReverseTimeout);
 
-    void setTimeoutTicks(int newTimeout);
-
     double getTransitionAngle();
 
     void setTransitionAngle(double angle);
 
     boolean hasTransitionAngle();
-
-    boolean timeoutComplete();
 
     /**
      * Used to set client gravity when logging into a server.
