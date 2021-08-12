@@ -80,7 +80,7 @@ public abstract class EntityPlayerWithGravity extends EntityPlayer {
 
         // We refuse to do these in setPosition called in the Entity constructor before the capability has been added
         // So we do them now, after the Entity constructor has finished and the GravityDirectionCapability has been added
-        this.setEntityBoundingBox(Hooks.getGravityAdjustedHitbox(this));
+       // this.setEntityBoundingBox(Hooks.getGravityAdjustedHitbox(this));
         this.setSize(this.width, this.height);
 
         this.positionVarsAreRelative = false;

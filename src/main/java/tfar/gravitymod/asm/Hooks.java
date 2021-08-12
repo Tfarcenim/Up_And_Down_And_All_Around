@@ -48,10 +48,11 @@ public class Hooks {
 
     /**
      * ASM Hook used in EntityPlayerSP::updateAutoJump
-     * @param vecIn Vec3d usually having its addVector method called.
-     * @param xIn X amount to add.
-     * @param yIn Y amount to add.
-     * @param zIn Z amount to add.
+     *
+     * @param vecIn  Vec3d usually having its addVector method called.
+     * @param xIn    X amount to add.
+     * @param yIn    Y amount to add.
+     * @param zIn    Z amount to add.
      * @param entity The entity whose gravity direction will be used to determine the result.
      * @return The adjusted Vec3d, taking into account the entity's gravity direction.
      */
@@ -66,6 +67,7 @@ public class Hooks {
 
     /**
      * ASM Hook used in EntityPlayerSP::updateAutoJump
+     *
      * @param normal Normal input Vec3d
      * @param entity Entity whose gravity direction will be used for the adjustment
      * @return new Vec3d adjusted for the Entity's gravity
@@ -73,33 +75,33 @@ public class Hooks {
     public static Vec3d adjustVec(Vec3d normal, Entity entity) {
         if (entity instanceof EntityPlayer) {
             return API.getGravityDirection((EntityPlayer) entity).adjustLookVec(normal);
-        }
-        else {
+        } else {
             return normal;
         }
     }
 
     /**
      * ASM Hook used in NetHandlerPlayServer::processPlayer
+     *
      * @param entity entity whose gravity direction will be used for the adjustment
-     * @param x input x value
-     * @param y input y value
-     * @param z input z value
+     * @param x      input x value
+     * @param y      input y value
+     * @param z      input z value
      * @return array of adjustedX, adjustedY, adjustedZ
      */
     public static double[] adjustXYZ(Entity entity, double x, double y, double z) {
         AxisAlignedBB entityBoundingBox = entity.getEntityBoundingBox();
         if (entityBoundingBox instanceof GravityAxisAlignedBB) {
             return ((GravityAxisAlignedBB) entityBoundingBox).getDirection().adjustXYZValues(x, y, z);
-        }
-        else {
-            return new double[]{x,y,z};
+        } else {
+            return new double[]{x, y, z};
         }
     }
 
     /**
      * ASM Hook used in EntityPlayerSP::updateAutoJump
-     * @param first first corner of the AABB
+     *
+     * @param first  first corner of the AABB
      * @param second second corner of the AABB
      * @param entity entity whose gravity capability will be used to construct a new GravityAxisAlignedBB
      * @return a GravityAxisAlignedBB with the two input Vec3ds as its corners and with the same GravityDirectionCapability
@@ -108,7 +110,7 @@ public class Hooks {
     public static AxisAlignedBB constructNewGAABBFrom2Vec3d(Vec3d first, Vec3d second, Entity entity) {
         AxisAlignedBB bb = entity.getEntityBoundingBox();
         if (bb instanceof GravityAxisAlignedBB) {
-            GravityAxisAlignedBB gbb = (GravityAxisAlignedBB)bb;
+            GravityAxisAlignedBB gbb = (GravityAxisAlignedBB) bb;
             return new GravityAxisAlignedBB(gbb, first, second);
         }
         return new AxisAlignedBB(first, second);
@@ -116,21 +118,22 @@ public class Hooks {
 
     /**
      * ASM Hook used in EntityPlayerSP::updateAutoJump
+     *
      * @param entity
      * @return
      */
     public static BlockPos getBlockPosAtTopOfPlayer(Entity entity) {
         AxisAlignedBB bb = entity.getEntityBoundingBox();
         if (bb instanceof GravityAxisAlignedBB) {
-            return new BlockPos(((GravityAxisAlignedBB)bb).offset(0, entity.height, 0).getOrigin());
-        }
-        else {
+            return new BlockPos(((GravityAxisAlignedBB) bb).offset(0, entity.height, 0).getOrigin());
+        } else {
             return new BlockPos(entity.posX, bb.maxY, entity.posZ);
         }
     }
 
     /**
      * ASM Hook used in EntityLivingBase::moveEntityWithHeading
+     *
      * @param entity
      * @return
      */
@@ -139,14 +142,14 @@ public class Hooks {
         if (entityBoundingBox instanceof GravityAxisAlignedBB) {
             Vec3d origin = ((GravityAxisAlignedBB) entityBoundingBox).offset(0, -1, 0).getOrigin();
             return BlockPos.PooledMutableBlockPos.retain(origin.x, origin.y, origin.z);
-        }
-        else {
+        } else {
             return BlockPos.PooledMutableBlockPos.retain(entity.posX, entity.getEntityBoundingBox().minY - 1.0D, entity.posZ);
         }
     }
 
     /**
      * ASM Hook used in EntityPlayerSP::updateAutoJump
+     *
      * @param entity
      * @return
      */
@@ -154,24 +157,23 @@ public class Hooks {
         AxisAlignedBB bb = entity.getEntityBoundingBox();
         if (bb instanceof GravityAxisAlignedBB) {
             return ((GravityAxisAlignedBB) bb).getOrigin();
-        }
-        else {
+        } else {
             return new Vec3d(entity.posX, entity.posY, entity.posZ);
         }
     }
 
     /**
      * ASM Hook used in Entity::moveEntity
+     *
      * @param entity
      * @return
      */
     public static BlockPos getImmutableBlockPosBelowEntity(Entity entity) {
         AxisAlignedBB entityBoundingBox = entity.getEntityBoundingBox();
         if (entityBoundingBox instanceof GravityAxisAlignedBB) {
-            GravityAxisAlignedBB gBB = (GravityAxisAlignedBB)entityBoundingBox;
+            GravityAxisAlignedBB gBB = (GravityAxisAlignedBB) entityBoundingBox;
             return new BlockPos(gBB.offset(0, -0.20000000298023224D, 0).getOrigin());
-        }
-        else {
+        } else {
             int x = MathHelper.floor(entity.posX);
             int y = MathHelper.floor(entity.posY - 0.20000000298023224D);
             int z = MathHelper.floor(entity.posZ);
@@ -181,54 +183,55 @@ public class Hooks {
 
     /**
      * ASM Hook used in EntityPlayerSP::updateAutoJump
+     *
      * @param entity
      * @return
      */
     public static double getOriginRelativePosX(Entity entity) {
         AxisAlignedBB bb = entity.getEntityBoundingBox();
         if (bb instanceof GravityAxisAlignedBB) {
-            GravityAxisAlignedBB gBB = (GravityAxisAlignedBB)bb;
+            GravityAxisAlignedBB gBB = (GravityAxisAlignedBB) bb;
             return gBB.getDirection().getInverseAdjustmentFromDOWNDirection().adjustLookVec(gBB.getOrigin()).x;
-        }
-        else {
+        } else {
             return entity.posX;
         }
     }
 
     /**
      * ASM Hook used in EntityPlayerSP::updateAutoJump
+     *
      * @param entity
      * @return
      */
     public static double getOriginRelativePosY(Entity entity) {
         AxisAlignedBB bb = entity.getEntityBoundingBox();
         if (bb instanceof GravityAxisAlignedBB) {
-            GravityAxisAlignedBB gBB = (GravityAxisAlignedBB)bb;
+            GravityAxisAlignedBB gBB = (GravityAxisAlignedBB) bb;
             return gBB.getDirection().getInverseAdjustmentFromDOWNDirection().adjustLookVec(gBB.getOrigin()).y;
-        }
-        else {
+        } else {
             return entity.posY;
         }
     }
 
     /**
      * ASM Hook used in EntityPlayerSP::updateAutoJump
+     *
      * @param entity
      * @return
      */
     public static double getOriginRelativePosZ(Entity entity) {
         AxisAlignedBB bb = entity.getEntityBoundingBox();
         if (bb instanceof GravityAxisAlignedBB) {
-            GravityAxisAlignedBB gBB = (GravityAxisAlignedBB)bb;
+            GravityAxisAlignedBB gBB = (GravityAxisAlignedBB) bb;
             return gBB.getDirection().getInverseAdjustmentFromDOWNDirection().adjustLookVec(gBB.getOrigin()).z;
-        }
-        else {
+        } else {
             return entity.posZ;
         }
     }
 
     /**
      * ASM Hook used in RenderLivingBase::doRender (all rotation field access converted to relative rotation)
+     *
      * @param entity
      * @return
      */
@@ -242,19 +245,20 @@ public class Hooks {
 
         final double f = Math.cos(-yaw * (Math.PI / 180d) - Math.PI);
         final double f1 = Math.sin(-yaw * (Math.PI / 180d) - Math.PI);
-        final double f2 = -Math.cos(-pitch * (Math.PI/180d));
-        final double f3 = Math.sin(-pitch * (Math.PI/180d));
+        final double f2 = -Math.cos(-pitch * (Math.PI / 180d));
+        final double f3 = Math.sin(-pitch * (Math.PI / 180d));
 
-        Vec3d lookVecWithDoubleAccuracy =  new Vec3d(f1 * f2, f3, f * f2);
+        Vec3d lookVecWithDoubleAccuracy = new Vec3d(f1 * f2, f3, f * f2);
 
 //        Vec3d adjustedVec = Hooks.adjustVec(lookVecWithDoubleAccuracy, entity);
         Vec3d adjustedVec = Hooks.inverseAdjustVec(lookVecWithDoubleAccuracy, entity);
-        return (float)(Math.atan2(-adjustedVec.x, adjustedVec.z) * (180D/Math.PI));
+        return (float) (Math.atan2(-adjustedVec.x, adjustedVec.z) * (180D / Math.PI));
     }
 
     /**
      * ASM Hook used in EntityPlayerSP::updateAutoJump
      * Gets the relative bottom of the passed entity's current bounding box
+     *
      * @param other
      * @param entity
      * @return
@@ -269,6 +273,7 @@ public class Hooks {
 
     /**
      * ASM Hook used in Entity::moveEntity
+     *
      * @param entity
      * @param other
      * @return
@@ -279,17 +284,17 @@ public class Hooks {
 
     /**
      * ASM Hook used in EntityPlayerSP::isHeadspaceFree and used in other hooks to reduce duplicate code.
-     * @see Ref#Hooks$makeRelativeBlockPos
-     * @param other The BlockPos whose coordinates will be inherited
+     *
+     * @param other  The BlockPos whose coordinates will be inherited
      * @param entity The entity whose gravity direction will define the relative movement of the returned BlockPos
      * @return
+     * @see Ref#Hooks$makeRelativeBlockPos
      */
     public static BlockPos makeRelativeBlockPos(BlockPos other, Entity entity) {
         AxisAlignedBB entityBoundingBox = entity.getEntityBoundingBox();
         if (entityBoundingBox instanceof GravityAxisAlignedBB) {
             return ((GravityAxisAlignedBB) entityBoundingBox).getDirection().makeRelativeBlockPos(other);
-        }
-        else {
+        } else {
             return other;
         }
     }
@@ -298,6 +303,7 @@ public class Hooks {
      * ASM Hook used in:
      * EntityLivingBase::moveEntityWithHeading
      * EntityPlayerSP::updateAutoJump
+     *
      * @param entity
      * @return
      */
@@ -312,6 +318,7 @@ public class Hooks {
      * ASM Hooks used in:
      * RenderLivingBase::doRender
      * SoundManager::setListener
+     *
      * @param entity
      * @return
      */
@@ -325,20 +332,21 @@ public class Hooks {
 
         final double f = Math.cos(-yaw * (Math.PI / 180d) - Math.PI);
         final double f1 = Math.sin(-yaw * (Math.PI / 180d) - Math.PI);
-        final double f2 = -Math.cos(-pitch * (Math.PI/180d));
-        final double f3 = Math.sin(-pitch * (Math.PI/180d));
+        final double f2 = -Math.cos(-pitch * (Math.PI / 180d));
+        final double f3 = Math.sin(-pitch * (Math.PI / 180d));
 
-        Vec3d lookVecWithDoubleAccuracy =  new Vec3d(f1 * f2, f3, f * f2);
+        Vec3d lookVecWithDoubleAccuracy = new Vec3d(f1 * f2, f3, f * f2);
 
 //        Vec3d adjustedVec = Hooks.adjustVec(lookVecWithDoubleAccuracy, entity);
         Vec3d adjustedVec = Hooks.inverseAdjustVec(lookVecWithDoubleAccuracy, entity);
-        return (float)-(Math.asin(adjustedVec.y) * (180D/Math.PI));
+        return (float) -(Math.asin(adjustedVec.y) * (180D / Math.PI));
     }
 
     /**
      * ASM Hook used in:
      * SoundManager::setListener
      * RenderLivingBase::doRender
+     *
      * @param entity
      * @return
      */
@@ -352,19 +360,20 @@ public class Hooks {
 
         final double f = Math.cos(-yaw * (Math.PI / 180d) - Math.PI);
         final double f1 = Math.sin(-yaw * (Math.PI / 180d) - Math.PI);
-        final double f2 = -Math.cos(-pitch * (Math.PI/180d));
-        final double f3 = Math.sin(-pitch * (Math.PI/180d));
+        final double f2 = -Math.cos(-pitch * (Math.PI / 180d));
+        final double f3 = Math.sin(-pitch * (Math.PI / 180d));
 
-        Vec3d lookVecWithDoubleAccuracy =  new Vec3d(f1 * f2, f3, f * f2);
+        Vec3d lookVecWithDoubleAccuracy = new Vec3d(f1 * f2, f3, f * f2);
 
 //        Vec3d adjustedVec = Hooks.adjustVec(lookVecWithDoubleAccuracy, entity);
         Vec3d adjustedVec = Hooks.inverseAdjustVec(lookVecWithDoubleAccuracy, entity);
-        return (float)-(Math.asin(adjustedVec.y) * (180D/Math.PI));
+        return (float) -(Math.asin(adjustedVec.y) * (180D / Math.PI));
     }
 
     /**
      * ASM Hook used in:
      * EntityLivingBase::onUpdate
+     *
      * @param entity
      * @return
      */
@@ -378,85 +387,25 @@ public class Hooks {
 
     /**
      * ASM Hook used in:
+     *
      * @param axisAlignedBB
      * @return
      */
     public static AxisAlignedBB normaliseAABB(@Nonnull AxisAlignedBB axisAlignedBB) {
         if (axisAlignedBB instanceof GravityAxisAlignedBB) {
-            return ((GravityAxisAlignedBB)axisAlignedBB).toVanilla();
+            return ((GravityAxisAlignedBB) axisAlignedBB).toVanilla();
         }
         return axisAlignedBB;
     }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
     /////////////////////////////////////////////////////////////////////////
 
     /**
      * Corrects the rotation of nameplates to match the player's rotated camera.
-     *
+     * <p>
      * Called in EntityRenderer.drawNameplate immediately before GlStateManager::disableLighting is called
-     *
+     * <p>
      * Don't ask for specifics, this was mostly done with trial and error.
      * (undo vanilla rotations and then try relative rotations until they're correct)
      */
@@ -499,8 +448,7 @@ public class Hooks {
                         GlStateManager.rotate(-90, 0, 0, 1);
                         break;
                 }
-            }
-            else {
+            } else {
                 // Frontal thirdperson camera
                 switch (API.getGravityDirection((EntityPlayer) renderViewEntity)) {
                     case UP:
@@ -553,8 +501,7 @@ public class Hooks {
         if (world.isRemote) {
             MinecraftForge.EVENT_BUS.post(new ItemStackUseEvent.OnUseOnBlock.Pre(stack, player, true));
             return new ItemStackAndBoolean(toReturn, true);
-        }
-        else {
+        } else {
             MinecraftForge.EVENT_BUS.post(new ItemStackUseEvent.OnUseOnBlock.Pre(stack, player, false));
             return new ItemStackAndBoolean(toReturn, false);
         }
@@ -567,8 +514,7 @@ public class Hooks {
 
         if (preCopyAndIsRemote.isRemote) {
             MinecraftForge.EVENT_BUS.post(new ItemStackUseEvent.OnUseOnBlock.Post(stack, player, true));
-        }
-        else {
+        } else {
             MinecraftForge.EVENT_BUS.post(new ItemStackUseEvent.OnUseOnBlock.Post(stack, player, false));
         }
     }
@@ -584,8 +530,7 @@ public class Hooks {
         if (world.isRemote) {
             MinecraftForge.EVENT_BUS.post(new ItemStackUseEvent.OnUseGeneral.Pre(stack, player, true));
             return new ItemStackAndBoolean(toReturn, true);
-        }
-        else {
+        } else {
             MinecraftForge.EVENT_BUS.post(new ItemStackUseEvent.OnUseGeneral.Pre(stack, player, false));
             return new ItemStackAndBoolean(toReturn, false);
         }
@@ -598,8 +543,7 @@ public class Hooks {
 
         if (preCopyAndIsRemote.isRemote) {
             MinecraftForge.EVENT_BUS.post(new ItemStackUseEvent.OnUseGeneral.Post(stack, player, true));
-        }
-        else {
+        } else {
             MinecraftForge.EVENT_BUS.post(new ItemStackUseEvent.OnUseGeneral.Post(stack, player, false));
         }
     }
@@ -615,8 +559,7 @@ public class Hooks {
         if (world.isRemote) {
             MinecraftForge.EVENT_BUS.post(new ItemStackUseEvent.OnStoppedUsing.Pre(stack, entity, true));
             return new ItemStackAndBoolean(toReturn, true);
-        }
-        else {
+        } else {
             MinecraftForge.EVENT_BUS.post(new ItemStackUseEvent.OnStoppedUsing.Pre(stack, entity, false));
             return new ItemStackAndBoolean(toReturn, false);
         }
@@ -629,8 +572,7 @@ public class Hooks {
 
         if (preCopyAndIsRemote.isRemote) {
             MinecraftForge.EVENT_BUS.post(new ItemStackUseEvent.OnStoppedUsing.Post(stack, entity, true));
-        }
-        else {
+        } else {
             MinecraftForge.EVENT_BUS.post(new ItemStackUseEvent.OnStoppedUsing.Post(stack, entity, false));
         }
     }
@@ -644,10 +586,12 @@ public class Hooks {
     }
 
     //TODO: Insert Hook
+
     /**
      * ASM Hook used in EntityLivingBase::moveEntityWithHeading
      * This hook is useful when Mojang code stores an entity's Y position, runs code that may change it, gets the Y
      * position again and then does something with the difference between the starting and resultant values.
+     *
      * @param entity
      * @return
      */
@@ -655,8 +599,7 @@ public class Hooks {
         AxisAlignedBB bb = entity.getEntityBoundingBox();
         if (bb instanceof GravityAxisAlignedBB) {
             return ((GravityAxisAlignedBB) bb).getDirection().adjustXYZValues(entity.posX, entity.posY, entity.posZ)[1];
-        }
-        else {
+        } else {
             return entity.posY;
         }
     }
@@ -665,8 +608,7 @@ public class Hooks {
         AxisAlignedBB bb = entity.getEntityBoundingBox();
         if (bb instanceof GravityAxisAlignedBB) {
             return ((GravityAxisAlignedBB) bb).getOrigin().x;
-        }
-        else {
+        } else {
             return entity.posX;
         }
     }
@@ -675,8 +617,7 @@ public class Hooks {
         AxisAlignedBB bb = entity.getEntityBoundingBox();
         if (bb instanceof GravityAxisAlignedBB) {
             return ((GravityAxisAlignedBB) bb).getOrigin().y;
-        }
-        else {
+        } else {
             return entity.posY;
         }
     }
@@ -685,8 +626,7 @@ public class Hooks {
         AxisAlignedBB bb = entity.getEntityBoundingBox();
         if (bb instanceof GravityAxisAlignedBB) {
             return ((GravityAxisAlignedBB) bb).getOrigin().z;
-        }
-        else {
+        } else {
             return entity.posZ;
         }
     }
@@ -694,6 +634,7 @@ public class Hooks {
     /**
      * ASM Hook used in:
      * EntityLivingBase::onUpdate
+     *
      * @param entity
      * @return
      */
@@ -708,6 +649,7 @@ public class Hooks {
     /**
      * ASM Hook used in
      * EntityLivingBase::onUpdate
+     *
      * @param entity
      * @return
      */
@@ -722,6 +664,7 @@ public class Hooks {
     /**
      * ASM Hook used in
      * EntityLivingBase::onUpdate
+     *
      * @param entity
      * @return
      */
@@ -735,6 +678,7 @@ public class Hooks {
 
     /**
      * ASM Hook used in EntityLivingBase::moveEntityWithHeading
+     *
      * @param mutableBlockPos
      * @param entity
      * @return
@@ -744,8 +688,7 @@ public class Hooks {
         if (entityBoundingBox instanceof GravityAxisAlignedBB) {
             Vec3d origin = ((GravityAxisAlignedBB) entityBoundingBox).offset(0, -1, 0).getOrigin();
             return mutableBlockPos.setPos(origin.x, origin.y, origin.z);
-        }
-        else {
+        } else {
             return mutableBlockPos.setPos(entity.posX, entityBoundingBox.minY - 1.0D, entity.posZ);
         }
 //        return mutableBlockPos.setPos(entity.posX, entity.getEntityBoundingBox().minY - 1.0D, entity.posZ);
@@ -753,16 +696,17 @@ public class Hooks {
 
     /**
      * ASM Hook used in EntityPlayerSP::onLivingUpdate
+     *
+     * @param playerWithGravity
+     * @param bb
      * @see PatchEntityPlayerSP#onLivingUpdatePatch(AbstractInsnNode, ListIterator)
      * @see Ref#Hooks$pushEntityPlayerSPOutOfBlocks
      * @see EntityPlayerSP#onLivingUpdate()
-     * @param playerWithGravity
-     * @param bb
      */
     public static void pushEntityPlayerSPOutOfBlocks(EntityPlayerWithGravity playerWithGravity, AxisAlignedBB bb) {
         // Called from ASM-ed code where we do an INSTANCEOF check beforehand, so this cast is fine
 
-        GravityAxisAlignedBB gBB = (GravityAxisAlignedBB)bb;
+        GravityAxisAlignedBB gBB = (GravityAxisAlignedBB) bb;
         Vec3d origin = gBB.offset(-playerWithGravity.width * 0.35, 0.5, playerWithGravity.width * 0.35).getOrigin();
         playerWithGravity.pushOutOfBlocks(origin.x, origin.y, origin.z);
         origin = gBB.offset(-playerWithGravity.width * 0.35, 0.5, -playerWithGravity.width * 0.35).getOrigin();
@@ -780,10 +724,11 @@ public class Hooks {
      * so that calculateXOffset is called on the GravityAxisAlignedBB with the AxisAlignedBB as the argument instead, such
      * that the returned value is the relative 'X' offset instead. If the GravityAxisAlignedBB's direction is DOWN, the
      * value returned will be the same as if the original Mojang method was called
+     *
      * @param instance The AxisAlignedBB that is usually the instance
-     * @param other The AxisAlignedBB that is usually one of the arguments for calculateYOffset, this will pretty much
-     *              always be a GravityAxisAlignedBB
-     * @param offset If offset is closer to zero than the X offset between the bounding boxes, then it is returned instead
+     * @param other    The AxisAlignedBB that is usually one of the arguments for calculateYOffset, this will pretty much
+     *                 always be a GravityAxisAlignedBB
+     * @param offset   If offset is closer to zero than the X offset between the bounding boxes, then it is returned instead
      * @return The relative X offset between the two bounding boxes, or offset if it's closer to zero.
      */
     public static double reverseXOffset(AxisAlignedBB instance, AxisAlignedBB other, double offset) {
@@ -800,10 +745,11 @@ public class Hooks {
      * so that calculateYOffset is called on the GravityAxisAlignedBB with the AxisAlignedBB as the argument instead, such
      * that the returned value is the relative 'Y' offset instead. If the GravityAxisAlignedBB's direction is DOWN, the
      * value returned will be the same as if the original Mojang method was called
+     *
      * @param instance The AxisAlignedBB that is usually the instance
-     * @param other The AxisAlignedBB that is usually one of the arguments for calculateYOffset, this will pretty much
-     *              always be a GravityAxisAlignedBB
-     * @param offset If offset is closer to zero than the Y offset between the bounding boxes, then it is returned instead
+     * @param other    The AxisAlignedBB that is usually one of the arguments for calculateYOffset, this will pretty much
+     *                 always be a GravityAxisAlignedBB
+     * @param offset   If offset is closer to zero than the Y offset between the bounding boxes, then it is returned instead
      * @return The relative Y offset between the two bounding boxes, or offset if it's closer to zero.
      */
     public static double reverseYOffset(AxisAlignedBB instance, AxisAlignedBB other, double offset) {
@@ -820,10 +766,11 @@ public class Hooks {
      * so that calculateXOffset is called on the GravityAxisAlignedBB with the AxisAlignedBB as the argument instead, such
      * that the returned value is the relative 'Z' offset instead. If the GravityAxisAlignedBB's direction is DOWN, the
      * value returned will be the same as if the original Mojang method was called
+     *
      * @param instance The AxisAlignedBB that is usually the instance
-     * @param other The AxisAlignedBB that is usually one of the arguments for calculateYOffset, this will pretty much
-     *              always be a GravityAxisAlignedBB
-     * @param offset If offset is closer to zero than the Z offset between the bounding boxes, then it is returned instead
+     * @param other    The AxisAlignedBB that is usually one of the arguments for calculateYOffset, this will pretty much
+     *                 always be a GravityAxisAlignedBB
+     * @param offset   If offset is closer to zero than the Z offset between the bounding boxes, then it is returned instead
      * @return The relative Z offset between the two bounding boxes, or offset if it's closer to zero.
      */
     public static double reverseZOffset(AxisAlignedBB instance, AxisAlignedBB other, double offset) {
@@ -836,8 +783,7 @@ public class Hooks {
     @SideOnly(Side.CLIENT)
     public static boolean isHeadspaceFree(EntityPlayerSP playerSP, BlockPos pos, int height) {
         EnumGravityDirection gravityDirection = API.getGravityDirection(playerSP);
-        for (int y = 0; y < height; y++)
-        {
+        for (int y = 0; y < height; y++) {
             double[] d = gravityDirection.adjustXYZValues(0, y, 0);
             if (!isOpenBlockSpace(playerSP, pos.add(d[0], d[1], d[2]))) return false;
         }
@@ -852,19 +798,19 @@ public class Hooks {
 
     public static void makeMotionAbsolute(Entity entity) {
         if (entity instanceof EntityPlayerWithGravity) {
-            ((EntityPlayerWithGravity)entity).makeMotionAbsolute();
+            ((EntityPlayerWithGravity) entity).makeMotionAbsolute();
         }
     }
 
     public static void makeMotionRelative(Entity entity) {
         if (entity instanceof EntityPlayerWithGravity) {
-            ((EntityPlayerWithGravity)entity).makeMotionRelative();
+            ((EntityPlayerWithGravity) entity).makeMotionRelative();
         }
     }
 
     public static void popMotionStack(Entity entity) {
         if (entity instanceof EntityPlayerWithGravity) {
-            ((EntityPlayerWithGravity)entity).popMotionStack();
+            ((EntityPlayerWithGravity) entity).popMotionStack();
         }
     }
 
@@ -878,26 +824,26 @@ public class Hooks {
 
     public static void makeRotationAbsolute(Entity entity) {
         if (entity instanceof EntityPlayerWithGravity) {
-            ((EntityPlayerWithGravity)entity).makeRotationAbsolute();
+            ((EntityPlayerWithGravity) entity).makeRotationAbsolute();
         }
     }
 
     public static void makeRotationRelative(Entity entity) {
         if (entity instanceof EntityPlayerWithGravity) {
-            ((EntityPlayerWithGravity)entity).makeRotationRelative();
+            ((EntityPlayerWithGravity) entity).makeRotationRelative();
         }
     }
 
     public static void popRotationStack(Entity entity) {
         if (entity instanceof EntityPlayerWithGravity) {
-            ((EntityPlayerWithGravity)entity).popRotationStack();
+            ((EntityPlayerWithGravity) entity).popRotationStack();
         }
     }
 
     public static void setRelativeMotionX(Entity entity, double value) {
         AxisAlignedBB entityBoundingBox = entity.getEntityBoundingBox();
         if (entityBoundingBox instanceof GravityAxisAlignedBB) {
-            GravityAxisAlignedBB gBB = (GravityAxisAlignedBB)entityBoundingBox;
+            GravityAxisAlignedBB gBB = (GravityAxisAlignedBB) entityBoundingBox;
             EnumGravityDirection direction = gBB.getDirection();
 
             double[] doubles = direction.getInverseAdjustmentFromDOWNDirection().adjustXYZValues(entity.motionX, entity.motionY, entity.motionZ);
@@ -908,8 +854,7 @@ public class Hooks {
             entity.motionX = doubles[0];
             entity.motionY = doubles[1];
             entity.motionZ = doubles[2];
-        }
-        else {
+        } else {
             entity.motionX = value;
         }
     }
@@ -917,7 +862,7 @@ public class Hooks {
     public static void setRelativeMotionY(Entity entity, double value) {
         AxisAlignedBB entityBoundingBox = entity.getEntityBoundingBox();
         if (entityBoundingBox instanceof GravityAxisAlignedBB) {
-            GravityAxisAlignedBB gBB = (GravityAxisAlignedBB)entityBoundingBox;
+            GravityAxisAlignedBB gBB = (GravityAxisAlignedBB) entityBoundingBox;
             EnumGravityDirection direction = gBB.getDirection();
 
             double[] doubles = direction.getInverseAdjustmentFromDOWNDirection().adjustXYZValues(entity.motionX, entity.motionY, entity.motionZ);
@@ -928,8 +873,7 @@ public class Hooks {
             entity.motionX = doubles[0];
             entity.motionY = doubles[1];
             entity.motionZ = doubles[2];
-        }
-        else {
+        } else {
             entity.motionY = value;
         }
     }
@@ -937,7 +881,7 @@ public class Hooks {
     public static void setRelativeMotionZ(Entity entity, double value) {
         AxisAlignedBB entityBoundingBox = entity.getEntityBoundingBox();
         if (entityBoundingBox instanceof GravityAxisAlignedBB) {
-            GravityAxisAlignedBB gBB = (GravityAxisAlignedBB)entityBoundingBox;
+            GravityAxisAlignedBB gBB = (GravityAxisAlignedBB) entityBoundingBox;
             EnumGravityDirection direction = gBB.getDirection();
 
             double[] doubles = direction.getInverseAdjustmentFromDOWNDirection().adjustXYZValues(entity.motionX, entity.motionY, entity.motionZ);
@@ -948,8 +892,7 @@ public class Hooks {
             entity.motionX = doubles[0];
             entity.motionY = doubles[1];
             entity.motionZ = doubles[2];
-        }
-        else {
+        } else {
             entity.motionZ = value;
         }
     }
@@ -957,7 +900,7 @@ public class Hooks {
     @SideOnly(Side.CLIENT)
     public static void runAutoJump(double oldRelativeX, double oldRelativeZ, EntityPlayerWithGravity player) {
         double[] doubles = Hooks.inverseAdjustXYZ(player, player.posX, player.posY, player.posZ);
-        player.updateAutoJump((float)(doubles[0] - oldRelativeX), (float)(doubles[2] - oldRelativeZ));
+        player.updateAutoJump((float) (doubles[0] - oldRelativeX), (float) (doubles[2] - oldRelativeZ));
     }
 
     public static Vec3d inverseAdjustVec(Vec3d normal, Entity entity) {
@@ -966,13 +909,13 @@ public class Hooks {
             EnumGravityDirection direction = ((GravityAxisAlignedBB) bb).getDirection().getInverseAdjustmentFromDOWNDirection();
             normal = direction.adjustLookVec(normal);
             return new Vec3d(normal.x, normal.y, normal.z);
-        }
-        else {
+        } else {
             return normal;
         }
     }
 
     //TODO: If we work out which two input x, y and z values are needed in lookVecWithDoubleAccuracy, we can skip calculating one of the doubles
+
     /**
      * ASM Hook used in
      * BlockChest::onBlockPlacedBy (Mojang. Ahem. Entity::getHorizontalFacing.),
@@ -980,6 +923,7 @@ public class Hooks {
      * BlockFenceGate::onBlockActivated
      * SoundManager::setListener
      * ParticleManager::renderLitParticles
+     *
      * @param entity
      * @return
      */
@@ -993,14 +937,14 @@ public class Hooks {
 
         final double f = Math.cos(-yaw * (Math.PI / 180d) - Math.PI);
         final double f1 = Math.sin(-yaw * (Math.PI / 180d) - Math.PI);
-        final double f2 = -Math.cos(-pitch * (Math.PI/180d));
-        final double f3 = Math.sin(-pitch * (Math.PI/180d));
+        final double f2 = -Math.cos(-pitch * (Math.PI / 180d));
+        final double f3 = Math.sin(-pitch * (Math.PI / 180d));
 
-        Vec3d lookVecWithDoubleAccuracy =  new Vec3d(f1 * f2, f3, f * f2);
+        Vec3d lookVecWithDoubleAccuracy = new Vec3d(f1 * f2, f3, f * f2);
 
         Vec3d adjustedVec = Hooks.adjustVec(lookVecWithDoubleAccuracy, entity);
 //        Vec3d adjustedVec = Hooks.inverseAdjustVec(lookVecWithDoubleAccuracy, entity);
-        return (float)(Math.atan2(-adjustedVec.x, adjustedVec.z) * (180D/Math.PI));
+        return (float) (Math.atan2(-adjustedVec.x, adjustedVec.z) * (180D / Math.PI));
     }
 
     public static final int YAW = 0;
@@ -1013,14 +957,14 @@ public class Hooks {
 
         double f = Math.cos(-yawIn * (Math.PI / 180d) - Math.PI);
         double f1 = Math.sin(-yawIn * (Math.PI / 180d) - Math.PI);
-        double f2 = -Math.cos(-pitchIn * (Math.PI/180d));
-        double f3 = Math.sin(-pitchIn * (Math.PI/180d));
+        double f2 = -Math.cos(-pitchIn * (Math.PI / 180d));
+        double f3 = Math.sin(-pitchIn * (Math.PI / 180d));
 
-        Vec3d lookVecWithDoubleAccuracy =  new Vec3d(f1 * f2, f3, f * f2);
+        Vec3d lookVecWithDoubleAccuracy = new Vec3d(f1 * f2, f3, f * f2);
 
         Vec3d adjustedVec = Hooks.inverseAdjustVec(lookVecWithDoubleAccuracy, entity);
-        double yawOut = (Math.atan2(-adjustedVec.x, adjustedVec.z) * (180D/Math.PI));
-        double pitchOut = -(Math.asin(adjustedVec.y) * (180D/Math.PI));
+        double yawOut = (Math.atan2(-adjustedVec.x, adjustedVec.z) * (180D / Math.PI));
+        double pitchOut = -(Math.asin(adjustedVec.y) * (180D / Math.PI));
         return new double[]{yawOut, pitchOut};
     }
 
@@ -1031,19 +975,18 @@ public class Hooks {
 
         double f = Math.cos(-yawIn * (Math.PI / 180d) - Math.PI);
         double f1 = Math.sin(-yawIn * (Math.PI / 180d) - Math.PI);
-        double f2 = -Math.cos(-pitchIn * (Math.PI/180d));
-        double f3 = Math.sin(-pitchIn * (Math.PI/180d));
+        double f2 = -Math.cos(-pitchIn * (Math.PI / 180d));
+        double f3 = Math.sin(-pitchIn * (Math.PI / 180d));
 
-        Vec3d lookVecWithDoubleAccuracy =  new Vec3d(f1 * f2, f3, f * f2);
+        Vec3d lookVecWithDoubleAccuracy = new Vec3d(f1 * f2, f3, f * f2);
 
         Vec3d adjustedVec = Hooks.adjustVec(lookVecWithDoubleAccuracy, entity);
-        double yawOut = (Math.atan2(-adjustedVec.x, adjustedVec.z) * (180D/Math.PI));
-        double pitchOut = -(Math.asin(adjustedVec.y) * (180D/Math.PI));
+        double yawOut = (Math.atan2(-adjustedVec.x, adjustedVec.z) * (180D / Math.PI));
+        double pitchOut = -(Math.asin(adjustedVec.y) * (180D / Math.PI));
         return new double[]{yawOut, pitchOut};
     }
 
     /**
-     *
      * @param entity
      * @return
      */
@@ -1077,14 +1020,14 @@ public class Hooks {
 
         final double f = Math.cos(-yaw * (Math.PI / 180d) - Math.PI);
         final double f1 = Math.sin(-yaw * (Math.PI / 180d) - Math.PI);
-        final double f2 = -Math.cos(-pitch * (Math.PI/180d));
-        final double f3 = Math.sin(-pitch * (Math.PI/180d));
+        final double f2 = -Math.cos(-pitch * (Math.PI / 180d));
+        final double f3 = Math.sin(-pitch * (Math.PI / 180d));
 
-        Vec3d lookVecWithDoubleAccuracy =  new Vec3d(f1 * f2, f3, f * f2);
+        Vec3d lookVecWithDoubleAccuracy = new Vec3d(f1 * f2, f3, f * f2);
 
 //        Vec3d adjustedVec = Hooks.adjustVec(lookVecWithDoubleAccuracy, entity);
         Vec3d adjustedVec = Hooks.inverseAdjustVec(lookVecWithDoubleAccuracy, entity);
-        return (float)(Math.atan2(-adjustedVec.x, adjustedVec.z) * (180D/Math.PI));
+        return (float) (Math.atan2(-adjustedVec.x, adjustedVec.z) * (180D / Math.PI));
     }
 
     public static float getAbsoluteYaw(Entity entity) {
@@ -1097,22 +1040,23 @@ public class Hooks {
 
         final double f = Math.cos(-yaw * (Math.PI / 180d) - Math.PI);
         final double f1 = Math.sin(-yaw * (Math.PI / 180d) - Math.PI);
-        final double f2 = -Math.cos(-pitch * (Math.PI/180d));
-        final double f3 = Math.sin(-pitch * (Math.PI/180d));
+        final double f2 = -Math.cos(-pitch * (Math.PI / 180d));
+        final double f3 = Math.sin(-pitch * (Math.PI / 180d));
 
-        Vec3d lookVecWithDoubleAccuracy =  new Vec3d(f1 * f2, f3, f * f2);
+        Vec3d lookVecWithDoubleAccuracy = new Vec3d(f1 * f2, f3, f * f2);
 
         Vec3d adjustedVec = Hooks.adjustVec(lookVecWithDoubleAccuracy, entity);
 //        Vec3d adjustedVec = Hooks.inverseAdjustVec(lookVecWithDoubleAccuracy, entity);
-        return (float)(Math.atan2(-adjustedVec.x, adjustedVec.z) * (180D/Math.PI));
+        return (float) (Math.atan2(-adjustedVec.x, adjustedVec.z) * (180D / Math.PI));
     }
 
 
-
     //TODO: If we work out which input x, y and z value is needed in lookVecWithDoubleAccuracy, we can skip calculating two of the doubles
+
     /**
      * AMS Hook used in
      * ParticleManager::renderLitParticles
+     *
      * @param entity
      * @return
      */
@@ -1123,19 +1067,20 @@ public class Hooks {
 
         final double f = Math.cos(-yaw * (Math.PI / 180d) - Math.PI);
         final double f1 = Math.sin(-yaw * (Math.PI / 180d) - Math.PI);
-        final double f2 = -Math.cos(-pitch * (Math.PI/180d));
-        final double f3 = Math.sin(-pitch * (Math.PI/180d));
+        final double f2 = -Math.cos(-pitch * (Math.PI / 180d));
+        final double f3 = Math.sin(-pitch * (Math.PI / 180d));
 
-        Vec3d lookVecWithDoubleAccuracy =  new Vec3d(f1 * f2, f3, f * f2);
+        Vec3d lookVecWithDoubleAccuracy = new Vec3d(f1 * f2, f3, f * f2);
 
         Vec3d adjustedVec = Hooks.adjustVec(lookVecWithDoubleAccuracy, entity);
 //        Vec3d adjustedVec = Hooks.inverseAdjustVec(lookVecWithDoubleAccuracy, entity);
-        return (float)-(Math.asin(adjustedVec.y) * (180D/Math.PI));
+        return (float) -(Math.asin(adjustedVec.y) * (180D / Math.PI));
     }
 
     /**
      * ASM Hook use in
      * ParticleManager::renderLitParticles
+     *
      * @param entity
      * @return
      */
@@ -1146,13 +1091,13 @@ public class Hooks {
 
         final double f = Math.cos(-yaw * (Math.PI / 180d) - Math.PI);
         final double f1 = Math.sin(-yaw * (Math.PI / 180d) - Math.PI);
-        final double f2 = -Math.cos(-pitch * (Math.PI/180d));
-        final double f3 = Math.sin(-pitch * (Math.PI/180d));
+        final double f2 = -Math.cos(-pitch * (Math.PI / 180d));
+        final double f3 = Math.sin(-pitch * (Math.PI / 180d));
 
-        Vec3d lookVecWithDoubleAccuracy =  new Vec3d(f1 * f2, f3, f * f2);
+        Vec3d lookVecWithDoubleAccuracy = new Vec3d(f1 * f2, f3, f * f2);
         Vec3d adjustedVec = Hooks.adjustVec(lookVecWithDoubleAccuracy, entity);
 //        Vec3d adjustedVec = Hooks.inverseAdjustVec(lookVecWithDoubleAccuracy, entity);
-        return (float)(Math.atan2(-adjustedVec.x, adjustedVec.z) * (180D/Math.PI));
+        return (float) (Math.atan2(-adjustedVec.x, adjustedVec.z) * (180D / Math.PI));
     }
 
     public static float getRelativePrevYaw(Entity entity) {
@@ -1165,19 +1110,21 @@ public class Hooks {
 
         final double f = Math.cos(-yaw * (Math.PI / 180d) - Math.PI);
         final double f1 = Math.sin(-yaw * (Math.PI / 180d) - Math.PI);
-        final double f2 = -Math.cos(-pitch * (Math.PI/180d));
-        final double f3 = Math.sin(-pitch * (Math.PI/180d));
+        final double f2 = -Math.cos(-pitch * (Math.PI / 180d));
+        final double f3 = Math.sin(-pitch * (Math.PI / 180d));
 
-        Vec3d lookVecWithDoubleAccuracy =  new Vec3d(f1 * f2, f3, f * f2);
+        Vec3d lookVecWithDoubleAccuracy = new Vec3d(f1 * f2, f3, f * f2);
 //        Vec3d adjustedVec = Hooks.adjustVec(lookVecWithDoubleAccuracy, entity);
         Vec3d adjustedVec = Hooks.inverseAdjustVec(lookVecWithDoubleAccuracy, entity);
-        return (float)(Math.atan2(-adjustedVec.x, adjustedVec.z) * (180D/Math.PI));
+        return (float) (Math.atan2(-adjustedVec.x, adjustedVec.z) * (180D / Math.PI));
     }
 
     //TODO: If we work out which input x, y and z value is needed in lookVecWithDoubleAccuracy, we can skip calculating two of the doubles
+
     /**
      * AMS Hook used in
      * ParticleManager::renderLitParticles
+     *
      * @param entity
      * @return
      */
@@ -1188,14 +1135,14 @@ public class Hooks {
 
         final double f = Math.cos(-yaw * (Math.PI / 180d) - Math.PI);
         final double f1 = Math.sin(-yaw * (Math.PI / 180d) - Math.PI);
-        final double f2 = -Math.cos(-pitch * (Math.PI/180d));
-        final double f3 = Math.sin(-pitch * (Math.PI/180d));
+        final double f2 = -Math.cos(-pitch * (Math.PI / 180d));
+        final double f3 = Math.sin(-pitch * (Math.PI / 180d));
 
-        Vec3d lookVecWithDoubleAccuracy =  new Vec3d(f1 * f2, f3, f * f2);
+        Vec3d lookVecWithDoubleAccuracy = new Vec3d(f1 * f2, f3, f * f2);
 
         Vec3d adjustedVec = Hooks.adjustVec(lookVecWithDoubleAccuracy, entity);
 //        Vec3d adjustedVec = Hooks.inverseAdjustVec(lookVecWithDoubleAccuracy, entity);
-        return (float)-(Math.asin(adjustedVec.y) * (180D/Math.PI));
+        return (float) -(Math.asin(adjustedVec.y) * (180D / Math.PI));
     }
 
     public static float getCosOfAngleBetweenVecsOnRelativeXYPlane(Entity entity, Vec3d normal1, Vec3d normal2) {
@@ -1205,11 +1152,12 @@ public class Hooks {
             normal1 = direction.adjustLookVec(normal1);
             normal2 = direction.adjustLookVec(normal2);
         }
-        return (float)(normal1.x * normal2.x + normal1.z * normal2.z);
+        return (float) (normal1.x * normal2.x + normal1.z * normal2.z);
     }
 
     /**
      * ASM Hook used in Entity::moveEntity
+     *
      * @param entity
      * @param x
      * @param y
@@ -1220,9 +1168,8 @@ public class Hooks {
         AxisAlignedBB entityBoundingBox = entity.getEntityBoundingBox();
         if (entityBoundingBox instanceof GravityAxisAlignedBB) {
             return ((GravityAxisAlignedBB) entityBoundingBox).getDirection().getInverseAdjustmentFromDOWNDirection().adjustXYZValues(x, y, z);
-        }
-        else {
-            return new double[]{x,y,z};
+        } else {
+            return new double[]{x, y, z};
         }
     }
 
@@ -1238,6 +1185,7 @@ public class Hooks {
 
     /**
      * ASM Hook used in RenderGlobal::getViewVector, I think this might have something to do with terrain culling, not sure
+     *
      * @param normal
      * @param entity
      * @return
@@ -1246,11 +1194,12 @@ public class Hooks {
     public static Vector3f adjustViewVector(Vector3f normal, Entity entity) {
         double[] doubles = Hooks.adjustXYZ(entity, normal.getX(), normal.getY(), normal.getZ());
 
-        return new Vector3f((float)doubles[0], (float)doubles[1], (float)doubles[2]);
+        return new Vector3f((float) doubles[0], (float) doubles[1], (float) doubles[2]);
     }
 
     /**
      * ASM Hook, to possibly be used in Particle:renderParticle
+     *
      * @param vecs
      * @param entity
      * @return
@@ -1270,6 +1219,7 @@ public class Hooks {
 
     /**
      * ASM Hook used in SoundManager::setListener
+     *
      * @param soundSystem
      * @param lookX
      * @param lookY
@@ -1286,36 +1236,41 @@ public class Hooks {
             double[] d = gravityDirection.adjustXYZValues(lookX, lookY, lookZ);
             double[] d1 = gravityDirection.adjustXYZValues(upX, upY, upZ);
 
-            soundSystem.setListenerOrientation((float)d[0], (float)d[1], (float)d[2], (float)d1[0], (float)d1[1], (float)d1[2]);
+            soundSystem.setListenerOrientation((float) d[0], (float) d[1], (float) d[2], (float) d1[0], (float) d1[1], (float) d1[2]);
         } else {
             soundSystem.setListenerOrientation(lookX, lookY, lookZ, upX, upY, upZ);
         }
     }
 
     //TODO: Add to transformer
+
     /**
      * ASM Hook used in EntityLivingBase::moveEntityWithHeading
+     *
      * @param entity
      */
     public static void makePositionAbsolute(EntityLivingBase entity) {
         if (entity instanceof EntityPlayerWithGravity) {
-            ((EntityPlayerWithGravity)entity).makePositionAbsolute();
+            ((EntityPlayerWithGravity) entity).makePositionAbsolute();
         }
     }
 
     //TODO: Add to transformer
+
     /**
      * ASM Hook used in EntityLivingBase::moveEntityWithHeading
+     *
      * @param entity
      */
     public static void makePositionRelative(EntityLivingBase entity) {
         if (entity instanceof EntityPlayerWithGravity) {
-            ((EntityPlayerWithGravity)entity).makePositionRelative();
+            ((EntityPlayerWithGravity) entity).makePositionRelative();
         }
     }
 
     /**
      * ASM Hook used in EntityPlayerSP::func_189810_i (auto-jump method)
+     *
      * @param other
      * @param entity
      * @return
@@ -1326,6 +1281,7 @@ public class Hooks {
 
     /**
      * ASM Hook used in EntityPlayerSP::func_189810_i
+     *
      * @param other
      * @param entity
      * @return
@@ -1333,7 +1289,7 @@ public class Hooks {
     public static int getRelativeYOfBlockPos(BlockPos other, Entity entity) {
         AxisAlignedBB entityBoundingBox = entity.getEntityBoundingBox();
         if (entityBoundingBox instanceof GravityAxisAlignedBB) {
-            switch (((GravityAxisAlignedBB)entityBoundingBox).getDirection()) {
+            switch (((GravityAxisAlignedBB) entityBoundingBox).getDirection()) {
                 case UP:
                     return -other.getY();
                 case DOWN:
@@ -1355,6 +1311,7 @@ public class Hooks {
 
     /**
      * ASM Hook used in EntityPlayerSP::func_189810_i
+     *
      * @param other
      * @param count
      * @param entity
@@ -1366,6 +1323,7 @@ public class Hooks {
 
     /**
      * ASM Hook used in EntityPlayerSP::func_189810_i
+     *
      * @param other
      * @param entity
      * @return
@@ -1373,7 +1331,7 @@ public class Hooks {
     public static double getRelativeTopOfBB(AxisAlignedBB other, Entity entity) {
         AxisAlignedBB bb = entity.getEntityBoundingBox();
         if (bb instanceof GravityAxisAlignedBB) {
-            switch(((GravityAxisAlignedBB) bb).getDirection()){
+            switch (((GravityAxisAlignedBB) bb).getDirection()) {
                 case UP:
                     return -other.minY;
                 case DOWN:
@@ -1400,8 +1358,7 @@ public class Hooks {
             Vec3d origin = ((GravityAxisAlignedBB) entityBoundingBox).getOrigin();
             ((WorldServer) entity.world).spawnParticle(EnumParticleTypes.BLOCK_DUST, origin.x, origin.y, origin.z, i, 0.0D, 0.0D, 0.0D,
                     0.15000000596046448D, Block.getStateId(blockState));
-        }
-        else {
+        } else {
             ((WorldServer) entity.world).spawnParticle(EnumParticleTypes.BLOCK_DUST, entity.posX, entity.posY, entity.posZ, i, 0.0D, 0.0D, 0.0D,
                     0.15000000596046448D, Block.getStateId(blockState));
         }
@@ -1410,6 +1367,7 @@ public class Hooks {
     /**
      * ASM Hook used in NetHandlerPlayServer::processPlayer
      * as a replacement for "this.playerEntity.handleFalling(this.playerEntity.posY - d3, packetIn.isOnGround());"
+     *
      * @param player
      * @param oldXPos
      * @param oldYPos
@@ -1423,8 +1381,7 @@ public class Hooks {
             double[] relativePlayerPos = direction.adjustXYZValues(player.posX, player.posY, player.posZ);
             double[] relativeOldPos = direction.adjustXYZValues(oldXPos, oldYPos, oldZPos);
             return relativePlayerPos[1] - relativeOldPos[1];
-        }
-        else {
+        } else {
             return player.posY - oldYPos;
         }
     }
@@ -1433,8 +1390,7 @@ public class Hooks {
         AxisAlignedBB aabb = entity.getEntityBoundingBox();
         if (aabb instanceof GravityAxisAlignedBB) {
             return ((GravityAxisAlignedBB) aabb).toVanilla();
-        }
-        else {
+        } else {
             return aabb;
         }
     }
@@ -1450,6 +1406,7 @@ public class Hooks {
     /**
      * Hook used in NetHandlerPlayServer::processPlayer
      * Takes 3 changes in player position and sets whichever value corresponds to the player's relative y direction, to zero
+     *
      * @param netHandlerPlayServer
      * @param inX
      * @param inY
@@ -1469,164 +1426,15 @@ public class Hooks {
     }
 
 
-
-
-    //
-    //
-    //
-    //
-    //
-    //
-    //
-    //
-    //
-    //
-    // UNUSED HOOKS
-    //
-    //
-    //
-    //
-    //
-    //
-    //
-    //
-    //
-    static AxisAlignedBB getGravityAdjustedHitbox(EntityPlayer player, float width, float height) {
-        return GravityDirectionCapability.getGravityDirection(player).getGravityAdjustedAABB(player, width, height);
-    }
-
     static AxisAlignedBB getGravityAdjustedHitbox(EntityPlayer player) {
         return GravityDirectionCapability.getGravityDirection(player).getGravityAdjustedAABB(player, player.width, player.height);
-    }
-
-    static Vec3d adjustLook(EntityPlayer player, Vec3d normal) {
-        return API.getGravityDirection(player).adjustLookVec(normal);
     }
 
     static AxisAlignedBB replaceWithGravityAware(EntityPlayer player, AxisAlignedBB old) {
         if (old instanceof GravityAxisAlignedBB) {
             return old;
-        }
-        else {
+        } else {
             return GravityDirectionCapability.newGravityAxisAligned(player, old);
         }
     }
-
-    static Vec3d getPositionEyes(EntityPlayer player, float partialTicks) {
-//        EnumGravityDirection direction = API.getGravityDirection(player);
-//        double[] doubles = direction.adjustXYZValues(0, API.getStandardEyeHeight(player), 0);
-        if (partialTicks == 1.0F)
-        {
-            return new Vec3d(player.posX, player.posY + player.getEyeHeight(), player.posZ);
-        }
-        else
-        {
-            double d0 = player.prevPosX + (player.posX - player.prevPosX) * (double)partialTicks;// + doubles[0];
-            double d1 = player.prevPosY + (player.posY - player.prevPosY) * (double)partialTicks + player.getEyeHeight();// + doubles[1];
-            double d2 = player.prevPosZ + (player.posZ - player.prevPosZ) * (double)partialTicks;// + doubles[2];
-            return new Vec3d(d0, d1, d2);
-        }
-    }
-
-    static boolean resetPositionToBB(EntityPlayer player) {
-        AxisAlignedBB axisalignedbb = player.getEntityBoundingBox();
-        if (axisalignedbb instanceof GravityAxisAlignedBB) {
-            GravityAxisAlignedBB g_AxisAlignedBB = (GravityAxisAlignedBB)axisalignedbb;
-//            float eyeHeight = player.getEyeHeight();
-//            double[] doubles = g_AxisAlignedBB.getDirection().adjustXYZValues(0, (double) eyeHeight, 0);
-            Vec3d vec3d = g_AxisAlignedBB.getOrigin();//.addVector(doubles[0], doubles[1], doubles[2]);
-            EnumGravityDirection direction = g_AxisAlignedBB.getDirection();
-            switch (direction) {
-                case UP:
-                case DOWN:
-                    break;
-                case SOUTH:
-                case WEST:
-                case NORTH:
-                case EAST:
-                    float eyeHeight = API.getStandardEyeHeight(player);
-                    double[] doubles = direction.adjustXYZValues(0, (double)eyeHeight, 0);
-                    vec3d = vec3d.addVector(doubles[0], doubles[1], doubles[2]);
-                    break;
-            }
-            player.posX = vec3d.x;
-            player.posY = vec3d.y;
-            player.posZ = vec3d.z;
-            return true;
-        }
-        Transformer.logger.warn("Player BB is not GravityAxisAlignedBB");
-        return false;
-//        switch (API.getGravityDirection(player)) {
-//            case DOWN:
-//                player.posX = (axisalignedbb.minX + axisalignedbb.maxX) / 2.0D;
-//                player.posY = axisalignedbb.minY;
-//                player.posZ = (axisalignedbb.minZ + axisalignedbb.maxZ) / 2.0D;
-//                break;
-//            case UP:
-//                player.posX = (axisalignedbb.minX + axisalignedbb.maxX) / 2.0D;
-//                player.posY = axisalignedbb.maxY;
-//                player.posZ = (axisalignedbb.minZ + axisalignedbb.maxZ) / 2.0D;
-//                break;
-//            case NORTH:
-//                player.posX = (axisalignedbb.minX + axisalignedbb.maxX) / 2.0D;
-//                player.posY = (axisalignedbb.minY + axisalignedbb.maxY) / 2.0D;
-//                player.posZ = axisalignedbb.minZ;
-//                break;
-//            case EAST:
-//                player.posX = axisalignedbb.maxX;
-//                player.posY = (axisalignedbb.minY + axisalignedbb.maxY) / 2.0D;
-//                player.posZ = (axisalignedbb.minZ + axisalignedbb.maxZ) / 2.0D;
-//                break;
-//            case SOUTH:
-//                player.posX = (axisalignedbb.minX + axisalignedbb.maxX) / 2.0D;
-//                player.posY = (axisalignedbb.minY + axisalignedbb.maxY) / 2.0D;
-//                player.posZ = axisalignedbb.maxZ;
-//                break;
-//            case WEST:
-//                player.posX = axisalignedbb.minX;
-//                player.posY = (axisalignedbb.minY + axisalignedbb.maxY) / 2.0D;
-//                player.posZ = (axisalignedbb.minZ + axisalignedbb.maxZ) / 2.0D;
-//                break;
-//
-//        }
-    }
-
-//    static void updateSizePseudoOverride(EntityPlayer player) {
-//        float f;
-//        float f1;
-//
-//        if (player.isElytraFlying())
-//        {
-//            f = 0.6F;
-//            f1 = 0.6F;
-//        }
-//        else if (player.isPlayerSleeping())
-//        {
-//            f = 0.2F;
-//            f1 = 0.2F;
-//        }
-//        else if (player.isSneaking())
-//        {
-//            f = 0.6F;
-//            f1 = 1.65F;
-//        }
-//        else
-//        {
-//            f = 0.6F;
-//            f1 = 1.8F;
-//        }
-//
-//        if (f != player.width || f1 != player.height)
-//        {
-//            AxisAlignedBB axisalignedbb = Hooks.getGravityAdjustedHitbox(player, f, f1);
-//
-//
-//            if (!player.worldObj.collidesWithAnyBlock(axisalignedbb))
-//            {
-//                EntityPlayer_setSize_Handle.invoke(player, f, f1);
-//                player.setSize(f, f1);
-//            }
-//        }
-//        net.minecraftforge.fml.common.FMLCommonHandler.instance().onPlayerPostTick(player);
-//    }
 }
