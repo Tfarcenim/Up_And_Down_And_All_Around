@@ -9,6 +9,7 @@ import net.minecraftforge.fml.common.registry.EntityRegistry;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import net.minecraftforge.registries.IForgeRegistry;
+import tfar.gravitymod.GravityMod;
 
 /**
  * Doesn't need to be an interface, unlike IModItem/IModBlock, since
@@ -20,7 +21,7 @@ public interface IModEntityClassWrapper<T extends Entity> extends IModObject, IM
     default void register(IForgeRegistry<EntityEntry> registry) {
         // Technically EntityRegistry.registerModEntity handles the actual registration if it's not already registered, but maybe that will change in the future
         String name = this.getModObjectName();
-        ResourceLocation resourceLocation = new ResourceLocation(this.getModID(), name);
+        ResourceLocation resourceLocation = new ResourceLocation(GravityMod.MOD_ID, name);
         EntityEntry entityEntry = new EntityEntry(this.getEntityClass(), name).setRegistryName(resourceLocation);
         registry.register(entityEntry);
 
@@ -29,7 +30,7 @@ public interface IModEntityClassWrapper<T extends Entity> extends IModObject, IM
                 this.getEntityClass(),
                 name,
                 this.getUniqueID(),
-                this.getModInstance(),
+                GravityMod.INSTANCE,
                 this.getTrackingRange(),
                 this.getUpdateFrequency(),
                 this.sendsVelocityUpdates());

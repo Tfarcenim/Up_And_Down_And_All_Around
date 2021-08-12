@@ -1,6 +1,5 @@
 package tfar.mystlib.setup.singletons;
 
-import net.minecraft.creativetab.CreativeTabs;
 import tfar.mystlib.setup.IFMLStaged;
 
 /**
@@ -17,18 +16,4 @@ public interface IModObject extends IFMLStaged {
 //    default String getName() {
 //        return this.getClass().getSimpleName().toLowerCase(Locale.ENGLISH);
 //    }
-
-    /**
-     * Get the String ID of your mod
-     *
-     * @return
-     */
-    String getModID();
-
-    /**
-     * Get your mod's instance. Use @Mod.Instance(&lt;modID&gt;) on a field and return that field in this method.
-     *
-     * @return
-     */
-    Object getModInstance();
 }

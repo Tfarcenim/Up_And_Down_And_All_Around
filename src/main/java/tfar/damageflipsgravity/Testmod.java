@@ -25,7 +25,7 @@ public class Testmod {
 
     @SubscribeEvent
     public static void tick(TickEvent.PlayerTickEvent e) {
-        if (!e.player.world.isRemote && e.phase == TickEvent.Phase.END) {
+        if (!e.player.world.isRemote && e.phase == TickEvent.Phase.END && false) {
             if (flipped) {
                 API.setPlayerGravity(EnumGravityDirection.fromEnumFacing(EnumFacing.UP), (EntityPlayerMP) e.player, GravityPriorityRegistry.GRAVITY_ANCHOR + 1);
             } else {
