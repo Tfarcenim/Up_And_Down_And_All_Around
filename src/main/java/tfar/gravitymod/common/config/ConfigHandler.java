@@ -34,23 +34,10 @@ public class ConfigHandler {
     public static int numNormalGravityEnablersRequiredForNormalGravity;
     public static int numNormalEnablersWeakEnablersCountsAs;
 
-    public static final String CATEGORY_GRAVITON_PEARL = newCategory("gravitonpearl");
-    public static double gravitonPearlRange;
-    public static float baseGravitonPearlStrength;
-
-    public static final String CATEGORY_GRAVITY_GENERATOR = newCategory("gravitygenerator");
-    public static int gravityGeneratorMaxHeight; // Min value 1
-    public static int gravityGeneratorMaxRadius; // Width = (x*2 + 1) // Min value 0
-    public static int gravityGeneratorMaxVolume;
-    public static double gravityGeneratorMaxDistance;
-
     public static final String CATEGORY_CLIENT = newCategory("client");
     public static double transitionAnimationRotationSpeed;
     public static double transitionAnimationRotationLength;
     public static double transitionAnimationRotationEnd;
-
-    public static final String CATEGORY_SERVER = newCategory("server");
-    public static boolean kickPlayersWithMismatchingModCompatHashes;
 
     public static Configuration config;
     private static List<String> propertyOrder;
@@ -151,39 +138,12 @@ public class ConfigHandler {
                 "This makes more sense thematically to be greater than 1, but '1' or '0' will still work.");
         numNormalEnablersWeakEnablersCountsAs = process().getInt();
 
-        nextCategory(CATEGORY_GRAVITON_PEARL);
-
-        prop = config.get(category, "gravitonPearlRange", 7.5d, "Range of the Graviton Pearl's push and pull effect", 0d, 20d);
-        gravitonPearlRange = process().getDouble();
-
-        prop = config.get(category, "baseGravitonPearlStrength", 0.05d, "Set the strength of the Graviton Pearl's push and pull effect." +
-                "\nPulled items and pushed projectiles are affected more than other entities", 0d, 1d);
-        baseGravitonPearlStrength = (float)process().getDouble();
-
-        nextCategory(CATEGORY_GRAVITY_GENERATOR);
-        prop = config.get(category, "maxHeight", 11, "The maximum relative Y height of gravity fields created by gravity generators, in blocks", 1, 255);
-        gravityGeneratorMaxHeight = process().getInt();
-
-        prop = config.get(category, "maxRadius", 5, "The maximum relative X/Z radius of gravity fields created by gravity generators, in blocks.\nThe maximum" +
-                " width is equal to double this value, plus one.", 0, 127);
-        gravityGeneratorMaxRadius = process().getInt();
-        gravityGeneratorMaxVolume = gravityGeneratorMaxHeight * (2 * gravityGeneratorMaxRadius + 1) * (2 * gravityGeneratorMaxRadius + 1);
-        gravityGeneratorMaxDistance =
-                (gravityGeneratorMaxRadius + 0.5) * (gravityGeneratorMaxRadius + 0.5)
-                        + (gravityGeneratorMaxRadius + 0.5) * (gravityGeneratorMaxRadius + 0.5)
-                        + gravityGeneratorMaxHeight * gravityGeneratorMaxHeight;
-
         nextCategory(CATEGORY_CLIENT, false);
         prop = config.get(category, "rotationAnimationSpeed", 1.5d, "Animation speed for gravity transition." +
                 "Takes 1 second divided by this config value.", 1d, 1000d);
         transitionAnimationRotationSpeed = process().getDouble();
         transitionAnimationRotationLength = GravityDirectionCapability.DEFAULT_TIMEOUT / transitionAnimationRotationSpeed;
         transitionAnimationRotationEnd = GravityDirectionCapability.DEFAULT_TIMEOUT - transitionAnimationRotationLength;
-
-        nextCategory(CATEGORY_SERVER);
-        prop = config.get(category, "kickPlayersWithMismatchingModCompat", false, "True if the server should kick players that have different mod " +
-                "compatibility settings.");
-        kickPlayersWithMismatchingModCompatHashes = process().getBoolean();
 
         // Needed to set the ordering of the current category
         nextCategory(null);

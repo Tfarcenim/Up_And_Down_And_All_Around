@@ -44,62 +44,6 @@ public class ItemStackUseListener {
         onPlayerStoppedUsing_itemToPrePostModifier.clear();
     }
 
-    public static void addPrePostModifier(
-            ResourceLocation itemRegistryName,
-            IPrePostModifier<EntityPlayerWithGravity> prePostModifier,
-            EnumItemStackUseCompat[] listenersSet,
-            int... damageValues) {
-
-        Objects.requireNonNull(listenersSet, String.format("[UpAndDownAndAllAround] Failed to register PrePostModifier for %s. ListenersSet cannot be null", prePostModifier));
-
-        if (listenersSet.length == 0) {
-            throw new IllegalArgumentException(String.format("[UpAndDownAndAllAround] Failed to register PrePostModifier for %s. ListenersSet cannot be empty", prePostModifier));
-        }
-
-        Item item = ForgeRegistries.ITEMS.getValue(Objects.requireNonNull(itemRegistryName, "itemRegistryName cannot be null"));
-        if (item == null) {
-            GravityMod.logWarning("Failed to register PrePostModifier for %s. The item could not be found", itemRegistryName);
-            return;
-        }
-
-        Objects.requireNonNull(prePostModifier, String.format("[UpAndDownAndAllAround] Failed to register PrePostModifier for %s. PrePostModifier cannot be null", prePostModifier));
-        if (damageValues == null || damageValues.length == 0) {
-            damageValues = new int[]{OreDictionary.WILDCARD_VALUE};
-        }
-        for (EnumItemStackUseCompat itemUseMethod : listenersSet) {
-            Objects.requireNonNull(itemUseMethod, String.format("[UpAndDownAndAllAround] Failed to register PrePostModifier for %s. ListenersSet cannot be null", prePostModifier));
-            TreeMap<Item, TIntObjectHashMap<IPrePostModifier<EntityPlayerWithGravity>>> map;
-            String mapName;
-            switch (itemUseMethod) {
-                case BLOCK:
-                    mapName = "onItemUse(BLOCK)";
-                    map = onItemUse_itemToPrePostModifier;
-                    break;
-                case GENERAL:
-                    mapName = "onItemRightClick(GENERAL)";
-                    map = onItemRightClick_itemToPrePostModifier;
-                    break;
-                default://case STOPPED_USING:
-                    mapName = "onPlayerStoppedUsing(STOPPED_USING)";
-                    map = onPlayerStoppedUsing_itemToPrePostModifier;
-                    break;
-            }
-            for (int damageValue : damageValues) {
-                TIntObjectHashMap<IPrePostModifier<EntityPlayerWithGravity>> damageToPrePostMap = map.get(item);
-                if (damageToPrePostMap == null) {
-                    damageToPrePostMap = new TIntObjectHashMap<>();
-                    map.put(item, damageToPrePostMap);
-                }
-                if (damageToPrePostMap.containsKey(damageValue)) {
-                    GravityMod.logWarning("A mapping for %s with damage value %s already exists in %s. Proceeding to overwrite it.",
-                            itemRegistryName,
-                            damageValue, mapName);
-                }
-                damageToPrePostMap.put(damageValue, prePostModifier);
-            }
-        }
-    }
-
     public static int getHashCode() {
         return hashCode;
     }
@@ -124,14 +68,12 @@ public class ItemStackUseListener {
             else {
                 int[] keysArray = prePostMap.keySet().toArray();
                 Arrays.sort(keysArray);
-                for (int nextKeyIndex = 0; nextKeyIndex < keysArray.length; nextKeyIndex++) {
-                    int nextKey = keysArray[nextKeyIndex];
+                for (int nextKey : keysArray) {
                     hash = 31 * hash + nextKey;
                     IPrePostModifier<EntityPlayerWithGravity> prePostModifier = prePostMap.get(nextKey);
                     if (prePostModifier == null) {
                         hash = 31 * hash;
-                    }
-                    else {
+                    } else {
                         hash = 31 * hash + prePostModifier.getUniqueID();
                     }
                 }
