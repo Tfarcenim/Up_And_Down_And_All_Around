@@ -8,13 +8,11 @@ import net.minecraft.client.settings.KeyBinding;
 import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.Entity;
-import net.minecraft.entity.item.EntityItem;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.item.EnumRarity;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.NonNullList;
-import net.minecraft.util.ResourceLocation;
 import net.minecraft.world.World;
 import net.minecraftforge.client.model.ModelLoader;
 import net.minecraftforge.fml.relauncher.Side;
@@ -23,10 +21,8 @@ import net.minecraftforge.registries.IForgeRegistry;
 import tfar.gravitymod.GravityMod;
 import tfar.gravitymod.api.API;
 import tfar.gravitymod.api.EnumGravityDirection;
-import tfar.gravitymod.api.ITickOnMouseCursor;
 import tfar.gravitymod.common.registries.GravityPriorityRegistry;
 import tfar.gravitymod.common.registries.IGravityModItem;
-import tfar.gravitymod.common.registries.ModItems;
 import tfar.mystlib.util.KeyBindingUtil;
 
 import javax.annotation.Nullable;
@@ -36,7 +32,7 @@ import java.util.Locale;
 /**
  * Created by Mysteryem on 2016-11-03.
  */
-public class ItemGravityAnchor extends Item implements ITickOnMouseCursor, IGravityModItem<ItemGravityAnchor> {
+public class ItemGravityAnchor extends Item implements IGravityModItem<ItemGravityAnchor> {
 
     // From EntityItem::onUpdate
     private static final double GRAVITY_DOWNWARDS_MOTION = 0.04D;

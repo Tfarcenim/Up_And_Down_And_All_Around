@@ -20,7 +20,6 @@ import net.minecraftforge.fml.relauncher.Side;
 import tfar.gravitymod.GravityMod;
 import tfar.gravitymod.api.API;
 import tfar.gravitymod.api.EnumGravityDirection;
-import tfar.gravitymod.api.ITickOnMouseCursor;
 import tfar.gravitymod.api.events.GravityTransitionEvent;
 import tfar.gravitymod.common.packets.PacketHandler;
 import tfar.gravitymod.common.packets.gravitychange.GravityChangeMessage;
@@ -131,9 +130,6 @@ public class GravityManagerCommon {
                     ItemStack itemStack = event.player.inventory.getItemStack();
                     if (!itemStack.isEmpty()) {
                         Item item = itemStack.getItem();
-                        if (item instanceof ITickOnMouseCursor) {
-                            item.onUpdate(itemStack, player.world, player, -1, false);
-                        }
                     }
                 }
             }

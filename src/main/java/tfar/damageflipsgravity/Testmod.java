@@ -1,6 +1,5 @@
 package tfar.damageflipsgravity;
 
-import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.util.EnumFacing;
 import net.minecraftforge.event.entity.living.LivingDamageEvent;
@@ -25,7 +24,7 @@ public class Testmod {
 
     @SubscribeEvent
     public static void tick(TickEvent.PlayerTickEvent e) {
-        if (!e.player.world.isRemote && e.phase == TickEvent.Phase.END && false) {
+        if (!e.player.world.isRemote && e.phase == TickEvent.Phase.END) {
             if (flipped) {
                 API.setPlayerGravity(EnumGravityDirection.fromEnumFacing(EnumFacing.UP), (EntityPlayerMP) e.player, GravityPriorityRegistry.GRAVITY_ANCHOR + 1);
             } else {
