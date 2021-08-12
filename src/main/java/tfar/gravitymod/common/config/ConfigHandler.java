@@ -7,13 +7,9 @@ import net.minecraftforge.fml.client.event.ConfigChangedEvent;
 import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import tfar.gravitymod.GravityMod;
-import tfar.gravitymod.asm.EntityPlayerWithGravity;
 import tfar.gravitymod.common.capabilities.gravitydirection.GravityDirectionCapability;
 import tfar.gravitymod.common.listeners.ItemStackUseListener;
 import tfar.gravitymod.common.listeners.ItemStackUseListener.EnumItemStackUseCompat;
-import tfar.gravitymod.common.modsupport.prepostmodifier.CombinedPrePostModifier;
-import tfar.gravitymod.common.modsupport.prepostmodifier.EnumPrePostModifier;
-import tfar.gravitymod.common.modsupport.prepostmodifier.IPrePostModifier;
 
 import java.io.File;
 import java.util.*;
@@ -52,19 +48,9 @@ public class ConfigHandler {
     public static double transitionAnimationRotationSpeed;
     public static double transitionAnimationRotationLength;
     public static double transitionAnimationRotationEnd;
-    public static int ticksUntilFullyFrozen;
-    public static boolean usePackedIceTexture;
 
     public static final String CATEGORY_SERVER = newCategory("server");
     public static boolean kickPlayersWithMismatchingModCompatHashes;
-
-    public static final String CATEGORY_FALLOUTOFWORLD = newCategory("fallupoutofworld");
-    public static double yHeightFreeze;
-    public static double yHeightBoil;
-    public static float bloodBoilDamage;
-    public static double yHeightNoAir;
-    public static float asphyxiateDamage;
-    public static double yHeightInstantDeath;
 
     public static Configuration config;
     private static List<String> propertyOrder;
@@ -194,38 +180,10 @@ public class ConfigHandler {
         transitionAnimationRotationLength = GravityDirectionCapability.DEFAULT_TIMEOUT / transitionAnimationRotationSpeed;
         transitionAnimationRotationEnd = GravityDirectionCapability.DEFAULT_TIMEOUT - transitionAnimationRotationLength;
 
-        prop = config.get(category, "ticksUntilFullyFrozen", 100, "Number of ticks it takes for the freezing screen effect to reach maximum opacity. 1 tick =" +
-                " 1/20th of a second.", 1, Integer.MAX_VALUE);
-        ticksUntilFullyFrozen = process().getInt();
-
-        prop = config.get(category, "usePackedIceTexture", false, "True to use the packed ice texture instead of the normal ice texture when freezing.");
-        usePackedIceTexture = process().getBoolean();
-
         nextCategory(CATEGORY_SERVER);
         prop = config.get(category, "kickPlayersWithMismatchingModCompat", false, "True if the server should kick players that have different mod " +
                 "compatibility settings.");
         kickPlayersWithMismatchingModCompatHashes = process().getBoolean();
-
-        nextCategory(CATEGORY_FALLOUTOFWORLD);
-
-        prop = config.get(category, "freezingHeight", 356d, "Players above this height will get a freezing effect applied to them that slowly obscures their view");
-        yHeightFreeze = process().getDouble();
-
-        prop = config.get(category, "noAirHeight", 257d, "Players above this height will slowly lose air and take damage if they run out, similar to drowning");
-        yHeightNoAir = process().getDouble();
-
-        // Default is 64 blocks higher than max y height, reflecting the fact you start takign void damage at -64
-        prop = config.get(category, "bloodBoilHeight", 500d, "Players above this height will take rapid damage similar to falling out of the bottom of " +
-                "the world.");
-        yHeightBoil = process().getDouble();
-
-        // 4f = the same as the constant damage you take when falling out of the world normally
-        prop = config.get(category, "bloodBoilDamage", 4d, "Damage taken each tick while blood is boiling. 4 would be the same as falling out of the bottom " +
-                "of the world");
-        bloodBoilDamage = (float)process().getDouble();
-
-        prop = config.get(category, "instantDeathHeight", 700d, "Players above this height instantly die");
-        yHeightInstantDeath = process().getDouble();
 
         // Needed to set the ordering of the current category
         nextCategory(null);
@@ -243,9 +201,6 @@ public class ConfigHandler {
 
     public static void processLateConfig() {
         ItemStackUseListener.clearPrePostModifiers();
-        processModCompatConfig(modCompatUseOnBlock, EnumItemStackUseCompat.BLOCK);
-        processModCompatConfig(modCompatUseGeneral, EnumItemStackUseCompat.GENERAL);
-        processModCompatConfig(modCompatOnStoppedUsing, EnumItemStackUseCompat.STOPPED_USING);
         ItemStackUseListener.makeHash();
         if (GravityMod.GENERAL_DEBUG) {
             GravityMod.logInfo("HashCode: " + ItemStackUseListener.getHashCode());
@@ -325,75 +280,6 @@ public class ConfigHandler {
         builder.append('.').append(propName);
 
         prop.setLanguageKey(builder.toString());
-    }
-
-    private static void processModCompatConfig(String[] stringList, EnumItemStackUseCompat compatType) {
-        toNextEntry:
-        for (String entry : stringList) {
-            String[] sections = entry.split(",");
-            if (sections.length != 2) {
-                GravityMod.logWarning("Invalid config line in %s: %s. Each line should have a single comma " +
-                        "separating item information and the compatibility information.", compatType.configName, entry);
-                continue;
-            }
-
-            String[] itemResourceAndDamageValues = sections[0].split(":");
-            if (itemResourceAndDamageValues.length < 2) {
-                GravityMod.logWarning("Invalid config line in %s: %s. A colon is required between the item's mod ID and the item's name.", compatType.configName, entry);
-                continue;
-            }
-            String modID = itemResourceAndDamageValues[0];
-            String itemName = itemResourceAndDamageValues[1];
-            int[] damageValues = new int[itemResourceAndDamageValues.length - 2];
-            for (int i = 2; i < itemResourceAndDamageValues.length; i++) {
-                try {
-                    damageValues[i - 2] = Integer.parseInt(itemResourceAndDamageValues[i]);
-                } catch (NumberFormatException numberFormatException) {
-                    GravityMod.logWarning("Invalid config line in %s: %s. Could not parse item damage value \"%s\".",
-                            compatType.configName, entry, itemResourceAndDamageValues[i]);
-                    continue toNextEntry;
-                }
-            }
-
-            IPrePostModifier<EntityPlayerWithGravity> modifier;
-
-            String[] modifierData = sections[1].split(":");
-            switch (modifierData.length) {
-                case 1:
-                    EnumPrePostModifier fromConfigString = EnumPrePostModifier.getFromConfigString(modifierData[0]);
-                    if (fromConfigString == null) {
-                        GravityMod.logWarning("Invalid config line in %s: %s. Invalid compatibility modifier \"%s\"",
-                                compatType.configName, entry, modifierData[0]);
-                        continue toNextEntry;
-                    }
-                    modifier = fromConfigString;
-                    break;
-                case 2:
-                    EnumPrePostModifier first = EnumPrePostModifier.getFromConfigString(modifierData[0]);
-                    if (first == null) {
-                        GravityMod.logWarning("Invalid config line in %s: %s. Invalid compatibility modifier \"%s\"",
-                                compatType.configName, entry, modifierData[0]);
-                        continue toNextEntry;
-                    }
-                    EnumPrePostModifier second = EnumPrePostModifier.getFromConfigString(modifierData[1]);
-                    if (second == null) {
-                        GravityMod.logWarning("Invalid config line in %s: %s. Invalid compatibility modifier \"%s\"",
-                                compatType.configName, entry, modifierData[1]);
-                        continue toNextEntry;
-                    }
-                    if (first.isMotionModifier() == second.isMotionModifier()) {
-                        GravityMod.logWarning("Invalid config line in %s: %s. Only up to 1 motion modifier and up to 1 rotation modifier may be used.",
-                                compatType.configName, entry);
-                        continue toNextEntry;
-                    }
-                    modifier = CombinedPrePostModifier.getModifierFor(first, second);
-                    break;
-                default:
-                    GravityMod.logWarning("Invalid config line in %s: %s. Expecting 1 or 2 compatibility modifiers only.", compatType.configName, entry);
-                    continue toNextEntry;
-            }
-            ItemStackUseListener.addPrePostModifier(modID, itemName, modifier, compatType, damageValues);
-        }
     }
 
     private static String newCategory(String baseName) {

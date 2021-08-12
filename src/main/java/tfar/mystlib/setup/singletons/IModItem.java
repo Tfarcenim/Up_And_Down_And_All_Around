@@ -28,7 +28,7 @@ public interface IModItem<T extends Item & IModItem<T>> extends IModObject, IMod
         T cast = this.getItem();
         cast.setUnlocalizedName(this.getModID() + "." + this.getModObjectName());
         cast.setRegistryName(new ResourceLocation(this.getModID(), this.getModObjectName()));
-        CreativeTabs creativeTab = this.getModCreativeTab();
+        CreativeTabs creativeTab = CreativeTabs.TOOLS;
         if (creativeTab != null) {
             cast.setCreativeTab(creativeTab);
         }

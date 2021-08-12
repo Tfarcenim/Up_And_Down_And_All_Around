@@ -129,12 +129,11 @@ public class GravityAxisAlignedBB extends AxisAlignedBB {
                     case -1:
                         return -super.calculateYOffset(other, -offset);
                     case 0:
-                        switch ((int)adjusted[2]) {
-                            case -1:
-                                return -super.calculateZOffset(other, -offset);
-                            default://case 0:
-                                return super.calculateZOffset(other, offset);
+                        //case 0:
+                        if ((int) adjusted[2] == -1) {
+                            return -super.calculateZOffset(other, -offset);
                         }
+                        return super.calculateZOffset(other, offset);
                     default:
                         return super.calculateYOffset(other, offset);
                 }

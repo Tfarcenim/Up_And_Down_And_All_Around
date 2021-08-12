@@ -4,16 +4,11 @@ import org.objectweb.asm.tree.AbstractInsnNode;
 import org.objectweb.asm.tree.FieldInsnNode;
 import tfar.gravitymod.asm.util.obfuscation.IClassName;
 import tfar.gravitymod.asm.util.obfuscation.IDeobfAware;
-import tfar.gravitymod.asm.util.obfuscation.names.UnqualifiedName;
 
 /**
  * Created by Mysteryem on 2017-01-30.
  */
 public class FieldInsn extends FieldInsnNode implements IDeobfAwareInstruction {
-
-    public FieldInsn(int opcode, UnqualifiedName ownerAndName, IClassName type) {
-        super(opcode, ownerAndName.owner, ownerAndName.name, type.asDescriptor());
-    }
 
     public FieldInsn(int opcode, IClassName owner, IDeobfAware name, IClassName type) {
         super(opcode, owner.toString(), name.toString(), type.asDescriptor());

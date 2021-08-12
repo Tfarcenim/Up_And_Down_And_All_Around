@@ -17,9 +17,4 @@ public interface IGravityModCommon extends IModObject {
     default Object getModInstance() {
         return GravityMod.INSTANCE;
     }
-
-    @Override
-    default CreativeTabs getModCreativeTab() {
-        return ModItems.UP_AND_DOWN_CREATIVE_TAB;
-    }
 }

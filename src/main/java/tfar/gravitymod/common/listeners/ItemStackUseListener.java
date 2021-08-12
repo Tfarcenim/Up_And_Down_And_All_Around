@@ -6,8 +6,6 @@ import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.event.entity.player.PlayerInteractEvent;
-import net.minecraftforge.fml.common.Loader;
-import net.minecraftforge.fml.common.ModContainer;
 import net.minecraftforge.fml.common.eventhandler.EventPriority;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.gameevent.TickEvent;
@@ -44,37 +42,6 @@ public class ItemStackUseListener {
         onItemRightClick_itemToPrePostModifier.clear();
         onItemUse_itemToPrePostModifier.clear();
         onPlayerStoppedUsing_itemToPrePostModifier.clear();
-    }
-
-    public static void addPrePostModifier(String fullModAndItemName, IPrePostModifier<EntityPlayerWithGravity> prePostModifier, EnumItemStackUseCompat listener, int... damageValues) {
-        addPrePostModifier(fullModAndItemName, prePostModifier, new EnumItemStackUseCompat[]{listener}, damageValues);
-    }
-
-    public static void addPrePostModifier(String fullModAndItemName, IPrePostModifier<EntityPlayerWithGravity> prePostModifier, EnumItemStackUseCompat[] listenersSet, int... damageValues) {
-        String[] split = fullModAndItemName.split(":");
-        if (split.length != 2) {
-            ModContainer activeModContainer = Loader.instance().activeModContainer();
-            if (activeModContainer != null) {
-                GravityMod.logWarning("Failed to register PrePostModifier. Failed to parse item registry name %s. Mod responsible: %s(%s)",
-                        fullModAndItemName, activeModContainer.getName(), activeModContainer.getModId());
-            }
-            else {
-                GravityMod.logWarning("Failed to register PrePostModifier. Failed to parse item registry name %s.",
-                        fullModAndItemName);
-            }
-        }
-        else {
-            addPrePostModifier(split[0], split[1], prePostModifier, listenersSet, damageValues);
-        }
-    }
-
-    public static void addPrePostModifier(String modID, String itemName, IPrePostModifier<EntityPlayerWithGravity> prePostModifier, EnumItemStackUseCompat[] listenersSet, int... damageValues) {
-        addPrePostModifier(
-                new ResourceLocation(Objects.requireNonNull(modID, "modID cannot be null"), Objects.requireNonNull(itemName, "itemName cannot be null")),
-                prePostModifier,
-                listenersSet,
-                damageValues);
-
     }
 
     public static void addPrePostModifier(
@@ -131,14 +98,6 @@ public class ItemStackUseListener {
                 damageToPrePostMap.put(damageValue, prePostModifier);
             }
         }
-    }
-
-    public static void addPrePostModifier(String modID, String itemName, IPrePostModifier<EntityPlayerWithGravity> prePostModifier, EnumItemStackUseCompat listener, int... damageValues) {
-        addPrePostModifier(modID, itemName, prePostModifier, new EnumItemStackUseCompat[]{listener}, damageValues);
-    }
-
-    public static void addPrePostModifier(ResourceLocation itemRegistryName, IPrePostModifier<EntityPlayerWithGravity> prePostModifier, EnumItemStackUseCompat listener, int... damageValues) {
-        addPrePostModifier(itemRegistryName, prePostModifier, new EnumItemStackUseCompat[]{listener}, damageValues);
     }
 
     public static int getHashCode() {

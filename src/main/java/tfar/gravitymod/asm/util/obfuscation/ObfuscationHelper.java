@@ -14,14 +14,11 @@ import java.util.Map;
  */
 public class ObfuscationHelper {
     public static final IClassName BOOLEAN = new PrimitiveName("Z");
-    public static final IClassName CHAR = new PrimitiveName("C");
     public static final IClassName DOUBLE = new PrimitiveName("D");
     public static final IClassName FLOAT = new PrimitiveName("F");
     public static final IDeobfAware INIT = new MethodName("<init>");
     public static final IClassName INT = new PrimitiveName("I");
     public static final boolean IS_DEV_ENVIRONMENT = (Boolean)Launch.blackboard.get("fml.deobfuscatedEnvironment");
-    public static final IClassName LONG = new PrimitiveName("J");
-    public static final IClassName SHORT = new PrimitiveName("S");
     public static final IClassName VOID = new PrimitiveName("V");
     public static final Map<String, String> deobfNameLookup = new HashMap<>();
 

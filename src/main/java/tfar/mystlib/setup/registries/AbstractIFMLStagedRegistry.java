@@ -22,21 +22,6 @@ public abstract class AbstractIFMLStagedRegistry<SINGLETON extends IFMLStaged, C
         this.getCollection().forEach(IFMLStaged::preInit);
     }
 
-//    @SubscribeEvent
-//    public void onRegisterBlocks(RegistryEvent.Register<Block> event) {
-//        this.getCollection().stream().filter((a) -> a instanceof IModBlock).forEach((a) -> ((IModBlock<?>) a).registerBlock(event.getRegistry()));
-//    }
-//
-//    @SubscribeEvent
-//    public void onRegisterItems(RegistryEvent.Register<Item> event) {
-//        this.getCollection().stream().filter((a) -> a instanceof IModItem).forEach((a) -> ((IModItem<?>) a).register(event.getRegistry()));
-//    }
-//
-//    @SubscribeEvent
-//    public void onRegisterPotions(RegistryEvent.Register<Potion> event) {
-//        this.getCollection().stream().filter((a) -> a instanceof IModPotion).forEach((a) -> ((IModPotion<?>) a).register(event.getRegistry()));
-//    }
-
     protected abstract void addToCollection(COLLECTION modObjects);
 
     public COLLECTION getCollection() {

@@ -12,10 +12,6 @@ import java.util.ListIterator;
 public interface IDeobfAwareInstruction extends IDeobfAware {
     boolean is(AbstractInsnNode abstractInsnNode);
 
-    default void addTo(InsnList insnList) {
-        insnList.add(this.asAbstract());
-    }
-
     AbstractInsnNode asAbstract();
 
     default void replace(ListIterator<AbstractInsnNode> it) {

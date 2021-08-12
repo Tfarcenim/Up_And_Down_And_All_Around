@@ -58,13 +58,10 @@ public class EntityRenderListener {
                 double distanceToUndo = playerBeingRendered.height + 0.5 - (playerBeingRendered.isSneaking() ? 0.25 : 0);
                 GlStateManager.translate(0, -distanceToUndo, 0);
                 double distanceToMove;
-                switch (gravityDirection) {
-                    case UP:
-                        distanceToMove = distanceToUndo;
-                        break;
-                    default:
-                        distanceToMove = distanceToUndo - API.getStandardEyeHeight(playerBeingRendered);
-                        break;
+                if (gravityDirection == EnumGravityDirection.UP) {
+                    distanceToMove = distanceToUndo;
+                } else {
+                    distanceToMove = distanceToUndo - API.getStandardEyeHeight(playerBeingRendered);
                 }
                 double[] d = gravityDirection.adjustXYZValues(0, distanceToMove, 0);
                 GlStateManager.translate(d[0], d[1], d[2]);

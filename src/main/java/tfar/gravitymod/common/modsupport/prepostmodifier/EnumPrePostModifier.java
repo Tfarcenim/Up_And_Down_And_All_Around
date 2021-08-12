@@ -2,16 +2,13 @@ package tfar.gravitymod.common.modsupport.prepostmodifier;
 
 import tfar.gravitymod.asm.EntityPlayerWithGravity;
 
-import java.util.HashMap;
-import java.util.Locale;
-
 /**
  * All the possible PrePostModifiers, all absolute is the default state, so is not included.
  * <p>
  * Created by Mysteryem on 2016-10-23.
  */
 public enum EnumPrePostModifier implements IPrePostModifier<EntityPlayerWithGravity> {
-    ALL_MOTION_RELATIVE(true, "relativemotionall") {
+    ALL_MOTION_RELATIVE() {
         @Override
         public void preModify(EntityPlayerWithGravity player) {
             player.makeMotionRelative();
@@ -22,7 +19,7 @@ public enum EnumPrePostModifier implements IPrePostModifier<EntityPlayerWithGrav
             player.popMotionStack();
         }
     },
-    ABSOLUTE_X(true, "absolutemotionx") {
+    ABSOLUTE_X() {
         @Override
         public void preModify(EntityPlayerWithGravity player) {
             player.makeMotionRelative();
@@ -36,7 +33,7 @@ public enum EnumPrePostModifier implements IPrePostModifier<EntityPlayerWithGrav
             player.motionX += motionXChange;
         }
     },
-    RELATIVE_Z(true, "relativemotionz") {
+    RELATIVE_Z() {
         @Override
         public void preModify(EntityPlayerWithGravity player) {
             player.makeMotionRelative();
@@ -53,7 +50,7 @@ public enum EnumPrePostModifier implements IPrePostModifier<EntityPlayerWithGrav
             player.motionY += motionYChange;
         }
     },
-    RELATIVE_Y(true, "relativemotiony") {
+    RELATIVE_Y() {
         @Override
         public void preModify(EntityPlayerWithGravity player) {
             player.makeMotionRelative();
@@ -70,7 +67,7 @@ public enum EnumPrePostModifier implements IPrePostModifier<EntityPlayerWithGrav
             player.motionZ += motionZChange;
         }
     },
-    ABSOLUTE_Y(true, "absolutemotiony") {
+    ABSOLUTE_Y() {
         @Override
         public void preModify(EntityPlayerWithGravity player) {
             player.makeMotionRelative();
@@ -84,7 +81,7 @@ public enum EnumPrePostModifier implements IPrePostModifier<EntityPlayerWithGrav
             player.motionY += motionYChange;
         }
     },
-    RELATIVE_X(true, "relativemotionx") {
+    RELATIVE_X() {
         @Override
         public void preModify(EntityPlayerWithGravity player) {
             player.makeMotionRelative();
@@ -101,7 +98,7 @@ public enum EnumPrePostModifier implements IPrePostModifier<EntityPlayerWithGrav
             player.motionZ += motionZChange;
         }
     },
-    ABSOLUTE_Z(true, "absolutemotionz") {
+    ABSOLUTE_Z() {
         @Override
         public void preModify(EntityPlayerWithGravity player) {
             player.makeMotionRelative();
@@ -115,7 +112,7 @@ public enum EnumPrePostModifier implements IPrePostModifier<EntityPlayerWithGrav
             player.motionZ += motionZChange;
         }
     },
-    ROTATION_RELATIVE(false, "relativerotation") {
+    ROTATION_RELATIVE() {
         @Override
         public void preModify(EntityPlayerWithGravity player) {
             player.makeRotationRelative();
@@ -127,24 +124,11 @@ public enum EnumPrePostModifier implements IPrePostModifier<EntityPlayerWithGrav
         }
     };
 
-    private static final HashMap<String, EnumPrePostModifier> lowerCaseConfigStringToEnumPrePostModifier = new HashMap<>();
 
     static {
-        for (EnumPrePostModifier modifier : EnumPrePostModifier.values()) {
-            lowerCaseConfigStringToEnumPrePostModifier.put(modifier.configString, modifier);
-        }
     }
 
-    private final String configString;
-    private final boolean isMotionModifier;
-
-    EnumPrePostModifier(boolean isMotionModifier, String configString) {
-        this.isMotionModifier = isMotionModifier;
-        this.configString = configString;
-    }
-
-    public static EnumPrePostModifier getFromConfigString(String configString) {
-        return lowerCaseConfigStringToEnumPrePostModifier.get(configString.toLowerCase(Locale.ENGLISH));
+    EnumPrePostModifier() {
     }
 
     @Override
@@ -152,7 +136,4 @@ public enum EnumPrePostModifier implements IPrePostModifier<EntityPlayerWithGrav
         return this.ordinal();
     }
 
-    public boolean isMotionModifier() {
-        return this.isMotionModifier;
-    }
 }
