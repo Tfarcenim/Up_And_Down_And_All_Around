@@ -155,23 +155,6 @@ public class GravityAxisAlignedBB extends AxisAlignedBB {
         return this.offsetFromArray(this.getDirection().adjustXYZValues(0, 0, 1), other, offsetZ);
     }
 
-    public GravityAxisAlignedBB expandUp(double y) {
-        switch (this.gravityCapability.getDirection()) {
-            case UP:
-                return new GravityAxisAlignedBB(this, this.minX, this.minY - y, this.minZ, this.maxX, this.maxY, this.maxZ);
-            case SOUTH:
-                return new GravityAxisAlignedBB(this, this.minX, this.minY, this.minZ - y, this.maxX, this.maxY, this.maxZ);
-            case WEST:
-                return new GravityAxisAlignedBB(this, this.minX, this.minY, this.minZ, this.maxX + y, this.maxY, this.maxZ);
-            case NORTH:
-                return new GravityAxisAlignedBB(this, this.minX, this.minY, this.minZ, this.maxX, this.maxY, this.maxZ + y);
-            case EAST:
-                return new GravityAxisAlignedBB(this, this.minX - y, this.minY, this.minZ, this.maxX, this.maxY, this.maxZ);
-            default://case DOWN:
-                return new GravityAxisAlignedBB(this, this.minX, this.minY, this.minZ, this.maxX, this.maxY + y, this.maxZ);
-        }
-    }
-
     public IGravityDirectionCapability getCapability() {
         return this.gravityCapability;
     }
@@ -203,22 +186,6 @@ public class GravityAxisAlignedBB extends AxisAlignedBB {
 
     private double getCentreY() {
         return (this.minY + this.maxY) / 2d;
-    }
-
-    public GravityAxisAlignedBB offsetSuper(double x, double y, double z) {
-        return new GravityAxisAlignedBB(this, super.offset(x, y, z));
-    }
-
-    public double superCalculateXOffset(AxisAlignedBB other, double offsetX) {
-        return super.calculateXOffset(other, offsetX);
-    }
-
-    public double superCalculateYOffset(AxisAlignedBB other, double offsetY) {
-        return super.calculateYOffset(other, offsetY);
-    }
-
-    public double superCalculateZOffset(AxisAlignedBB other, double offsetZ) {
-        return super.calculateZOffset(other, offsetZ);
     }
 
     public AxisAlignedBB toVanilla() {

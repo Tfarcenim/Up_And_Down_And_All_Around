@@ -1,6 +1,5 @@
 package uk.co.mysterymayhem.gravitymod;
 
-import com.google.common.collect.Lists;
 import net.minecraft.block.Block;
 import net.minecraft.enchantment.Enchantment;
 import net.minecraft.item.Item;
@@ -16,11 +15,9 @@ import net.minecraftforge.fml.common.registry.EntityEntry;
 import net.minecraftforge.fml.common.registry.VillagerRegistry;
 import uk.co.mysterymayhem.gravitymod.common.capabilities.gravitydirection.GravityDirectionCapability;
 import uk.co.mysterymayhem.gravitymod.common.config.ConfigHandler;
-import uk.co.mysterymayhem.gravitymod.common.entities.EntityFloatingItem;
-import uk.co.mysterymayhem.gravitymod.common.items.materials.BlockBreakListener;
+import uk.co.mysterymayhem.gravitymod.common.events.BlockBreakListener;
 import uk.co.mysterymayhem.gravitymod.common.listeners.GravityManagerCommon;
 import uk.co.mysterymayhem.gravitymod.common.listeners.ItemStackUseListener;
-import uk.co.mysterymayhem.gravitymod.common.listeners.LootTableListener;
 import uk.co.mysterymayhem.gravitymod.common.packets.PacketHandler;
 import uk.co.mysterymayhem.gravitymod.common.registries.ModItems;
 import uk.co.mysterymayhem.mystlib.setup.registries.AbstractIFMLStagedRegistry;
@@ -28,7 +25,6 @@ import uk.co.mysterymayhem.mystlib.setup.registries.AbstractModObjectRegistry;
 import uk.co.mysterymayhem.mystlib.setup.registries.AbstractRegistrableModObjectRegistry;
 
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.function.Consumer;
 
 /**
@@ -65,8 +61,6 @@ public class CommonProxy extends AbstractIFMLStagedRegistry<AbstractModObjectReg
         MinecraftForge.EVENT_BUS.register(this.getGravityManager());
         MinecraftForge.EVENT_BUS.register(ItemStackUseListener.class);
         MinecraftForge.EVENT_BUS.register(BlockBreakListener.class);
-        MinecraftForge.EVENT_BUS.register(EntityFloatingItem.class);
-        MinecraftForge.EVENT_BUS.register(LootTableListener.class);
         MinecraftForge.EVENT_BUS.register(ConfigHandler.class);
 //        MinecraftForge.EVENT_BUS.register(new DebugHelperListener());
     }

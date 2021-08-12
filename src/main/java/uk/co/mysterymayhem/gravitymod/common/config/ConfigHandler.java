@@ -1,8 +1,5 @@
 package uk.co.mysterymayhem.gravitymod.common.config;
 
-import gnu.trove.set.hash.TIntHashSet;
-import net.minecraft.util.ResourceLocation;
-import net.minecraft.world.storage.loot.LootTable;
 import net.minecraftforge.common.config.ConfigCategory;
 import net.minecraftforge.common.config.Configuration;
 import net.minecraftforge.common.config.Property;
@@ -12,17 +9,15 @@ import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import uk.co.mysterymayhem.gravitymod.GravityMod;
 import uk.co.mysterymayhem.gravitymod.asm.EntityPlayerWithGravity;
 import uk.co.mysterymayhem.gravitymod.common.capabilities.gravitydirection.GravityDirectionCapability;
-import uk.co.mysterymayhem.gravitymod.common.items.materials.BlockBreakListener;
+import uk.co.mysterymayhem.gravitymod.common.events.BlockBreakListener;
 import uk.co.mysterymayhem.gravitymod.common.listeners.ItemStackUseListener;
 import uk.co.mysterymayhem.gravitymod.common.listeners.ItemStackUseListener.EnumItemStackUseCompat;
-import uk.co.mysterymayhem.gravitymod.common.listeners.LootTableListener;
 import uk.co.mysterymayhem.gravitymod.common.modsupport.prepostmodifier.CombinedPrePostModifier;
 import uk.co.mysterymayhem.gravitymod.common.modsupport.prepostmodifier.EnumPrePostModifier;
 import uk.co.mysterymayhem.gravitymod.common.modsupport.prepostmodifier.IPrePostModifier;
 
 import java.io.File;
 import java.util.*;
-import java.util.function.Predicate;
 import java.util.regex.Pattern;
 
 /**
@@ -36,37 +31,6 @@ public class ConfigHandler {
     public static String[] modCompatOnStoppedUsing;
     //<mod id>:<item name>[:damage][:damage][...],<compatibility modifier>:[compatibility modifier]
     public static final Pattern modCompatPattern = Pattern.compile("[^:]+:[^:]+(:[\\d]+)*,[a-zA-Z]+(:[a-zA-Z]+)?");
-
-    public static final String CATEGORY_ANTIMASS_INDUCER = newCategory("antimassinducer");
-    public static int gravityDustAmountDropped;
-    public static float gravityDustDropChance;
-    public static boolean gravityDustChanceOncePerBrokenBlock;
-    public static final Pattern validDropBlockOrePattern = Pattern.compile("[^:]+:[^:]+(:[\\d]+)?");
-    public static String[] gravityDustValidBlocksToDropFrom;
-    public static String[] gravityDustValidDropsToSpawnAs;
-
-    public static final String CATEGORY_DESTABILISED_ANTIMASS = newCategory("destabilisedantimass");
-    public static boolean destabilisedGravityDustDissipatesWhenDropped;
-
-    public static final String CATEGORY_WORLD_GEN = newCategory("worldgen");
-    public static boolean oreGenDimensionListIsBlackList;
-    public static TIntHashSet oreGenDimensionIDs;
-
-    public static final String CATEGORY_LOOT = newCategory("extraloot");
-    //TODO
-    public static boolean addDownAnchorToFishingJunk;
-    //TODO
-    public static int downAnchorFishingJunkWeight;
-    //TODO
-    public static boolean addGravityDustToMineshafts;
-    //TODO
-    public static int gravityDustMineshaftWeight;
-    public static float anchorChestLootChance;
-    private static final String[] defaultAnchorLootTables = {
-        "minecraft:chests/abandoned_mineshaft", "minecraft:chests/stronghold_corridor", "minecraft:chests/stronghold_crossing",
-        "minecraft:chests/desert_pyramid", "minecraft:chests/jungle_temple", "minecraft:chests/simple_dungeon"};
-    //TODO
-    public static final HashMap<ResourceLocation, Predicate<LootTable>> lootTableAdditions = new HashMap<>();
 
     public static final String CATEGORY_GRAVITY = newCategory("gravity");
     public static float oppositeDirectionFallDistanceMultiplier;
@@ -180,105 +144,6 @@ public class ConfigHandler {
                         "'tconstruct:longsword,relativeMotionAll:relativeRotation' - Adds a relative X, Y and Z motion modifier combined with a relative " +
                         "rotation modifier to all damage values of Tinkers' Construct Longswords.");
 
-        nextCategory(CATEGORY_ANTIMASS_INDUCER);
-
-        prop = config.get(category, "amountDropped", 5, "The amount of anti-mass items that drop from each anti-mass spawn when mining \n" +
-                "This is also the base amount dropped by Anti-Mass ore.\n" +
-                "The exact amount dropped by Anti-Mass ore is a random value between this value and double this value", 1, 64);
-        gravityDustAmountDropped = process().getInt();
-
-        prop = config.get(category, "dropChance", 0.05d, "The chance that anti-mass will spawn", 0d, 1d);
-        gravityDustDropChance = (float)process().getDouble();
-
-        prop = config.get(category, "oneChancePerBrokenBlock", false, "If true, only the first valid drop of a block will have a chance to spawn anti-mass." +
-                "\nIf false, each valid drop will have a chance to spawn anti-mass");
-        gravityDustChanceOncePerBrokenBlock = process().getBoolean();
-
-        prop = config.get(category, "validBlocksToSpawnFrom",
-                new String[]{"ore:oreRedstone", "ore:oreDiamond", "ore:oreLapis", "ore:oreCoal", "ore:oreQuartz", "ore:oreEmerald"},
-                "Blocks that, when broken, have a chance for some of their drops to become special 'anti-mass' items which float around and drop both the " +
-                        "original item and the 'anti-mass' item added by this mod." +
-                        "\nThe normal item drops must be in the config as valid drops to spawn as for this to happen." +
-                        "\nUse format \"<modid>:<block name>[:<meta>]\" (not providing a metadata value will allow for any value)" +
-                        "\nOre registry names can be specified by using \"ore:<ore name>\"" +
-                        "\nEnsure you don't add any blocks that drop themselves when broken (like iron ore), to both the blocks and drops lists, otherwise " +
-                        "players can place the block back down and mine it again for another chance at getting the special drop." +
-                        "\nRedstone ore has been hardcoded such that if a player breaks lit redstone ore, the mod acts as if the player broke non-lit " +
-                        "redstone ore.",
-                validDropBlockOrePattern);
-        gravityDustValidBlocksToDropFrom = process().getStringList();
-
-        prop = config.get(category, "validDropsToSpawnAs",
-                new String[]{"ore:dustRedstone", "ore:gemDiamond", "ore:gemEmerald", "ore:gemQuartz", "ore:gemLapis", "minecraft:coal:0"},
-                "Items/blocks that, when dropped from a broken block, have a chance to become a special 'anti-mass' item that floats around and drops both " +
-                        "the original item and the 'anti-mass' item added by this mod." +
-                        "\nThe broken block must be in the config as a valid block for this to happen." +
-                        "\n\nUse format \"<modid>:<block/item name>[:<meta>]\"" +
-                        "\nOre registry names can be specified by using \"ore:<ore name>\"" +
-                        "\n\n",
-                validDropBlockOrePattern);
-        gravityDustValidDropsToSpawnAs = process().getStringList();
-
-        nextCategory(CATEGORY_DESTABILISED_ANTIMASS);
-
-        prop = config.get(category, "destroyedWhenDropped", true, "Destabilised Anti-Mass should dissipate/be destroyed when dropped out of an " +
-                "inventory");
-        destabilisedGravityDustDissipatesWhenDropped = process().getBoolean();
-
-        nextCategory(CATEGORY_WORLD_GEN);
-
-        prop = config.get(category, "oreDimensionListIsBlacklist",
-                true, "Set to true if the dimension ID list for ore generation should be treated as a Blacklist.\n" +
-                        "Set to false if the dimension ID list for ore generation should be treated as a Whitelist.");
-        oreGenDimensionListIsBlackList = process().getBoolean();
-
-        prop = config.get(category, "oreDimensionList", new int[0], "List of dimension IDs that UpAndDown's ore generation should either generate in, or not generate in.\n" +
-                "Depending on whether the list is set to act as a Whitelist or Blacklist. See \"oreDimensionListIsBlacklist\"");
-        oreGenDimensionIDs = new TIntHashSet(process().getIntList());
-
-        nextCategory(CATEGORY_LOOT);
-
-        prop = config.get(category, "addDownAnchorToFishingJunk", true, "True if downwards gravity anchors should be added to the fishing junk loot table");
-        addDownAnchorToFishingJunk = process().getBoolean();
-
-        prop = config.get(category, "downAnchorFishingJunkWeight", 2, "'Weight' of the downwards gravity anchor added to the fishing junk loot table (higher " +
-                "weight = higher chance based on the weights of everything else in the loot table)", 1, 100);
-        downAnchorFishingJunkWeight = process().getInt();
-
-        prop = config.get(category, "addGravityDustToMineshafts", true, "True if anti-mass should be added to mineshaft chest loot");
-        addGravityDustToMineshafts = process().getBoolean();
-
-        prop = config.get(category, "gravityDustMineshaftWeight", 5, "'Weight' of anti-mass added to mineshaft chests (higher " +
-                "weight = higher chance based on the weights of everything else in the loot table)", 1, 100);
-        gravityDustMineshaftWeight = process().getInt();
-
-        prop = config.get(category, "lootTablesToAddAnchorsTo", defaultAnchorLootTables, "Loot tables to add gravity anchors to (their direction is chosen at" +
-                " random)");
-        String[] lootTablesToAddAnchorsTo = process().getStringList();
-
-        // Since adding loot to existing loot tables uses a map for quickly checking if we have anything to add, we need to prepare the map before the
-        // LootTableLoadEvent is fired
-        lootTableAdditions.clear();
-        if (addDownAnchorToFishingJunk) {
-            lootTableAdditions.put(new ResourceLocation("minecraft:gameplay/fishing/junk"), LootTableListener.FISHING_JUNK_LOOT);
-        }
-        if (addGravityDustToMineshafts) {
-            lootTableAdditions.put(new ResourceLocation("minecraft:chests/abandoned_mineshaft"), LootTableListener.ADD_GRAVITYDUST_TO_MINESHAFT);
-        }
-        for (String lootTable : lootTablesToAddAnchorsTo) {
-            ResourceLocation resourceLocation = new ResourceLocation(lootTable);
-            Predicate<LootTable> lootTablePredicate = lootTableAdditions.get(resourceLocation);
-            if (lootTablePredicate == null) {
-                lootTableAdditions.put(resourceLocation, LootTableListener.ADD_ANCHOR_POOL);
-            }
-            else {
-                lootTableAdditions.put(resourceLocation, lootTablePredicate.and(LootTableListener.ADD_ANCHOR_POOL));
-            }
-        }
-
-        prop = config.get(category, "generalAnchorChance", 0.05d, "The chance that one of the above loot tables will generate a gravity anchor", 0d, 1d);
-        anchorChestLootChance = (float)process().getDouble();
-
         nextCategory(CATEGORY_GRAVITY);
 
         prop = config.get(category, "oppositeDirectionFallDistanceMultiplier", 0d, "When a player's gravity direction changes to the opposite direction, " +
@@ -379,8 +244,6 @@ public class ConfigHandler {
 
     public static void processLateConfig() {
         BlockBreakListener.clearAcceptableBlocksAndDrops();
-        BlockBreakListener.addBlocksFromConfig(gravityDustValidBlocksToDropFrom);
-        BlockBreakListener.addDropsFromConfig(gravityDustValidDropsToSpawnAs);
         ItemStackUseListener.clearPrePostModifiers();
         processModCompatConfig(modCompatUseOnBlock, EnumItemStackUseCompat.BLOCK);
         processModCompatConfig(modCompatUseGeneral, EnumItemStackUseCompat.GENERAL);

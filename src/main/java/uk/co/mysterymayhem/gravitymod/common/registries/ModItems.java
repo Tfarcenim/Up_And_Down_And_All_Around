@@ -3,9 +3,6 @@ package uk.co.mysterymayhem.gravitymod.common.registries;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.NonNullList;
-import net.minecraftforge.fluids.Fluid;
-import net.minecraftforge.fluids.FluidStack;
-import net.minecraftforge.fluids.FluidUtil;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import uk.co.mysterymayhem.gravitymod.GravityMod;
@@ -16,10 +13,6 @@ import uk.co.mysterymayhem.gravitymod.common.items.armour.ItemGravityLeggings;
 import uk.co.mysterymayhem.gravitymod.common.items.materials.*;
 import uk.co.mysterymayhem.gravitymod.common.items.misc.ItemCreativeTabIcon;
 import uk.co.mysterymayhem.gravitymod.common.items.tools.ItemGravityAnchor;
-import uk.co.mysterymayhem.gravitymod.common.items.tools.ItemPersonalGravityController;
-import uk.co.mysterymayhem.gravitymod.common.items.tools.ItemUltimateGravityController;
-import uk.co.mysterymayhem.gravitymod.common.items.tools.ItemWeakGravityController;
-import uk.co.mysterymayhem.gravitymod.common.liquids.LiquidAntiMass;
 import uk.co.mysterymayhem.mystlib.setup.registries.AbstractItemRegistry;
 
 import javax.annotation.Nonnull;
@@ -35,9 +28,6 @@ public class ModItems extends AbstractItemRegistry<IGravityModItem<?>, ArrayList
     public static final CreativeTabs FAKE_TAB_FOR_CONTROLLERS;
     @SuppressWarnings("WeakerAccess")
     static ItemCreativeTabIcon creativeTabIcon;
-    static ItemPersonalGravityController personalGravityController;
-    static ItemWeakGravityController weakGravityController;
-    static ItemUltimateGravityController ultimateGravityController;
     static ItemGravityAnchor gravityAnchor;
     static ItemGravityIngot gravityIngot;
     static ItemGravityPearl gravityPearl;
@@ -48,7 +38,6 @@ public class ModItems extends AbstractItemRegistry<IGravityModItem<?>, ArrayList
     static ItemGravityChestplate gravityChestplate;
     static ItemGravityHelmet gravityHelmet;
     static ItemGravityLeggings gravityLeggings;
-    static ItemDestabilisedGravityDust destabilisedGravityDust;
     static ItemRestabilisedGravityDust restabilisedGravityDust;
     static ItemStack liquidAntiMassBucket;
     static ItemGravityDustInducer spacetimeDistorter;
@@ -93,11 +82,7 @@ public class ModItems extends AbstractItemRegistry<IGravityModItem<?>, ArrayList
 
     @Override
     protected void addToCollection(ArrayList<IGravityModItem<?>> modObjects) {
-        liquidAntiMassBucket = FluidUtil.getFilledBucket(new FluidStack(LiquidAntiMass.INSTANCE, Fluid.BUCKET_VOLUME));
         modObjects.add(creativeTabIcon = new ItemCreativeTabIcon());
-        modObjects.add(personalGravityController = new ItemPersonalGravityController());
-        modObjects.add(weakGravityController = new ItemWeakGravityController());
-        modObjects.add(ultimateGravityController = new ItemUltimateGravityController());
         modObjects.add(gravityAnchor = new ItemGravityAnchor());
         modObjects.add(gravityIngot = new ItemGravityIngot());
         modObjects.add(gravityPearl = new ItemGravityPearl());
@@ -108,7 +93,6 @@ public class ModItems extends AbstractItemRegistry<IGravityModItem<?>, ArrayList
         modObjects.add(gravityChestplate = new ItemGravityChestplate());
         modObjects.add(gravityHelmet = new ItemGravityHelmet());
         modObjects.add(gravityLeggings = new ItemGravityLeggings());
-        modObjects.add(destabilisedGravityDust = new ItemDestabilisedGravityDust());
         modObjects.add(restabilisedGravityDust = new ItemRestabilisedGravityDust());
         modObjects.add(spacetimeDistorter = new ItemGravityDustInducer());
         STATIC_SETUP_ALLOWED = true;

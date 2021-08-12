@@ -89,9 +89,9 @@ public class ClientTickListener {
             Tessellator tessellator = Tessellator.getInstance();
             BufferBuilder vertexbuffer = tessellator.getBuffer();
             vertexbuffer.begin(7, DefaultVertexFormats.POSITION_COLOR);
-            vertexbuffer.pos(0.0D, (double)scaledRes.getScaledHeight(), -90.0D).color(red, green, blue, alpha).endVertex();
-            vertexbuffer.pos((double)scaledRes.getScaledWidth(), (double)scaledRes.getScaledHeight(), -90.0D).color(red, green, blue, alpha).endVertex();
-            vertexbuffer.pos((double)scaledRes.getScaledWidth(), 0.0D, -90.0D).color(red, green, blue, alpha).endVertex();
+            vertexbuffer.pos(0.0D, scaledRes.getScaledHeight(), -90.0D).color(red, green, blue, alpha).endVertex();
+            vertexbuffer.pos(scaledRes.getScaledWidth(), scaledRes.getScaledHeight(), -90.0D).color(red, green, blue, alpha).endVertex();
+            vertexbuffer.pos(scaledRes.getScaledWidth(), 0.0D, -90.0D).color(red, green, blue, alpha).endVertex();
             vertexbuffer.pos(0.0D, 0.0D, -90.0D).color(red, green, blue, alpha).endVertex();
             tessellator.draw();
             GlStateManager.enableTexture2D();

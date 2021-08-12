@@ -7,9 +7,6 @@ import uk.co.mysterymayhem.gravitymod.common.items.armour.ItemGravityHelmet;
 import uk.co.mysterymayhem.gravitymod.common.items.armour.ItemGravityLeggings;
 import uk.co.mysterymayhem.gravitymod.common.items.materials.*;
 import uk.co.mysterymayhem.gravitymod.common.items.tools.ItemGravityAnchor;
-import uk.co.mysterymayhem.gravitymod.common.items.tools.ItemPersonalGravityController;
-import uk.co.mysterymayhem.gravitymod.common.items.tools.ItemUltimateGravityController;
-import uk.co.mysterymayhem.gravitymod.common.items.tools.ItemWeakGravityController;
 
 /**
  * Registry of singletons used in the mod, static and final for speed purposes.
@@ -20,9 +17,6 @@ import uk.co.mysterymayhem.gravitymod.common.items.tools.ItemWeakGravityControll
  * Created by Mysteryem on 2016-12-07.
  */
 public class StaticItems {
-    public static final ItemPersonalGravityController PERSONAL_GRAVITY_CONTROLLER;
-    public static final ItemWeakGravityController WEAK_GRAVITY_CONTROLLER;
-    public static final ItemUltimateGravityController ULTIMATE_GRAVITY_CONTROLLER;
     public static final ItemGravityAnchor GRAVITY_ANCHOR;
     public static final ItemGravityIngot GRAVITY_INGOT;
     public static final ItemGravityPearl GRAVITY_PEARL;
@@ -33,16 +27,12 @@ public class StaticItems {
     public static final ItemGravityChestplate GRAVITY_CHESTPLATE;
     public static final ItemGravityHelmet GRAVITY_HELMET;
     public static final ItemGravityLeggings GRAVITY_LEGGINGS;
-    public static final ItemDestabilisedGravityDust DESTABILISED_GRAVITY_DUST;
     public static final ItemRestabilisedGravityDust RESTABILISED_GRAVITY_DUST;
     public static final ItemStack LIQUID_ANTI_MASS_BUCKET;
     public static final ItemGravityDustInducer SPACETIME_DISTORTER;
 
     static {
         if (ModItems.STATIC_SETUP_ALLOWED) {
-            PERSONAL_GRAVITY_CONTROLLER = ModItems.personalGravityController;
-            WEAK_GRAVITY_CONTROLLER = ModItems.weakGravityController;
-            ULTIMATE_GRAVITY_CONTROLLER = ModItems.ultimateGravityController;
             GRAVITY_ANCHOR = ModItems.gravityAnchor;
             GRAVITY_INGOT = ModItems.gravityIngot;
             GRAVITY_PEARL = ModItems.gravityPearl;
@@ -53,7 +43,6 @@ public class StaticItems {
             GRAVITY_CHESTPLATE = ModItems.gravityChestplate;
             GRAVITY_HELMET = ModItems.gravityHelmet;
             GRAVITY_LEGGINGS = ModItems.gravityLeggings;
-            DESTABILISED_GRAVITY_DUST = ModItems.destabilisedGravityDust;
             RESTABILISED_GRAVITY_DUST = ModItems.restabilisedGravityDust;
             LIQUID_ANTI_MASS_BUCKET = ModItems.liquidAntiMassBucket;
             SPACETIME_DISTORTER = ModItems.spacetimeDistorter;
