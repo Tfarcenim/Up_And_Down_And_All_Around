@@ -1,0 +1,17 @@
+{
+  "required": true,
+  "package": "tfar.gravitymod.mixin",
+  "compatibilityLevel": "JAVA_8",
+  "refmap": "mysttmtgravitymod.refmap.json",
+  "mixins": [
+    "EntityPlayerSPAccess",
+    "EntityPlayerWithGravityMP",
+    "EntityPlayerWithGravitySP"
+  ],
+  "client": [
+  ],
+  "injectors": {
+    "defaultRequire": 1
+  },
+  "minVersion": "0.8"
+}

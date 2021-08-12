@@ -8,6 +8,8 @@ import org.objectweb.asm.commons.LocalVariablesSorter;
 import org.objectweb.asm.tree.AbstractInsnNode;
 import org.objectweb.asm.tree.FieldInsnNode;
 import org.objectweb.asm.tree.MethodNode;
+import org.spongepowered.asm.launch.MixinBootstrap;
+import org.spongepowered.asm.mixin.Mixins;
 import tfar.gravitymod.asm.patches.*;
 import tfar.gravitymod.asm.util.obfuscation.IClassName;
 import tfar.gravitymod.asm.util.obfuscation.names.DeobfAwareString;
@@ -26,6 +28,11 @@ import static org.objectweb.asm.Opcodes.GETFIELD;
  * Created by Mysteryem on 2016-08-16.
  */
 public class Transformer implements IClassTransformer {
+
+    public Transformer() {
+        MixinBootstrap.init();
+        Mixins.addConfiguration("mysttmtgravitymod.mixins.json");
+    }
 
     // Maps classes to their patch methods
     private static final HashMap<String, ClassPatcher> classNameToMethodMap = new HashMap<>();
