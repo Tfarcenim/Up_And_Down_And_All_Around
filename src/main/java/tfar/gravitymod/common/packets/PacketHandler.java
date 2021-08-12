@@ -4,8 +4,6 @@ import net.minecraftforge.fml.common.network.NetworkRegistry;
 import net.minecraftforge.fml.common.network.simpleimpl.SimpleNetworkWrapper;
 import net.minecraftforge.fml.relauncher.Side;
 import tfar.gravitymod.GravityMod;
-import tfar.gravitymod.common.packets.config.ModCompatConfigCheckMessage;
-import tfar.gravitymod.common.packets.config.ModCompatConfigCheckPacketHandler;
 import tfar.gravitymod.common.packets.gravitychange.GravityChangeMessage;
 import tfar.gravitymod.common.packets.gravitychange.GravityChangePacketHandler;
 
@@ -23,11 +21,8 @@ public class PacketHandler {
 
     public static void registerMessages() {
         GravityChangePacketHandler gravityChangePacketHandler = new GravityChangePacketHandler();
-        ModCompatConfigCheckPacketHandler modCompatConfigCheckPacketHandler = new ModCompatConfigCheckPacketHandler();
 
         INSTANCE.registerMessage(gravityChangePacketHandler, GravityChangeMessage.class, nextID(), Side.CLIENT);
         INSTANCE.registerMessage(gravityChangePacketHandler, GravityChangeMessage.class, nextID(), Side.SERVER);
-        INSTANCE.registerMessage(modCompatConfigCheckPacketHandler, ModCompatConfigCheckMessage.class, nextID(), Side.CLIENT);
-        INSTANCE.registerMessage(modCompatConfigCheckPacketHandler, ModCompatConfigCheckMessage.class, nextID(), Side.SERVER);
     }
 }

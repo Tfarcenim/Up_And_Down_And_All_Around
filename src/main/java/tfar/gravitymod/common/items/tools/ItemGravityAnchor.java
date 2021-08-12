@@ -39,7 +39,7 @@ import java.util.Locale;
 public class ItemGravityAnchor extends Item implements ITickOnMouseCursor, IGravityModItem<ItemGravityAnchor> {
 
     // From EntityItem::onUpdate
-    private static final double GRAVITY_DOWNWARDS_MOTION = 0.03999999910593033D;
+    private static final double GRAVITY_DOWNWARDS_MOTION = 0.04D;
 
     @SideOnly(Side.CLIENT)
     @Override

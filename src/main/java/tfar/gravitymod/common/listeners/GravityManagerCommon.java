@@ -24,7 +24,6 @@ import tfar.gravitymod.api.ITickOnMouseCursor;
 import tfar.gravitymod.api.events.GravityTransitionEvent;
 import tfar.gravitymod.asm.Hooks;
 import tfar.gravitymod.common.packets.PacketHandler;
-import tfar.gravitymod.common.packets.config.ModCompatConfigCheckMessage;
 import tfar.gravitymod.common.packets.gravitychange.GravityChangeMessage;
 import tfar.gravitymod.common.capabilities.gravitydirection.GravityDirectionCapability;
 import tfar.gravitymod.common.capabilities.gravitydirection.IGravityDirectionCapability;
@@ -114,7 +113,6 @@ public class GravityManagerCommon {
                 // When the client receives the gravity change packet, their position changes client side, we teleport them back via a packet
                 ((EntityPlayerMP)event.player).connection.setPlayerLocation(event.player.posX, event.player.posY, event.player.posZ, event.player.rotationYaw, event.player.rotationPitch);
             }
-            PacketHandler.INSTANCE.sendTo(new ModCompatConfigCheckMessage(ItemStackUseListener.getHashCode()), (EntityPlayerMP)event.player);
         }
     }
 
