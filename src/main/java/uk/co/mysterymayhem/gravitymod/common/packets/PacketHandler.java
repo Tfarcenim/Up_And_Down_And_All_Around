@@ -19,10 +19,6 @@ public class PacketHandler {
 
     private static int packetID = 0;
 
-    public static <REQ extends IMessage, REPLY extends IMessage> void registerMessage(Class<? extends IMessageHandler<REQ, REPLY>> messageHandler, Class<REQ> requestMessageType, Side processingSide) {
-        INSTANCE.registerMessage(messageHandler, requestMessageType, nextID(), processingSide);
-    }
-
     private static int nextID() {
         return packetID++;
     }

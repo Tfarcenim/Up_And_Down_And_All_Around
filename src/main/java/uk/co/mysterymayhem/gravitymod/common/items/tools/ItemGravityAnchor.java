@@ -23,7 +23,6 @@ import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.world.World;
 import net.minecraftforge.client.model.ModelLoader;
-import net.minecraftforge.fml.common.FMLLog;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import net.minecraftforge.registries.IForgeRegistry;
@@ -32,7 +31,6 @@ import uk.co.mysterymayhem.gravitymod.api.API;
 import uk.co.mysterymayhem.gravitymod.api.EnumGravityDirection;
 import uk.co.mysterymayhem.gravitymod.api.ITickOnMouseCursor;
 import uk.co.mysterymayhem.gravitymod.asm.Hooks;
-import uk.co.mysterymayhem.gravitymod.common.entities.EntityGravityItem;
 import uk.co.mysterymayhem.gravitymod.common.registries.GravityPriorityRegistry;
 import uk.co.mysterymayhem.gravitymod.common.registries.IGravityModItem;
 import uk.co.mysterymayhem.gravitymod.common.registries.ModItems;
@@ -68,24 +66,6 @@ public class ItemGravityAnchor extends Item implements ITickOnMouseCursor, IGrav
     }
 
     @Override
-    public Entity createEntity(World world, Entity location, ItemStack itemstack) {
-        EnumGravityDirection direction = EnumGravityDirection.getSafeDirectionFromOrdinal(itemstack.getItemDamage());
-        if (direction == EnumGravityDirection.DOWN) {
-            return null;
-        }
-        if (location instanceof EntityItem) {
-            return new EntityGravityItem(direction, (EntityItem)location);
-        }
-        else {
-            //what
-            FMLLog.bigWarning(
-                    "Entity argument should always be an EntityItem, it was "
-                            + (location == null ? "null" : "something else (not null)"));
-            return null;
-        }
-    }
-
-    @Override
     public String getModObjectName() {
         return "gravityanchor";
     }
@@ -109,12 +89,6 @@ public class ItemGravityAnchor extends Item implements ITickOnMouseCursor, IGrav
     public String getUnlocalizedName(ItemStack stack) {
         int i = stack.getItemDamage();
         return super.getUnlocalizedName() + "." + EnumGravityDirection.getSafeDirectionFromOrdinal(i).getName();
-    }
-
-    @Override
-    public boolean hasCustomEntity(ItemStack stack) {
-        EnumGravityDirection direction = EnumGravityDirection.getSafeDirectionFromOrdinal(stack.getItemDamage());
-        return direction != EnumGravityDirection.DOWN;
     }
 
     // Counteracts vanilla gravity and applies motion with the same strength in the gravity direction of the item

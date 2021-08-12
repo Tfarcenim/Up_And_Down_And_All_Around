@@ -70,14 +70,6 @@ public class CombinedPrePostModifier implements IPrePostModifier<EntityPlayerWit
         return this.first;
     }
 
-    public ProcessingOrder getProcessingOrder() {
-        return this.processingOrder;
-    }
-
-    public IPrePostModifier<EntityPlayerWithGravity> getSecond() {
-        return this.second;
-    }
-
     @Override
     public int getUniqueID() {
         return this.id;

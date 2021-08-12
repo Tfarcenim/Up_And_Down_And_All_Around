@@ -27,10 +27,6 @@ import uk.co.mysterymayhem.gravitymod.common.packets.gravitychange.GravityChange
 @SideOnly(Side.CLIENT)
 public class GravityManagerClient extends GravityManagerCommon {
 
-    public EnumGravityDirection getClientGravity() {
-        return GravityDirectionCapability.getGravityDirection(Minecraft.getMinecraft().player);
-    }
-
     @Override
     public void handlePacket(GravityChangeMessage message, MessageContext context) {
         switch (message.getPacketType()) {

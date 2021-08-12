@@ -1,21 +1,11 @@
 package uk.co.mysterymayhem.gravitymod;
 
-import net.minecraft.block.Block;
-import net.minecraft.enchantment.Enchantment;
 import net.minecraft.item.Item;
-import net.minecraft.item.crafting.IRecipe;
-import net.minecraft.potion.Potion;
-import net.minecraft.potion.PotionType;
-import net.minecraft.util.SoundEvent;
-import net.minecraft.world.biome.Biome;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.RegistryEvent;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
-import net.minecraftforge.fml.common.registry.EntityEntry;
-import net.minecraftforge.fml.common.registry.VillagerRegistry;
 import uk.co.mysterymayhem.gravitymod.common.capabilities.gravitydirection.GravityDirectionCapability;
 import uk.co.mysterymayhem.gravitymod.common.config.ConfigHandler;
-import uk.co.mysterymayhem.gravitymod.common.events.BlockBreakListener;
 import uk.co.mysterymayhem.gravitymod.common.listeners.GravityManagerCommon;
 import uk.co.mysterymayhem.gravitymod.common.listeners.ItemStackUseListener;
 import uk.co.mysterymayhem.gravitymod.common.packets.PacketHandler;
@@ -60,7 +50,6 @@ public class CommonProxy extends AbstractIFMLStagedRegistry<AbstractModObjectReg
     public void registerListeners() {
         MinecraftForge.EVENT_BUS.register(this.getGravityManager());
         MinecraftForge.EVENT_BUS.register(ItemStackUseListener.class);
-        MinecraftForge.EVENT_BUS.register(BlockBreakListener.class);
         MinecraftForge.EVENT_BUS.register(ConfigHandler.class);
 //        MinecraftForge.EVENT_BUS.register(new DebugHelperListener());
     }

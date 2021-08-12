@@ -43,45 +43,6 @@ import java.util.Set;
  */
 public class GravityManagerCommon {
 
-    public static boolean playerIsAffectedByNormalGravity(EntityPlayerMP player) {
-        if (!(player instanceof FakePlayer)) {
-            NonNullList<ItemStack> armorInventory = player.inventory.armorInventory;
-            int numRequired = ConfigHandler.numNormalGravityEnablersRequiredForNormalGravity;
-            int numNormalGravityEnablers = 0;
-            for (ItemStack stack : armorInventory) {
-                if (!stack.isEmpty()) {
-                    if (stack.getItem() instanceof IWeakGravityEnabler) {
-                        numNormalGravityEnablers += ConfigHandler.numNormalEnablersWeakEnablersCountsAs;
-                        if (numNormalGravityEnablers >= numRequired) {
-                            return true;
-                        }
-                    }
-                }
-            }
-        }
-        return false;
-    }
-
-    public static boolean playerIsAffectedByStrongGravity(EntityPlayerMP playerMP) {
-        return !(playerMP instanceof FakePlayer);
-    }
-
-    public static boolean playerIsAffectedByWeakGravity(EntityPlayerMP player) {
-        if (!(player instanceof FakePlayer)) {
-            NonNullList<ItemStack> armorInventory = player.inventory.armorInventory;
-            int numRequired = ConfigHandler.numWeakGravityEnablersRequiredForWeakGravity;
-            int numWeakGravityEnablers = 0;
-            for (ItemStack stack : armorInventory) {
-                if (!stack.isEmpty() && stack.getItem() instanceof IWeakGravityEnabler) {
-                    if (++numWeakGravityEnablers == numRequired) {
-                        return true;
-                    }
-                }
-            }
-        }
-        return false;
-    }
-
     public void handlePacket(GravityChangeMessage message, MessageContext context) {
         switch (message.getPacketType()) {
             case CLIENT_REQUEST_GRAVITY_OF_PLAYER:

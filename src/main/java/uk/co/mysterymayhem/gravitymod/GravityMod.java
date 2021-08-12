@@ -16,7 +16,6 @@ import org.apache.logging.log4j.Logger;
 import org.apache.logging.log4j.message.StringFormatterMessageFactory;
 import uk.co.mysterymayhem.gravitymod.common.config.ConfigHandler;
 import uk.co.mysterymayhem.gravitymod.common.listeners.ItemStackUseListener;
-import uk.co.mysterymayhem.gravitymod.common.modsupport.ModSupport;
 
 /**
  * Created by Mysteryem on 2016-08-04.
@@ -26,7 +25,6 @@ import uk.co.mysterymayhem.gravitymod.common.modsupport.ModSupport;
         modid = GravityMod.MOD_ID,
         version = GravityMod.VERSION,
         acceptedMinecraftVersions = GravityMod.MINECRAFT_VERSION,
-        dependencies = GravityMod.DEPENDENCIES_LIST,
         name = GravityMod.USER_FRIENDLY_NAME,
         acceptableRemoteVersions = GravityMod.ACCEPTABLE_VERSIONS,
         guiFactory = GravityMod.GUI_FACTORY
@@ -46,14 +44,10 @@ public class GravityMod {
     public static final String ACCEPTABLE_VERSIONS = "[" + MAJOR_VERSION + '.' + MINOR_VERSION + ',' + MAJOR_VERSION + '.' + (MINOR_VERSION + 1) + ")";
     public static final String MOD_ID = "mysttmtgravitymod";
     public static final String MINECRAFT_VERSION = "1.12.2";
-    //Forge 12.18.2.2107 adds Block#getStateForPlacement
-    //Baubles 1.3.BETA9 adds default methods to IRenderBauble
-    public static final String DEPENDENCIES_LIST = "required-after:forge@[14.23.4.2744,];after:" + ModSupport.BAUBLES_MOD_ID + "@[1.3.BETA9,]";
     public static final String USER_FRIENDLY_NAME = "Up And Down And All Around";
     public static final String GUI_FACTORY = "uk.co.mysterymayhem.gravitymod.client.config.GravityModGuiFactory";
 
     public static final EnumRarity RARITY_NORMAL = EnumHelper.addRarity("NORMAL_GRAVITY", TextFormatting.DARK_PURPLE, "Normal Strength");
-    public static final EnumRarity RARITY_STRONG = EnumHelper.addRarity("STRONG_GRAVITY", TextFormatting.BLUE, "Strong Strength");
 
     private static final Logger logger = LogManager.getLogger("UpAndDownAndAllAround", StringFormatterMessageFactory.INSTANCE);
 
@@ -97,8 +91,6 @@ public class GravityMod {
     public static void logInfo(String formattableString, Object... objects) {
         logger.info(formattableString, objects);
     }
-
-    public static ResourceLocation resource(String path) {return new ResourceLocation(GravityMod.MOD_ID, path);}
 
     @EventHandler
     public void preInit(FMLPreInitializationEvent event) {

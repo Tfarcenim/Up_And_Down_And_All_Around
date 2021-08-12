@@ -366,34 +366,29 @@ public abstract class EntityPlayerWithGravity extends EntityPlayer {
     public void knockBack(Entity attacker, float strength, double xRatio, double zRatio) {
 //        FMLLog.info("x:%s, z:%s", xRatio, zRatio);
         this.makeMotionRelative();
-        if (attacker != null) {
-            // Standard mob attacks, also arrows, not sure about others (checked first
-            if (xRatio == attacker.posX - this.posX && zRatio == attacker.posZ - this.posZ) {
+        // Standard mob attacks, also arrows, not sure about others (checked first
+        if (xRatio == attacker.posX - this.posX && zRatio == attacker.posZ - this.posZ) {
 //                FMLLog.info("Distance based attack");
-                EnumGravityDirection direction = API.getGravityDirection(this).getInverseAdjustmentFromDOWNDirection();
-                double[] d_attacker = direction.adjustXYZValues(attacker.posX, attacker.posY, attacker.posZ);
-                double[] d_player = direction.adjustXYZValues(this.posX, this.posY, this.posZ);
-                xRatio = d_attacker[0] - d_player[0];
-                zRatio = d_attacker[2] - d_player[2];
-                super.knockBack(attacker, strength, xRatio, zRatio);
-            }
-            // Usually the knockback enchantment
-            else if (xRatio == (double)MathHelper.sin(attacker.rotationYaw * 0.017453292F) && zRatio == (double)-MathHelper.cos(attacker.rotationYaw *
-                    0.017453292F)) {
+            EnumGravityDirection direction = API.getGravityDirection(this).getInverseAdjustmentFromDOWNDirection();
+            double[] d_attacker = direction.adjustXYZValues(attacker.posX, attacker.posY, attacker.posZ);
+            double[] d_player = direction.adjustXYZValues(this.posX, this.posY, this.posZ);
+            xRatio = d_attacker[0] - d_player[0];
+            zRatio = d_attacker[2] - d_player[2];
+            super.knockBack(attacker, strength, xRatio, zRatio);
+        }
+        // Usually the knockback enchantment
+        else if (xRatio == (double)MathHelper.sin(attacker.rotationYaw * 0.017453292F) && zRatio == (double)-MathHelper.cos(attacker.rotationYaw *
+                0.017453292F)) {
 //                FMLLog.info("Rotation based attack");
-                Vec3d lookVec = attacker.getLookVec();
-                EnumGravityDirection direction = API.getGravityDirection(this);
-                Vec3d adjustedLook = direction.adjustLookVec(lookVec);
-                xRatio = -adjustedLook.x;
-                zRatio = -adjustedLook.z;
-                super.knockBack(attacker, strength, xRatio, zRatio);
-            }
-            else {
-//                FMLLog.info("Unknown attack");
-                super.knockBack(attacker, strength, xRatio, zRatio);
-            }
+            Vec3d lookVec = attacker.getLookVec();
+            EnumGravityDirection direction = API.getGravityDirection(this);
+            Vec3d adjustedLook = direction.adjustLookVec(lookVec);
+            xRatio = -adjustedLook.x;
+            zRatio = -adjustedLook.z;
+            super.knockBack(attacker, strength, xRatio, zRatio);
         }
         else {
+//                FMLLog.info("Unknown attack");
             super.knockBack(attacker, strength, xRatio, zRatio);
         }
         this.popMotionStack();

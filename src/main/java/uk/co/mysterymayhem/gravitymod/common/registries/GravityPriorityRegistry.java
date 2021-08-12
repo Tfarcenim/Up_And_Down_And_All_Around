@@ -1,8 +1,5 @@
 package uk.co.mysterymayhem.gravitymod.common.registries;
 
-import net.minecraft.util.math.MathHelper;
-import uk.co.mysterymayhem.gravitymod.api.EnumGravityTier;
-
 /**
  * Created by Mysteryem on 2016-11-08.
  */
@@ -37,60 +34,4 @@ public class GravityPriorityRegistry {
     // Extra value
     public static final int GRAVITY_ANCHOR = PERSONAL_GRAVITY_CONTROLLER + 1;
 
-    public static final int STRONG_MIN = GRAVITY_ANCHOR + 1;
-    public static final int STRONG_MAX = STRONG_MIN + PRIORITY_SIZE;
-    // Extra value
-    public static final int ULTIMATE_GRAVITY_CONTROLLER = STRONG_MAX + 1; //Integer.MAX_VALUE
-
-    public static EnumGravityTier getTierFromPriority(int priority) {
-        if (isPriorityWeak(priority)) {
-            return EnumGravityTier.WEAK;
-        }
-        if (isPriorityStrong(priority)) {
-            return EnumGravityTier.STRONG;
-        }
-        return EnumGravityTier.NORMAL;
-    }
-
-    public static boolean isPriorityWeak(int priority) {
-        return priority <= WEAK_GRAVITY_CONTROLLER;
-    }
-
-    public static boolean isPriorityNormal(int priority) {
-        return !(isPriorityWeak(priority) || isPriorityStrong(priority));
-    }
-
-    public static boolean isPriorityStrong(int priority) {
-        return priority >= STRONG_MIN;
-    }
-
-    public static int interpolateNormal(double percent) {
-        percent = MathHelper.clamp(percent, 0.0, 1.0);
-        return (int)(NORMAL_MIN + PRIORITY_SIZE * percent);
-    }
-
-    public static int interpolateNormal(float percent) {
-        percent = MathHelper.clamp(percent, 0.0f, 1.0f);
-        return (int)(NORMAL_MIN + PRIORITY_SIZE * percent);
-    }
-
-    public static int interpolateStrong(double percent) {
-        percent = MathHelper.clamp(percent, 0.0, 1.0);
-        return (int)(STRONG_MIN + PRIORITY_SIZE * percent);
-    }
-
-    public static int interpolateStrong(float percent) {
-        percent = MathHelper.clamp(percent, 0.0f, 1.0f);
-        return (int)(STRONG_MIN + PRIORITY_SIZE * percent);
-    }
-
-    public static int interpolateWeak(double percent) {
-        percent = MathHelper.clamp(percent, 0.0, 1.0);
-        return (int)(WEAK_MIN + PRIORITY_SIZE * percent);
-    }
-
-    public static int interpolateWeak(float percent) {
-        percent = MathHelper.clamp(percent, 0.0f, 1.0f);
-        return (int)(WEAK_MIN + PRIORITY_SIZE * percent);
-    }
 }
