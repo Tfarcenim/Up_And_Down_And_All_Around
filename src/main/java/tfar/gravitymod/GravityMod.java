@@ -58,14 +58,8 @@ public class GravityMod {
     @SidedProxy(clientSide = "tfar.gravitymod.ClientProxy", serverSide = "tfar.gravitymod.CommonProxy")
     public static CommonProxy proxy;
 
-    private static int currentEntityID = 0;
-
     static {
         FluidRegistry.enableUniversalBucket();
-    }
-
-    public static int getNextEntityID() {
-        return currentEntityID++;
     }
 
     public static void logWarning(String formattableString, Object... objects) {
@@ -95,18 +89,6 @@ public class GravityMod {
     public void preInit(FMLPreInitializationEvent event) {
         //TODO: config stuff instead of hardcoding for just the Botania rod (or just for the air sigil
         ConfigHandler.initialConfigLoad(event);
-//        File configFile = event.getSuggestedConfigurationFile();
-//        Configuration config = new Configuration(configFile);
-//        config.load();
-//
-//        MOTION_IS_RELATIVE_WHEN_PLAYERS_USE_ITEMS = config.getBoolean(
-//                "relative_motion_when_using_items",
-//                Configuration.CATEGORY_GENERAL,
-//                true,
-//                "true if player motion should be relative when players use items, this will make it so that items such" +
-//                        " as Botania's Rod of the Skies will send the player upwards relative to their view. But it will" +
-//                        " make any items which, when used, adjust the player's motion based off of their rotation, send" +
-//                        " the player in the wrong direction, such as Blood.");
 
         proxy.preInit();
     }

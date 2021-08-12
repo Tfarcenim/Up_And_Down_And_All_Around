@@ -335,17 +335,6 @@ public class PatchEntityPlayerSP extends ClassPatcher {
                                         AbstractInsnNode previous = iterator.previous();
                                         if (previous instanceof LabelNode) {
                                             labelForGotoJumpInsnNode = (LabelNode)previous;
-                                            // ClassWriter is going to compute the frames, the commented out code is untested
-//                                            for(;iterator.hasNext();) {
-//                                                node = iterator.next();
-//                                                if (node instanceof VarInsnNode) {
-//                                                    varInsnNode = (VarInsnNode)node;
-//                                                    if (varInsnNode.getOpcode() == Opcodes.ALOAD && varInsnNode.var == 0) {
-//                                                        FrameNode frameSameNode = new FrameNode(Opcodes.F_SAME, 0, new Object[0], 0, new Object[0]);
-//                                                        break;
-//                                                    }
-//                                                }
-//                                            }
                                             break;
                                         }
                                     }
@@ -364,7 +353,7 @@ public class PatchEntityPlayerSP extends ClassPatcher {
         return false;
     }
 
-    private class UpdateAutoJump extends MethodPatcher {
+    public class UpdateAutoJump extends MethodPatcher {
 
         UpdateAutoJump() {
             // Normal patches

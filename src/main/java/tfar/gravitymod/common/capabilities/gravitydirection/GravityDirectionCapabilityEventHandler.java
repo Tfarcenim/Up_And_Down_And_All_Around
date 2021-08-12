@@ -22,12 +22,12 @@ public class GravityDirectionCapabilityEventHandler {
 
     @SubscribeEvent
     public static void onEntityContruct(AttachCapabilitiesEvent<Entity> event) {
-        Object ent = event.getObject();
+        Entity ent = event.getObject();
         if (ent instanceof EntityPlayer) {
             final EntityPlayer player = (EntityPlayer)ent;
             event.addCapability(GravityDirectionCapability.CAPABILITY_RESOURCE_LOCATION, new ICapabilitySerializable<NBTPrimitive>() {
 
-                IGravityDirectionCapability instance = GravityDirectionCapability.GRAVITY_CAPABILITY_INSTANCE.getDefaultInstance();
+                final IGravityDirectionCapability instance = GravityDirectionCapability.GRAVITY_CAPABILITY_INSTANCE.getDefaultInstance();
 
                 // Give the player a GravityAxisAlignedBB as early as possible (can't give them one during the EntityConstructingEvent
                 // as the AttachCapabilitiesEvent is fired after it
