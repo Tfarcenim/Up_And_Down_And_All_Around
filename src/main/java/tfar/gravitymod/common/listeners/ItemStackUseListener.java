@@ -101,16 +101,6 @@ public class ItemStackUseListener {
        // Hooks.popMotionStack(event.getEntityPlayer());
     }
 
-    public enum EnumItemStackUseCompat {
-        BLOCK("onUseOnBlock"), GENERAL("onUseGeneral"), STOPPED_USING("onStoppedUsing");
-
-        public final String configName;
-
-        EnumItemStackUseCompat(String configName) {
-            this.configName = configName;
-        }
-    }
-
     private static class ItemComparator implements Comparator<Item> {
         @Override
         public int compare(Item o1, Item o2) {

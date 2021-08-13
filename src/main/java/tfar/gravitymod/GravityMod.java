@@ -2,6 +2,7 @@ package tfar.gravitymod;
 
 import net.minecraft.item.EnumRarity;
 import net.minecraft.util.text.TextFormatting;
+import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.common.util.EnumHelper;
 import net.minecraftforge.fluids.FluidRegistry;
 import net.minecraftforge.fml.common.Mod;
@@ -13,8 +14,12 @@ import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.apache.logging.log4j.message.StringFormatterMessageFactory;
+import tfar.gravitymod.client.listeners.EntityRenderListener;
+import tfar.gravitymod.client.listeners.PlayerCameraListener;
+import tfar.gravitymod.common.capabilities.gravitydirection.GravityDirectionCapability;
 import tfar.gravitymod.common.config.ConfigHandler;
 import tfar.gravitymod.common.listeners.ItemStackUseListener;
+import tfar.gravitymod.common.packets.PacketHandler;
 
 /**
  * Created by Mysteryem on 2016-08-04.
@@ -25,8 +30,7 @@ import tfar.gravitymod.common.listeners.ItemStackUseListener;
         version = GravityMod.VERSION,
         acceptedMinecraftVersions = GravityMod.MINECRAFT_VERSION,
         name = GravityMod.USER_FRIENDLY_NAME,
-        acceptableRemoteVersions = GravityMod.ACCEPTABLE_VERSIONS,
-        guiFactory = GravityMod.GUI_FACTORY
+        acceptableRemoteVersions = GravityMod.ACCEPTABLE_VERSIONS
 )
 public class GravityMod {
     // Major changes, 1 was used for TMT, 2 is main development, 3 will likely be for initial full release and beyond
@@ -44,9 +48,6 @@ public class GravityMod {
     public static final String MOD_ID = "mysttmtgravitymod";
     public static final String MINECRAFT_VERSION = "1.12.2";
     public static final String USER_FRIENDLY_NAME = "Up And Down And All Around";
-    public static final String GUI_FACTORY = "uk.co.mysterymayhem.gravitymod.client.config.GravityModGuiFactory";
-
-    public static final EnumRarity RARITY_NORMAL = EnumHelper.addRarity("NORMAL_GRAVITY", TextFormatting.DARK_PURPLE, "Normal Strength");
 
     private static final Logger logger = LogManager.getLogger("UpAndDownAndAllAround", StringFormatterMessageFactory.INSTANCE);
 
@@ -69,7 +70,17 @@ public class GravityMod {
     @EventHandler
     public void init(FMLInitializationEvent event) {
         // Register listeners, blocks etc.
-        proxy.init();
+
+        MinecraftForge.EVENT_BUS.register(this);
+        GravityDirectionCapability.registerCapability();
+        proxy.registerGravityManager();
+        PacketHandler.registerMessages();
+
+        MinecraftForge.EVENT_BUS.register(proxy.getGravityManager());
+        MinecraftForge.EVENT_BUS.register(ItemStackUseListener.class);
+        MinecraftForge.EVENT_BUS.register(ConfigHandler.class);
+        MinecraftForge.EVENT_BUS.register(PlayerCameraListener.class);
+        MinecraftForge.EVENT_BUS.register(EntityRenderListener.class);
     }
 
     @EventHandler
@@ -78,7 +89,6 @@ public class GravityMod {
         if (GravityMod.GENERAL_DEBUG) {
             GravityMod.logInfo("HashCode: " + ItemStackUseListener.getHashCode());
         }
-        proxy.postInit();
     }
 
     public static void logInfo(String formattableString, Object... objects) {
@@ -89,8 +99,6 @@ public class GravityMod {
     public void preInit(FMLPreInitializationEvent event) {
         //TODO: config stuff instead of hardcoding for just the Botania rod (or just for the air sigil
         ConfigHandler.initialConfigLoad(event);
-
-        proxy.preInit();
     }
 
 }
