@@ -1,14 +1,10 @@
 package tfar.gravitymod.common.listeners;
 
-import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityTracker;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
-import net.minecraft.item.Item;
-import net.minecraft.item.ItemStack;
 import net.minecraft.world.WorldServer;
 import net.minecraftforge.common.MinecraftForge;
-import net.minecraftforge.event.entity.living.LivingDeathEvent;
 import net.minecraftforge.event.entity.player.PlayerEvent.Clone;
 import net.minecraftforge.fml.common.eventhandler.EventPriority;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
@@ -21,10 +17,10 @@ import tfar.gravitymod.GravityMod;
 import tfar.gravitymod.api.API;
 import tfar.gravitymod.api.EnumGravityDirection;
 import tfar.gravitymod.api.events.GravityTransitionEvent;
-import tfar.gravitymod.common.packets.PacketHandler;
-import tfar.gravitymod.common.packets.gravitychange.GravityChangeMessage;
 import tfar.gravitymod.common.capabilities.gravitydirection.GravityDirectionCapability;
 import tfar.gravitymod.common.capabilities.gravitydirection.IGravityDirectionCapability;
+import tfar.gravitymod.common.packets.PacketHandler;
+import tfar.gravitymod.common.packets.gravitychange.GravityChangeMessage;
 import tfar.gravitymod.common.registries.GravityPriorityRegistry;
 
 import javax.annotation.Nonnull;
@@ -77,23 +73,6 @@ public class GravityManagerCommon {
                 MinecraftForge.EVENT_BUS.post(new GravityTransitionEvent.Server.Clone.Pre(originalDirection, EnumGravityDirection.DOWN, cloneMP, originalMP, event));
                 GravityDirectionCapability.setGravityDirection(clone, originalDirection, false);
                 MinecraftForge.EVENT_BUS.post(new GravityTransitionEvent.Server.Clone.Post(originalDirection, EnumGravityDirection.DOWN, cloneMP, originalMP, event));
-            }
-        }
-
-    }
-
-    //TODO: Still needed?
-    // Prevent players from getting kicked for flying after dying
-    // The "allowFlying = true" seems to be lost when the player respawns
-    @SubscribeEvent(priority = EventPriority.LOWEST)
-    public void onPlayerDeath(LivingDeathEvent event) {
-        Entity entity = event.getEntity();
-        if (entity instanceof EntityPlayer) {
-            EntityPlayer player = (EntityPlayer)entity;
-            EnumGravityDirection gravityDirection = GravityDirectionCapability.getGravityDirection(player);
-            if (gravityDirection != EnumGravityDirection.DOWN) {
-                //TODO: Try removing this now that players don't get kicked for falling
-                player.capabilities.allowFlying = true;
             }
         }
     }
