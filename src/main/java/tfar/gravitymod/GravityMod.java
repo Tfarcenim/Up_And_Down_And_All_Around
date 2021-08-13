@@ -1,9 +1,6 @@
 package tfar.gravitymod;
 
-import net.minecraft.item.EnumRarity;
-import net.minecraft.util.text.TextFormatting;
 import net.minecraftforge.common.MinecraftForge;
-import net.minecraftforge.common.util.EnumHelper;
 import net.minecraftforge.fluids.FluidRegistry;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.Mod.EventHandler;
@@ -18,7 +15,6 @@ import tfar.gravitymod.client.listeners.EntityRenderListener;
 import tfar.gravitymod.client.listeners.PlayerCameraListener;
 import tfar.gravitymod.common.capabilities.gravitydirection.GravityDirectionCapability;
 import tfar.gravitymod.common.config.ConfigHandler;
-import tfar.gravitymod.common.listeners.ItemStackUseListener;
 import tfar.gravitymod.common.packets.PacketHandler;
 
 /**
@@ -77,18 +73,9 @@ public class GravityMod {
         PacketHandler.registerMessages();
 
         MinecraftForge.EVENT_BUS.register(proxy.getGravityManager());
-        MinecraftForge.EVENT_BUS.register(ItemStackUseListener.class);
         MinecraftForge.EVENT_BUS.register(ConfigHandler.class);
         MinecraftForge.EVENT_BUS.register(PlayerCameraListener.class);
         MinecraftForge.EVENT_BUS.register(EntityRenderListener.class);
-    }
-
-    @EventHandler
-    public void postInit(FMLPostInitializationEvent event) {
-        ConfigHandler.processLateConfig();
-        if (GravityMod.GENERAL_DEBUG) {
-            GravityMod.logInfo("HashCode: " + ItemStackUseListener.getHashCode());
-        }
     }
 
     public static void logInfo(String formattableString, Object... objects) {

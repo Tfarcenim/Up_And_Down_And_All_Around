@@ -8,7 +8,6 @@ import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import tfar.gravitymod.GravityMod;
 import tfar.gravitymod.common.capabilities.gravitydirection.GravityDirectionCapability;
-import tfar.gravitymod.common.listeners.ItemStackUseListener;
 
 import java.io.File;
 import java.util.*;
@@ -97,14 +96,6 @@ public class ConfigHandler {
         GravityMod.logInfo("Loaded config");
     }
 
-    public static void processLateConfig() {
-        ItemStackUseListener.clearPrePostModifiers();
-        ItemStackUseListener.makeHash();
-        if (GravityMod.GENERAL_DEBUG) {
-            GravityMod.logInfo("HashCode: " + ItemStackUseListener.getHashCode());
-        }
-    }
-
     private static void cleanup() {
         category = null;
         prop = null;
@@ -126,7 +117,6 @@ public class ConfigHandler {
     public static void onConfigChanged(ConfigChangedEvent.OnConfigChangedEvent event) {
         if (event.getModID().equals(GravityMod.MOD_ID)) {
             syncConfig(false);
-            processLateConfig();
         }
     }
 
