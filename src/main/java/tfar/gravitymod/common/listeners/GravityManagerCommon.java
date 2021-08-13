@@ -21,7 +21,6 @@ import tfar.gravitymod.common.capabilities.gravitydirection.GravityDirectionCapa
 import tfar.gravitymod.common.capabilities.gravitydirection.IGravityDirectionCapability;
 import tfar.gravitymod.common.packets.PacketHandler;
 import tfar.gravitymod.common.packets.gravitychange.GravityChangeMessage;
-import tfar.gravitymod.common.registries.GravityPriorityRegistry;
 
 import javax.annotation.Nonnull;
 import java.util.Set;
@@ -32,14 +31,6 @@ import java.util.Set;
 public class GravityManagerCommon {
 
     public void handlePacket(GravityChangeMessage message, MessageContext context) {
-        switch (message.getPacketType()) {
-            case CLIENT_REQUEST_GRAVITY_OF_PLAYER:
-                //TODO: Move all packet handling logic into this method (using the context to get the worldthread when needed), return type will need to change!
-                // This is handled in the GravityChangeMessage.WhatsUpMessageHandler class currently so as to minimise response time
-                break;
-            default:
-                break;
-        }
     }
 
     @SubscribeEvent
@@ -108,7 +99,7 @@ public class GravityManagerCommon {
                     // FIXME: Returns false if we set our gravity to downwards (the same as DEFAULT) and then unset it. (the last change was high priority,
                     // so it returns false)
                     int previousTickPriority = gravityCapability.getPreviousTickPriority();
-                    if (previousTickPriority == GravityPriorityRegistry.WORLD_DEFAULT) {
+                    if (previousTickPriority ==Integer.MIN_VALUE) {
                         reverseTimeOut = 0;
                     }
                     // Attempting to change to a different direction, we should decrement the reverseTimeout

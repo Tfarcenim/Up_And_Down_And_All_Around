@@ -9,7 +9,6 @@ import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.gameevent.TickEvent;
 import tfar.gravitymod.api.API;
 import tfar.gravitymod.api.EnumGravityDirection;
-import tfar.gravitymod.common.registries.GravityPriorityRegistry;
 
 @Mod.EventBusSubscriber
 public class Testmod {
@@ -27,7 +26,7 @@ public class Testmod {
     public static void tick(TickEvent.PlayerTickEvent e) {
         if (!e.player.world.isRemote && e.phase == TickEvent.Phase.START) {
             if (flipped) {
-                API.setPlayerGravity(EnumGravityDirection.fromEnumFacing(EnumFacing.UP), (EntityPlayerMP) e.player, GravityPriorityRegistry.GRAVITY_ANCHOR + 1);
+                API.setPlayerGravity(EnumGravityDirection.fromEnumFacing(EnumFacing.UP), (EntityPlayerMP) e.player, 0);
             } else {
             }
         }

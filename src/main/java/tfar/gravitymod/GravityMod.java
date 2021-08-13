@@ -1,12 +1,10 @@
 package tfar.gravitymod;
 
 import net.minecraftforge.common.MinecraftForge;
-import net.minecraftforge.fluids.FluidRegistry;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.Mod.EventHandler;
 import net.minecraftforge.fml.common.SidedProxy;
 import net.minecraftforge.fml.common.event.FMLInitializationEvent;
-import net.minecraftforge.fml.common.event.FMLPostInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -16,6 +14,8 @@ import tfar.gravitymod.client.listeners.PlayerCameraListener;
 import tfar.gravitymod.common.capabilities.gravitydirection.GravityDirectionCapability;
 import tfar.gravitymod.common.config.ConfigHandler;
 import tfar.gravitymod.common.packets.PacketHandler;
+
+import static tfar.gravitymod.common.config.ConfigHandler.syncConfig;
 
 /**
  * Created by Mysteryem on 2016-08-04.
@@ -49,15 +49,8 @@ public class GravityMod {
 
     public static final boolean GENERAL_DEBUG = false;
 
-    @Mod.Instance(GravityMod.MOD_ID)
-    public static GravityMod INSTANCE;
-
     @SidedProxy(clientSide = "tfar.gravitymod.ClientProxy", serverSide = "tfar.gravitymod.CommonProxy")
     public static CommonProxy proxy;
-
-    static {
-        FluidRegistry.enableUniversalBucket();
-    }
 
     public static void logWarning(String formattableString, Object... objects) {
         logger.warn(formattableString, objects);
@@ -85,7 +78,7 @@ public class GravityMod {
     @EventHandler
     public void preInit(FMLPreInitializationEvent event) {
         //TODO: config stuff instead of hardcoding for just the Botania rod (or just for the air sigil
-        ConfigHandler.initialConfigLoad(event);
+        syncConfig();
     }
 
 }
