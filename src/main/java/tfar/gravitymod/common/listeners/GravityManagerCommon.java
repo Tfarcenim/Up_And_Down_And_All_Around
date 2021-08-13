@@ -114,29 +114,6 @@ public class GravityManagerCommon {
         }
     }
 
-    @SubscribeEvent(priority = EventPriority.LOW)
-    public void onPlayerUpdateTickEnd(PlayerTickEvent event) {
-        if (event.phase == TickEvent.Phase.END) {
-            //Phase = END
-            //If done at start of tick, when putting an item onto the mouse cursor, when it's put back into the player's
-            //inventory, there's a single tick where the item won't be ticked. Issue does not occur when done at the end of
-            //the player tick.
-            //VANILLA BUG/FEATURE:
-            //  The item on the mouse cursor is always null if the player is in creative and in their own inventory
-            if (event.side == Side.SERVER) {
-                EntityPlayer player = event.player;
-                if (player.inventory != null) {
-//                    ItemStack itemStack = event.player.inventoryContainer.inventorySlots.getItemStack();
-                    ItemStack itemStack = event.player.inventory.getItemStack();
-                    if (!itemStack.isEmpty()) {
-                        Item item = itemStack.getItem();
-                    }
-                }
-            }
-            //Hooks.popMotionStack(event.player);
-        }
-    }
-
     @SubscribeEvent(priority = EventPriority.HIGH)
     public void onPlayerUpdateTickStart(PlayerTickEvent event) {
         if (event.phase == TickEvent.Phase.START) {

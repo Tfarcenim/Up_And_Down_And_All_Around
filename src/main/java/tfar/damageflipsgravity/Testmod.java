@@ -4,6 +4,7 @@ import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.util.EnumFacing;
 import net.minecraftforge.event.entity.living.LivingDamageEvent;
 import net.minecraftforge.fml.common.Mod;
+import net.minecraftforge.fml.common.eventhandler.EventPriority;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.gameevent.TickEvent;
 import tfar.gravitymod.api.API;
@@ -22,13 +23,12 @@ public class Testmod {
         }
     }
 
-    @SubscribeEvent
+    @SubscribeEvent(priority = EventPriority.HIGHEST)
     public static void tick(TickEvent.PlayerTickEvent e) {
         if (!e.player.world.isRemote && e.phase == TickEvent.Phase.END) {
             if (flipped) {
                 API.setPlayerGravity(EnumGravityDirection.fromEnumFacing(EnumFacing.UP), (EntityPlayerMP) e.player, GravityPriorityRegistry.GRAVITY_ANCHOR + 1);
             } else {
-                //API.setPlayerGravity(EnumGravityDirection.fromEnumFacing(EnumFacing.DOWN), (EntityPlayerMP) e.player, GravityPriorityRegistry.GRAVITY_ANCHOR);
             }
         }
     }
