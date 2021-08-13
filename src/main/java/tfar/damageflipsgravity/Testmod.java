@@ -1,14 +1,12 @@
 package tfar.damageflipsgravity;
 
 import net.minecraft.entity.player.EntityPlayerMP;
-import net.minecraft.util.EnumFacing;
 import net.minecraftforge.event.entity.living.LivingDamageEvent;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.eventhandler.EventPriority;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.gameevent.TickEvent;
 import tfar.gravitymod.api.API;
-import tfar.gravitymod.api.EnumGravityDirection;
 
 @Mod.EventBusSubscriber
 public class Testmod {
@@ -26,7 +24,7 @@ public class Testmod {
     public static void tick(TickEvent.PlayerTickEvent e) {
         if (!e.player.world.isRemote && e.phase == TickEvent.Phase.START) {
             if (flipped) {
-                API.setPlayerGravity(EnumGravityDirection.fromEnumFacing(EnumFacing.UP), (EntityPlayerMP) e.player, 0);
+                API.setPlayerGravity(true, (EntityPlayerMP) e.player, 0);
             } else {
             }
         }

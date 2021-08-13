@@ -3,7 +3,7 @@ package tfar.gravitymod.common.util.boundingboxes;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Vec3d;
-import tfar.gravitymod.api.EnumGravityDirection;
+import tfar.gravitymod.api.util;
 import tfar.gravitymod.common.capabilities.gravitydirection.IGravityDirectionCapability;
 
 /**
@@ -27,36 +27,34 @@ public class GravityAxisAlignedBB extends AxisAlignedBB {
 
     public static double getRelativeBottom(AxisAlignedBB bb) {
         if (bb instanceof GravityAxisAlignedBB) {
-            return ((GravityAxisAlignedBB)bb).getRelativeBottom();
+            return ((GravityAxisAlignedBB) bb).getRelativeBottom();
         }
         return bb.minY;
     }
 
     public double getRelativeBottom() {
-        switch (this.getDirection()) {
-            case UP:
-                return -this.maxY;
-            case DOWN:
-                return this.minY;
-            default:
-                return -this.maxX;
+        boolean up = this.getDirection();
+        if (up) {
+            return -this.maxY;
+        } else {
+            return this.minY;
         }
     }
 
-    public EnumGravityDirection getDirection() {
+    public boolean getDirection() {
         return this.gravityCapability.getDirection();
     }
 
     @Override
     public GravityAxisAlignedBB expand(double x, double y, double z) {
-        double[] d = this.gravityCapability.getDirection().adjustXYZValues(x, y, z);
+        double[] d = util.adjustXYZValues(this.gravityCapability.getDirection(), x, y, z);
         return new GravityAxisAlignedBB(this, super.expand(d[0], d[1], d[2]));
     }
 
     @Override
     public GravityAxisAlignedBB grow(double x, double y, double z) {
         // Sign of the arguments is important, we only want to get the new directions the values correspond to
-        double[] d = this.getDirection().adjustXYZValuesMaintainSigns(x, y, z);
+        double[] d = util.adjustXYZValuesMaintainSigns(this.getDirection(),x, y, z);
         return new GravityAxisAlignedBB(this, super.grow(d[0], d[1], d[2]));
     }
 
@@ -67,22 +65,22 @@ public class GravityAxisAlignedBB extends AxisAlignedBB {
 
     @Override
     public GravityAxisAlignedBB offset(double x, double y, double z) {
-        double[] d = this.gravityCapability.getDirection().adjustXYZValues(x, y, z);
+        double[] d = util.adjustXYZValues(this.gravityCapability.getDirection(),x, y, z);
         return new GravityAxisAlignedBB(this, super.offset(d[0], d[1], d[2]));
     }
 
     // Do I need to gravity adjust these?
     @Override
     public double calculateXOffset(AxisAlignedBB other, double offsetX) {
-        return this.offsetFromArray(this.getDirection().adjustXYZValues(1, 0, 0), other, offsetX);
+        return this.offsetFromArray(util.adjustXYZValues(this.getDirection(),1, 0, 0), other, offsetX);
     }
 
     private double offsetFromArray(double[] adjusted, AxisAlignedBB other, double offset) {
-        switch ((int)adjusted[0]) {
+        switch ((int) adjusted[0]) {
             case -1:
                 return -super.calculateXOffset(other, -offset);
             case 0:
-                switch ((int)adjusted[1]) {
+                switch ((int) adjusted[1]) {
                     case -1:
                         return -super.calculateYOffset(other, -offset);
                     case 0:
@@ -102,13 +100,13 @@ public class GravityAxisAlignedBB extends AxisAlignedBB {
     // Do I need to gravity adjust these?
     @Override
     public double calculateYOffset(AxisAlignedBB other, double offsetY) {
-        return this.offsetFromArray(this.getDirection().adjustXYZValues(0, 1, 0), other, offsetY);
+        return this.offsetFromArray(util.adjustXYZValues(this.getDirection(),0, 1, 0), other, offsetY);
     }
 
     // Do I need to gravity adjust these?
     @Override
     public double calculateZOffset(AxisAlignedBB other, double offsetZ) {
-        return this.offsetFromArray(this.getDirection().adjustXYZValues(0, 0, 1), other, offsetZ);
+        return this.offsetFromArray(util.adjustXYZValues(this.getDirection(),0, 0, 1), other, offsetZ);
     }
 
     public IGravityDirectionCapability getCapability() {
@@ -116,11 +114,13 @@ public class GravityAxisAlignedBB extends AxisAlignedBB {
     }
 
     public Vec3d getOrigin() {
-        switch (this.gravityCapability.getDirection()) {
-            case UP:
-                return new Vec3d(this.getCentreX(), this.maxY, this.getCentreZ());
-            default://case DOWN:
-                return new Vec3d(this.getCentreX(), this.minY, this.getCentreZ());
+
+        boolean up = this.gravityCapability.getDirection();
+
+        if (up) {
+            return new Vec3d(this.getCentreX(), this.maxY, this.getCentreZ());
+        } else {
+              return new Vec3d(this.getCentreX(), this.minY, this.getCentreZ());
         }
     }
 

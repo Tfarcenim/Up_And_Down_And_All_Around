@@ -12,7 +12,6 @@ import net.minecraftforge.fml.common.network.simpleimpl.MessageContext;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import tfar.gravitymod.GravityMod;
-import tfar.gravitymod.api.EnumGravityDirection;
 import tfar.gravitymod.api.events.GravityTransitionEvent;
 import tfar.gravitymod.common.capabilities.gravitydirection.GravityDirectionCapability;
 import tfar.gravitymod.common.listeners.GravityManagerCommon;
@@ -43,7 +42,7 @@ public class GravityManagerClient extends GravityManagerCommon {
 
     }
 
-    private void setClientSideGravityDirection(UUID playerName, EnumGravityDirection direction, boolean noTimeout) {
+    private void setClientSideGravityDirection(UUID playerName, boolean direction, boolean noTimeout) {
         //TODO: Switch to UUIDs instead of names?
         EntityPlayer playerEntityByName = Minecraft.getMinecraft().world.getPlayerEntityByUUID(playerName);
 
@@ -51,7 +50,7 @@ public class GravityManagerClient extends GravityManagerCommon {
             AbstractClientPlayer player = (AbstractClientPlayer)playerEntityByName;
 
             // Get the current direction
-            EnumGravityDirection oldDirection = GravityDirectionCapability.getGravityDirection(player);
+            boolean oldDirection = GravityDirectionCapability.getGravityDirection(player);
             // Post Pre client event
             MinecraftForge.EVENT_BUS.post(new GravityTransitionEvent.Client.Pre(direction, oldDirection, player));
             // Set the new direction

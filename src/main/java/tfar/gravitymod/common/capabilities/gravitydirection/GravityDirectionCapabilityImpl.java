@@ -1,7 +1,6 @@
 package tfar.gravitymod.common.capabilities.gravitydirection;
 
 import net.minecraft.util.math.Vec3d;
-import tfar.gravitymod.api.EnumGravityDirection;
 
 import javax.annotation.Nonnull;
 
@@ -10,14 +9,14 @@ import javax.annotation.Nonnull;
  */
 public class GravityDirectionCapabilityImpl implements IGravityDirectionCapability {
     // The direction for this tick
-    private EnumGravityDirection direction;
+    private boolean up;
     private Vec3d eyePosChangeVec = Vec3d.ZERO;
     private boolean hasTransitionAngle = false;
     //
-    private EnumGravityDirection pendingDirection;
+    private boolean pendingDirection;
     private int pendingPriority = GravityDirectionCapability.MIN_PRIORITY;
     // Updated when the direction changes. Used to do smooth transitions between
-    private EnumGravityDirection prevDirection;
+    private boolean prevDirection;
     // After changing gravity direction, there's a certain number of ticks that must occur before your gravity direction can change again, this is done so
     // that the 'gravity transition animation' can completely finish
     private int timeoutTicks = 0;
@@ -43,33 +42,32 @@ public class GravityDirectionCapabilityImpl implements IGravityDirectionCapabili
     private int reverseTimeoutTicks = 0; // 'Count up' or 'Timeout' both work fine, we just want to count ticks
 
     public GravityDirectionCapabilityImpl() {
-        this(GravityDirectionCapability.DEFAULT_GRAVITY);
+        this(false);
     }
 
-    public GravityDirectionCapabilityImpl(@Nonnull EnumGravityDirection direction) {
-        this.direction = direction;
+    public GravityDirectionCapabilityImpl(boolean up) {
+        this.up = up;
         //TODO: Safe to assume not null?
-//        this.direction = Objects.requireNonNull(direction, "Gravity direction cannot be null");
-        this.prevDirection = direction;
-        this.pendingDirection = direction;
+        this.prevDirection = up;
+        this.pendingDirection = up;
     }
 
     @Override
     @Nonnull
-    public EnumGravityDirection getDirection() {
-        return this.direction;
+    public boolean getDirection() {
+        return this.up;
     }
 
     @Override
-    public void setDirection(@Nonnull EnumGravityDirection direction) {
+    public void setDirection(boolean direction) {
         this.updateDirection(direction);
         this.timeoutTicks = GravityDirectionCapability.DEFAULT_TIMEOUT;
         this.reverseTimeoutTicks = GravityDirectionCapability.DEFAULT_REVERSE_TIMEOUT;
     }
 
-    private void updateDirection(@Nonnull EnumGravityDirection direction) {
-        this.prevDirection = this.direction;
-        this.direction = direction;
+    private void updateDirection(boolean direction) {
+        this.prevDirection = this.up;
+        this.up = direction;
         this.transitionRotationAmount = 0;
         this.hasTransitionAngle = false;
         //TODO: Safe to assume not null?
@@ -78,13 +76,13 @@ public class GravityDirectionCapabilityImpl implements IGravityDirectionCapabili
 
     @Nonnull
     @Override
-    public EnumGravityDirection getPrevDirection() {
+    public boolean getPrevDirection() {
         return this.prevDirection;
     }
 
     @Nonnull
     @Override
-    public EnumGravityDirection getPendingDirection() {
+    public boolean getPendingDirection() {
         return this.pendingDirection;
     }
 
@@ -104,7 +102,7 @@ public class GravityDirectionCapabilityImpl implements IGravityDirectionCapabili
     }
 
     @Override
-    public void setPendingDirection(@Nonnull EnumGravityDirection direction, int priority) {
+    public void setPendingDirection(@Nonnull boolean direction, int priority) {
         if (priority > this.pendingPriority) {
             this.pendingPriority = priority;
             this.pendingDirection = direction;
@@ -112,7 +110,7 @@ public class GravityDirectionCapabilityImpl implements IGravityDirectionCapabili
     }
 
     @Override
-    public void forceSetPendingDirection(@Nonnull EnumGravityDirection direction, int priority) {
+    public void forceSetPendingDirection(@Nonnull boolean direction, int priority) {
         this.pendingPriority = priority;
         this.pendingDirection = direction;
     }
@@ -139,7 +137,7 @@ public class GravityDirectionCapabilityImpl implements IGravityDirectionCapabili
     @Override
     public void tickServer() {
         this.previousTickPriority = this.pendingPriority;
-        this.pendingDirection = GravityDirectionCapability.DEFAULT_GRAVITY;
+        this.pendingDirection = false;
         this.pendingPriority = GravityDirectionCapability.MIN_PRIORITY;
     }
 
@@ -171,8 +169,8 @@ public class GravityDirectionCapabilityImpl implements IGravityDirectionCapabili
     }
 
     @Override
-    public void setDirectionNoTimeout(@Nonnull EnumGravityDirection direction) {
-        this.updateDirection(direction);
+    public void setDirectionNoTimeout(boolean up) {
+        this.updateDirection(this.up);
         this.timeoutTicks = 0;
     }
 }

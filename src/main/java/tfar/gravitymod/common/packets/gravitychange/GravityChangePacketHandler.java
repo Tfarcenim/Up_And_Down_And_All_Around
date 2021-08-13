@@ -5,7 +5,6 @@ import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessageHandler;
 import net.minecraftforge.fml.common.network.simpleimpl.MessageContext;
 import tfar.gravitymod.GravityMod;
-import tfar.gravitymod.api.EnumGravityDirection;
 import tfar.gravitymod.common.capabilities.gravitydirection.GravityDirectionCapability;
 
 /**
@@ -19,7 +18,7 @@ public class GravityChangePacketHandler implements IMessageHandler<GravityChange
             if (GravityMod.GENERAL_DEBUG) {
                 GravityMod.logInfo("Received gravity data request for %s, from %s", message.toSend, ctx.getServerHandler().player);
             }
-            EnumGravityDirection gravityDirection = GravityDirectionCapability.getGravityDirection(message.getStringData(), ctx.getServerHandler().player
+            boolean gravityDirection = GravityDirectionCapability.getGravityDirection(message.getStringData(), ctx.getServerHandler().player
                     .getEntityWorld());
             if (GravityMod.GENERAL_DEBUG) {
                 GravityMod.logInfo("Responding with gravity data for %s to %s", message.toSend, ctx.getServerHandler().player);

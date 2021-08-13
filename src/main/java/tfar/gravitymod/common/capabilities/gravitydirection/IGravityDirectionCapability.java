@@ -1,7 +1,6 @@
 package tfar.gravitymod.common.capabilities.gravitydirection;
 
 import net.minecraft.util.math.Vec3d;
-import tfar.gravitymod.api.EnumGravityDirection;
 
 import javax.annotation.Nonnull;
 
@@ -9,17 +8,17 @@ import javax.annotation.Nonnull;
  * Created by Mysteryem on 2016-10-10.
  */
 public interface IGravityDirectionCapability {
-    EnumGravityDirection getDirection();
+    boolean getDirection();
 
-    void setDirection(@Nonnull EnumGravityDirection direction);
+    void setDirection(boolean up);
 
     @Nonnull Vec3d getEyePosChangeVector();
 
     void setEyePosChangeVector(@Nonnull Vec3d vec3d);
 
-    EnumGravityDirection getPendingDirection();
+    boolean getPendingDirection();
 
-    EnumGravityDirection getPrevDirection();
+    boolean getPrevDirection();
 
     int getTimeoutTicks();
 
@@ -33,16 +32,10 @@ public interface IGravityDirectionCapability {
 
     boolean hasTransitionAngle();
 
-    /**
-     * Used to set client gravity when logging into a server.
-     * Possibly also on both sides when a dimension change/respawn occurs
-     *
-     * @param direction
-     */
-    void setDirectionNoTimeout(@Nonnull EnumGravityDirection direction);
+    void setDirectionNoTimeout(boolean up);
 
-    void setPendingDirection(@Nonnull EnumGravityDirection direction, int priority);
-    void forceSetPendingDirection(@Nonnull EnumGravityDirection direction, int priority);
+    void setPendingDirection(boolean up, int priority);
+    void forceSetPendingDirection(boolean up, int priority);
 
     int getPendingPriority();
 

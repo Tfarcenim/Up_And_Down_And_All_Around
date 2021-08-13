@@ -12,7 +12,7 @@ import java.util.UUID;
  */
 public class GravityChangeMessage implements IMessage {
 
-    EnumGravityDirection newGravityDirection;
+    boolean newGravityDirection;
     boolean noTimeout;
     UUID toSend;
     private EnumChangePacketType packetType;
@@ -20,7 +20,7 @@ public class GravityChangeMessage implements IMessage {
     @UsedReflexively
     public GravityChangeMessage() {/**/}
 
-    public GravityChangeMessage(UUID stringToSend, EnumGravityDirection newGravityDirection, boolean noTimeout) {
+    public GravityChangeMessage(UUID stringToSend, boolean newGravityDirection, boolean noTimeout) {
         this.toSend = stringToSend;
         this.newGravityDirection = newGravityDirection;
         this.noTimeout = noTimeout;
@@ -46,7 +46,7 @@ public class GravityChangeMessage implements IMessage {
         this.packetType.writeToBuff(this, buf);
     }
 
-    public EnumGravityDirection getNewGravityDirection() {
+    public boolean getNewGravityDirection() {
         return this.newGravityDirection;
     }
 

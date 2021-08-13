@@ -6,7 +6,6 @@ import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraftforge.event.entity.player.PlayerEvent;
 import net.minecraftforge.fml.common.eventhandler.Event;
 import net.minecraftforge.fml.relauncher.Side;
-import tfar.gravitymod.api.EnumGravityDirection;
 
 import static net.minecraftforge.fml.common.gameevent.TickEvent.Phase;
 
@@ -17,13 +16,13 @@ import static net.minecraftforge.fml.common.gameevent.TickEvent.Phase;
 @SuppressWarnings("WeakerAccess")
 public class GravityTransitionEvent<T extends EntityPlayer> extends Event {
 
-    public final EnumGravityDirection newGravityDirection;
-    public final EnumGravityDirection oldGravityDirection;
+    public final boolean newGravityDirection;
+    public final boolean oldGravityDirection;
     public final T player;
     public final Side side;
     public final Phase phase;
 
-    public GravityTransitionEvent(EnumGravityDirection newGravityDirection, EnumGravityDirection oldGravityDirection,
+    public GravityTransitionEvent(boolean newGravityDirection, boolean oldGravityDirection,
             T player, Side side, Phase phase) {
         this.newGravityDirection = newGravityDirection;
         this.oldGravityDirection = oldGravityDirection;
@@ -39,7 +38,7 @@ public class GravityTransitionEvent<T extends EntityPlayer> extends Event {
      * @see GravityTransitionEvent.Client.Post
      */
     public static class Client extends GravityTransitionEvent<AbstractClientPlayer> {
-        public Client(EnumGravityDirection newGravityDirection, EnumGravityDirection oldGravityDirection,
+        public Client(boolean newGravityDirection, boolean oldGravityDirection,
                 AbstractClientPlayer player, Phase phase) {
             super(newGravityDirection, oldGravityDirection, player, Side.CLIENT, phase);
         }
@@ -52,7 +51,7 @@ public class GravityTransitionEvent<T extends EntityPlayer> extends Event {
          * a bug has occurred.
          */
         public static class Post extends Client {
-            public Post(EnumGravityDirection newGravityDirection, EnumGravityDirection oldGravityDirection,
+            public Post(boolean newGravityDirection, boolean oldGravityDirection,
                     AbstractClientPlayer player) {
                 super(newGravityDirection, oldGravityDirection, player, Phase.END);
             }
@@ -66,7 +65,7 @@ public class GravityTransitionEvent<T extends EntityPlayer> extends Event {
          * a bug has occurred.
          */
         public static class Pre extends Client {
-            public Pre(EnumGravityDirection newGravityDirection, EnumGravityDirection oldGravityDirection,
+            public Pre(boolean newGravityDirection, boolean oldGravityDirection,
                     AbstractClientPlayer player) {
                 super(newGravityDirection, oldGravityDirection, player, Phase.START);
             }
@@ -80,7 +79,7 @@ public class GravityTransitionEvent<T extends EntityPlayer> extends Event {
      * @see Clone.Post
      */
     public static class Server extends GravityTransitionEvent<EntityPlayerMP> {
-        public Server(EnumGravityDirection newGravityDirection, EnumGravityDirection oldGravityDirection,
+        public Server(boolean newGravityDirection, boolean oldGravityDirection,
                 EntityPlayerMP player, Phase phase) {
             super(newGravityDirection, oldGravityDirection, player, Side.SERVER, phase);
         }
@@ -97,7 +96,7 @@ public class GravityTransitionEvent<T extends EntityPlayer> extends Event {
             public final EntityPlayerMP oldPlayer;
             public final PlayerEvent.Clone cloneEvent;
 
-            public Clone(EnumGravityDirection newGravityDirection, EnumGravityDirection oldGravityDirection,
+            public Clone(boolean newGravityDirection, boolean oldGravityDirection,
                     EntityPlayerMP newPlayer, Phase phase, EntityPlayerMP oldPlayer, PlayerEvent.Clone
                     cloneEvent) {
                 super(newGravityDirection, oldGravityDirection, newPlayer, phase);
@@ -111,7 +110,7 @@ public class GravityTransitionEvent<T extends EntityPlayer> extends Event {
              * direction, but not due to death. This will usually occur when a player returns from the End.
              */
             public static class Post extends Clone {
-                public Post(EnumGravityDirection newGravityDirection, EnumGravityDirection oldGravityDirection,
+                public Post(boolean newGravityDirection, boolean oldGravityDirection,
                         EntityPlayerMP newPlayer, EntityPlayerMP oldPlayer, PlayerEvent.Clone cloneEvent) {
                     super(newGravityDirection, oldGravityDirection, newPlayer, Phase.END, oldPlayer, cloneEvent);
                 }
@@ -123,7 +122,7 @@ public class GravityTransitionEvent<T extends EntityPlayer> extends Event {
              * direction, but not due to death. This will usually occur when a player returns from the End.
              */
             public static class Pre extends Clone {
-                public Pre(EnumGravityDirection newGravityDirection, EnumGravityDirection oldGravityDirection,
+                public Pre(boolean newGravityDirection, boolean oldGravityDirection,
                         EntityPlayerMP newPlayer, EntityPlayerMP oldPlayer, PlayerEvent.Clone cloneEvent) {
                     super(newGravityDirection, oldGravityDirection, newPlayer, Phase.START, oldPlayer, cloneEvent);
                 }
@@ -134,7 +133,7 @@ public class GravityTransitionEvent<T extends EntityPlayer> extends Event {
          * Called server side immediately after a player's gravity direction changes
          */
         public static class Post extends Server {
-            public Post(EnumGravityDirection newGravityDirection, EnumGravityDirection oldGravityDirection,
+            public Post(boolean newGravityDirection, boolean oldGravityDirection,
                     EntityPlayerMP player) {
                 super(newGravityDirection, oldGravityDirection, player, Phase.END);
             }
@@ -145,7 +144,7 @@ public class GravityTransitionEvent<T extends EntityPlayer> extends Event {
          * If the event is cancelled, gravity direction is not changed
          */
         public static class Pre extends Server {
-            public Pre(EnumGravityDirection newGravityDirection, EnumGravityDirection oldGravityDirection,
+            public Pre(boolean newGravityDirection, boolean oldGravityDirection,
                     EntityPlayerMP player) {
                 super(newGravityDirection, oldGravityDirection, player, Phase.START);
             }

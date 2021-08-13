@@ -13,7 +13,7 @@ import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import tfar.gravitymod.api.API;
-import tfar.gravitymod.api.EnumGravityDirection;
+import tfar.gravitymod.api.util;
 import tfar.gravitymod.common.capabilities.gravitydirection.GravityDirectionCapability;
 import tfar.gravitymod.common.capabilities.gravitydirection.IGravityDirectionCapability;
 import tfar.gravitymod.common.config.ConfigHandler;
@@ -52,18 +52,14 @@ public class EntityRenderListener {
         // move nameplate into correct position if the player has been rotated due to non-downwards gravity
         if (entityBeingRendered instanceof EntityPlayer) {
             EntityPlayer playerBeingRendered = (EntityPlayer)entityBeingRendered;
-            EnumGravityDirection gravityDirection = API.getGravityDirection(playerBeingRendered);
-            if (gravityDirection != EnumGravityDirection.DOWN) {
+            boolean gravityDirection = API.getGravityDirection(playerBeingRendered);
+            if (gravityDirection) {
                 //see net.minecraft.client.renderer.entity renderLivingLabel for why this value in particular
                 double distanceToUndo = playerBeingRendered.height + 0.5 - (playerBeingRendered.isSneaking() ? 0.25 : 0);
                 GlStateManager.translate(0, -distanceToUndo, 0);
                 double distanceToMove;
-                if (gravityDirection == EnumGravityDirection.UP) {
-                    distanceToMove = distanceToUndo;
-                } else {
-                    distanceToMove = distanceToUndo - API.getStandardEyeHeight(playerBeingRendered);
-                }
-                double[] d = gravityDirection.adjustXYZValues(0, distanceToMove, 0);
+                distanceToMove = distanceToUndo;
+                double[] d = util.adjustXYZValues(gravityDirection,0, distanceToMove, 0);
                 GlStateManager.translate(d[0], d[1], d[2]);
             }
         }
@@ -81,7 +77,7 @@ public class EntityRenderListener {
         GravityAxisAlignedBB gAABB = (GravityAxisAlignedBB)entityBoundingBox;
 
         IGravityDirectionCapability capability = gAABB.getCapability();
-        EnumGravityDirection gravityDirection = capability.getDirection();
+        boolean gravityDirection = capability.getDirection();
 
         int timeoutTicks = capability.getTimeoutTicks();
         double effectiveTimeoutTicks = timeoutTicks - (1 * event.getPartialRenderTick());
@@ -92,7 +88,6 @@ public class EntityRenderListener {
         //TODO: Change to rotate about centre of gravity
         // Adjusts the player's rendered position due to the fact that gravityDirection.runCameraTransformation();
         // at the end of this method is not rotating the player about their centre of gravity
-        gravityDirection.applyOtherPlayerRenderTransformations(player);
 
         if (timeoutTicks != 0 && effectiveTimeoutTicks > ConfigHandler.transitionAnimationRotationEnd) {
             double numerator = GravityDirectionCapability.DEFAULT_TIMEOUT - effectiveTimeoutTicks;
@@ -103,16 +98,16 @@ public class EntityRenderListener {
 
             //TODO: Rewrite so it doesn't modify the player's position fields (will probably have to add something to EnumGravityDirection)
             // Work out the translation required such that we can rotate the player about their centre of gravity
-            gravityDirection.returnCentreOfGravityToPlayerPos(player);
+            util.returnCentreOfGravityToPlayerPos(gravityDirection,player);
             Vec3d positionVector = player.getPositionVector();
-            gravityDirection.offsetCentreOfGravityFromPlayerPos(player);
+            util.offsetCentreOfGravityFromPlayerPos(gravityDirection,player);
             Vec3d origin = gAABB.getOrigin();
             Vec3d subtract = origin.subtract(positionVector);
 //
             GlStateManager.translate(-subtract.x, -subtract.y, -subtract.z);
 //
-            Vec3i cameraTransformVars = gravityDirection.getCameraTransformVars();
-            Vec3i prevCameraTransformVars = capability.getPrevDirection().getCameraTransformVars();
+            Vec3i cameraTransformVars = util.getCameraTransformVars(gravityDirection);
+            Vec3i prevCameraTransformVars = util.getCameraTransformVars(capability.getPrevDirection());
 
             GlStateManager.rotate((float)(prevCameraTransformVars.getX() * oneMinusMultiplier), 1, 0, 0);
             GlStateManager.rotate((float)(prevCameraTransformVars.getY() * oneMinusMultiplier), 0, 1, 0);
@@ -124,7 +119,7 @@ public class EntityRenderListener {
 //
             GlStateManager.translate(subtract.x, subtract.y, subtract.z);
         }
-        gravityDirection.runCameraTransformation();
+        util.runCameraTransformation(gravityDirection);
 
         GlStateManager.translate(-event.getX(), -event.getY(), -event.getZ());
         playerRotationNeedToPop = true;

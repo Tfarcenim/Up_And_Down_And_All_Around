@@ -15,7 +15,6 @@ import net.minecraftforge.fml.common.network.simpleimpl.MessageContext;
 import net.minecraftforge.fml.relauncher.Side;
 import tfar.gravitymod.GravityMod;
 import tfar.gravitymod.api.API;
-import tfar.gravitymod.api.EnumGravityDirection;
 import tfar.gravitymod.api.events.GravityTransitionEvent;
 import tfar.gravitymod.common.capabilities.gravitydirection.GravityDirectionCapability;
 import tfar.gravitymod.common.capabilities.gravitydirection.IGravityDirectionCapability;
@@ -58,12 +57,12 @@ public class GravityManagerCommon {
                 EntityPlayerMP cloneMP = (EntityPlayerMP)clone;
                 EntityPlayerMP originalMP = (EntityPlayerMP)original;
 
-                EnumGravityDirection originalDirection = GravityDirectionCapability.getGravityDirection(original);
+                boolean originalDirection = GravityDirectionCapability.getGravityDirection(original);
 
                 // When a player entity enters the world, they are given a GravityCapability which defaults to DOWN
-                MinecraftForge.EVENT_BUS.post(new GravityTransitionEvent.Server.Clone.Pre(originalDirection, EnumGravityDirection.DOWN, cloneMP, originalMP, event));
+                MinecraftForge.EVENT_BUS.post(new GravityTransitionEvent.Server.Clone.Pre(originalDirection, false, cloneMP, originalMP, event));
                 GravityDirectionCapability.setGravityDirection(clone, originalDirection, false);
-                MinecraftForge.EVENT_BUS.post(new GravityTransitionEvent.Server.Clone.Post(originalDirection, EnumGravityDirection.DOWN, cloneMP, originalMP, event));
+                MinecraftForge.EVENT_BUS.post(new GravityTransitionEvent.Server.Clone.Post(originalDirection, false, cloneMP, originalMP, event));
             }
         }
     }
@@ -71,11 +70,11 @@ public class GravityManagerCommon {
     @SubscribeEvent
     public void onPlayerLogIn(PlayerEvent.PlayerLoggedInEvent event) {
         if (event.player instanceof EntityPlayerMP) {
-            EnumGravityDirection gravityDirection = API.getGravityDirection(event.player);
+            boolean gravityDirection = API.getGravityDirection(event.player);
             // Default gravity is down when players are created server/client side
-            if (gravityDirection != EnumGravityDirection.DOWN) {
+            if (gravityDirection) {
                 PacketHandler.INSTANCE.sendTo(
-                        new GravityChangeMessage(event.player.getGameProfile().getId(), gravityDirection, true),
+                        new GravityChangeMessage(event.player.getGameProfile().getId(), true, true),
                         (EntityPlayerMP)event.player
                 );
                 // When the client receives the gravity change packet, their position changes client side, we teleport them back via a packet
@@ -91,8 +90,8 @@ public class GravityManagerCommon {
             if (event.side == Side.SERVER) {
                 EntityPlayer player = event.player;
 
-                EnumGravityDirection currentDirection = gravityCapability.getDirection();
-                EnumGravityDirection pendingDirection = gravityCapability.getPendingDirection();
+                boolean currentDirection = gravityCapability.getDirection();
+                boolean pendingDirection = gravityCapability.getPendingDirection();
 
                 if (currentDirection != pendingDirection) {
                     int reverseTimeOut = gravityCapability.getReverseTimeoutTicks();
@@ -142,8 +141,8 @@ public class GravityManagerCommon {
         }
     }
 
-    public void doGravityTransition(@Nonnull EnumGravityDirection newDirection, @Nonnull EntityPlayerMP player, boolean noTimeout) {
-        EnumGravityDirection oldDirection = GravityDirectionCapability.getGravityDirection(player);
+    public void doGravityTransition(boolean newDirection, @Nonnull EntityPlayerMP player, boolean noTimeout) {
+        boolean oldDirection = GravityDirectionCapability.getGravityDirection(player);
         if (oldDirection != newDirection) {
             GravityTransitionEvent.Server event = new GravityTransitionEvent.Server.Pre(newDirection, oldDirection, player);
             if (!MinecraftForge.EVENT_BUS.post(event)) {
@@ -157,7 +156,7 @@ public class GravityManagerCommon {
 
     //Dedicated/Integrated Server only
     @SuppressWarnings("unchecked")
-    private void sendUpdatePacketToTrackingPlayers(@Nonnull EntityPlayerMP player, @Nonnull EnumGravityDirection newGravityDirection, boolean noTimeout) {
+    private void sendUpdatePacketToTrackingPlayers(@Nonnull EntityPlayerMP player, boolean newGravityDirection, boolean noTimeout) {
         //DEBUG
         if (GravityMod.GENERAL_DEBUG) {
             GravityMod.logInfo("Sending gravity data for %s to players", player.getName());
@@ -177,7 +176,7 @@ public class GravityManagerCommon {
         }
     }
 
-    public void prepareGravityTransition(@Nonnull EnumGravityDirection newDirection, @Nonnull EntityPlayerMP player, int priority) {
+    public void prepareGravityTransition(boolean newDirection, @Nonnull EntityPlayerMP player, int priority) {
         IGravityDirectionCapability gravityCapability = GravityDirectionCapability.getGravityCapability(player);
         gravityCapability.setPendingDirection(newDirection, priority);
     }

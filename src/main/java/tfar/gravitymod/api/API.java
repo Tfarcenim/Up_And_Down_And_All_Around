@@ -26,7 +26,7 @@ public class API {
      * @param noTimeout  False to set a default timeout, preventing normal changes to gravity.
      *                   True to specifically set a zero timeout, normal changes will be able to take place immediately.
      */
-    public static void forceSetPlayerGravity(@Nonnull EnumGravityDirection newGravity, @Nonnull EntityPlayerMP player, boolean noTimeout) {
+    public static void forceSetPlayerGravity(boolean newGravity, @Nonnull EntityPlayerMP player, boolean noTimeout) {
         GravityMod.proxy.getGravityManager().doGravityTransition(newGravity, player, noTimeout);
     }
 
@@ -37,7 +37,7 @@ public class API {
      * @return The gravity direction of the player.
      * (will return DOWN if the player does not have the GravityCapability, e.g., while the EntityPlayer object is constructing)
      */
-    public static EnumGravityDirection getGravityDirection(@Nonnull EntityPlayer player) {
+    public static boolean getGravityDirection(@Nonnull EntityPlayer player) {
         return GravityDirectionCapability.getGravityDirection(player);
     }
 
@@ -59,7 +59,7 @@ public class API {
      * (will return DOWN if the player does not have the GravityCapability, e.g., while the EntityPlayer object is
      * constructing or if the passed player object is NULL)
      */
-    public static EnumGravityDirection getGravityDirectionNullable(@Nullable EntityPlayer player) {
+    public static boolean getGravityDirectionNullable(@Nullable EntityPlayer player) {
         if (player == null) {
             return GravityDirectionCapability.DEFAULT_GRAVITY;
         }
@@ -87,7 +87,7 @@ public class API {
      * @param player     The player to apply the gravity to.
      * @param priority   The priority of this 'prepared gravity transition'
      */
-    public static void setPlayerGravity(@Nonnull EnumGravityDirection newGravity, @Nonnull EntityPlayerMP player, int priority) {
+    public static void setPlayerGravity(boolean newGravity, @Nonnull EntityPlayerMP player, int priority) {
         GravityMod.proxy.getGravityManager().prepareGravityTransition(newGravity, player, priority);
     }
 }

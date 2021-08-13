@@ -1,8 +1,6 @@
 package tfar.gravitymod.common.packets.gravitychange;
 
 import io.netty.buffer.ByteBuf;
-import net.minecraftforge.fml.common.network.ByteBufUtils;
-import tfar.gravitymod.api.EnumGravityDirection;
 import tfar.gravitymod.common.packets.IMessageHelper;
 
 import java.util.UUID;
@@ -16,7 +14,7 @@ public enum EnumChangePacketType implements IMessageHelper<GravityChangeMessage>
         public void writeToBuff(GravityChangeMessage message, ByteBuf buf) {
             buf.writeLong(message.toSend.getMostSignificantBits());
             buf.writeLong(message.toSend.getLeastSignificantBits());
-            buf.writeInt(message.newGravityDirection.ordinal());
+            buf.writeBoolean(message.newGravityDirection);
             buf.writeBoolean(message.noTimeout);
         }
 
@@ -25,7 +23,7 @@ public enum EnumChangePacketType implements IMessageHelper<GravityChangeMessage>
             long most = buf.readLong();
             long least = buf.readLong();
             message.toSend = new UUID(most,least);
-            message.newGravityDirection = EnumGravityDirection.getSafeDirectionFromOrdinal(buf.readInt());
+            message.newGravityDirection = buf.readBoolean();
             message.noTimeout = buf.readBoolean();
         }
     },

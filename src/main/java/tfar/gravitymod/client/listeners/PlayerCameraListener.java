@@ -9,7 +9,7 @@ import net.minecraftforge.client.event.EntityViewRenderEvent.CameraSetup;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
-import tfar.gravitymod.api.EnumGravityDirection;
+import tfar.gravitymod.api.util;
 import tfar.gravitymod.common.capabilities.gravitydirection.GravityDirectionCapability;
 import tfar.gravitymod.common.capabilities.gravitydirection.IGravityDirectionCapability;
 import tfar.gravitymod.common.config.ConfigHandler;
@@ -30,7 +30,7 @@ public class PlayerCameraListener {
         if (renderViewEntity instanceof EntityPlayer) {
             EntityPlayer player = (EntityPlayer)renderViewEntity;
             IGravityDirectionCapability capability = GravityDirectionCapability.getGravityCapability(player);
-            EnumGravityDirection gravityDirection = capability.getDirection();
+            boolean gravityDirection = capability.getDirection();
 
             float transitionRollAmount = 0;
             int timeoutTicks = capability.getTimeoutTicks();
@@ -43,7 +43,7 @@ public class PlayerCameraListener {
             interpolatedYaw %= 360;
 
             Vec3d interpolatedLookVec = Vec3dHelper.getPreciseVectorForRotation(interpolatedPitch, interpolatedYaw);
-            Vec3d relativeInterpolatedLookVec = gravityDirection.getInverseAdjustmentFromDOWNDirection().adjustLookVec(interpolatedLookVec);
+            Vec3d relativeInterpolatedLookVec = util.adjustLookVec(gravityDirection,interpolatedLookVec);
             double[] precisePitchAndYawFromVector = Vec3dHelper.getPrecisePitchAndYawFromVector(relativeInterpolatedLookVec);
 
             double relativeInterpolatedPitch = precisePitchAndYawFromVector[Vec3dHelper.PITCH];
@@ -66,7 +66,7 @@ public class PlayerCameraListener {
                     Vec3d absoluteLookVec = Vec3dHelper.getPreciseVectorForRotation(pitch, yaw);
 
                     // Get the relative look vector for the current gravity direction
-                    Vec3d relativeCurrentLookVector = gravityDirection.getInverseAdjustmentFromDOWNDirection().adjustLookVec(absoluteLookVec);
+                    Vec3d relativeCurrentLookVector = util.adjustLookVec(gravityDirection,absoluteLookVec);
                     // Get the pitch and yaw from the relative look vector
                     double[] pitchAndYawRelativeCurrentLook = Vec3dHelper.getPrecisePitchAndYawFromVector(relativeCurrentLookVector);
                     // Pitch - 90, -90 changes it from the forwards direction to the upwards direction
@@ -77,10 +77,10 @@ public class PlayerCameraListener {
                     Vec3d relativeCurrentUpVector = Vec3dHelper.getPreciseVectorForRotation(
                             relativeCurrentPitch, relativeCurrentYaw);
                     // Get the absolute vector for the relative upwards vector
-                    Vec3d absoluteCurrentUpVector = gravityDirection.adjustLookVec(relativeCurrentUpVector);
+                    Vec3d absoluteCurrentUpVector = util.adjustLookVec(gravityDirection,relativeCurrentUpVector);
 
                     // Get the relative look vector for the previous gravity direction
-                    Vec3d relativePrevLookVector = capability.getPrevDirection().getInverseAdjustmentFromDOWNDirection().adjustLookVec(absoluteLookVec);
+                    Vec3d relativePrevLookVector = util.adjustLookVec(capability.getPrevDirection(),absoluteLookVec);
                     // Get the pitch and yaw from the relative look vector
                     double[] pitchAndYawRelativePrevLook = Vec3dHelper.getPrecisePitchAndYawFromVector(relativePrevLookVector);
                     // Pitch - 90, -90 changes it from the forwards direction to the upwards direction
@@ -91,7 +91,7 @@ public class PlayerCameraListener {
                     Vec3d relativePrevUpVector = Vec3dHelper.getPreciseVectorForRotation(
                             relativePrevPitch, relativePrevYaw);
                     // Get the absolute vector for the relative upwards vector
-                    Vec3d absolutePrevUpVector = capability.getPrevDirection().adjustLookVec(relativePrevUpVector);
+                    Vec3d absolutePrevUpVector = util.adjustLookVec(capability.getPrevDirection(),relativePrevUpVector);
 
                     //See http://stackoverflow.com/a/33920320 for the maths
                     rotationAngle = (180d / Math.PI) * Math.atan2(
@@ -128,7 +128,7 @@ public class PlayerCameraListener {
             GlStateManager.rotate((float)relativeInterpolatedYaw, 0, 1, 0);
 
             // 3: Now that our look direction is effectively 0 yaw and 0 pitch, perform the rotation specific for this gravity
-            gravityDirection.runCameraTransformation();
+            util.runCameraTransformation(gravityDirection);
 
             // 2: Undo the absolute yaw rotation of the player
             GlStateManager.rotate((float)-interpolatedYaw, 0, 1, 0);
