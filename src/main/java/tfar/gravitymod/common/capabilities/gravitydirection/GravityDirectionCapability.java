@@ -54,18 +54,6 @@ public class GravityDirectionCapability {
         return getGravityDirection(getGravityCapability(player));
     }
 
-    public static AxisAlignedBB newGravityAxisAligned(EntityPlayer player, AxisAlignedBB old) {
-        IGravityDirectionCapability gravityCapability = getGravityCapability(player);
-        if (gravityCapability == null) {
-            // Should no longer occur during Entity::<init>, but there's nothing stopping other mods from calling code
-            // in a EntityConstructingEvent (which happens before Capabilities are added)
-            // Occurs during construction of players (<init>)
-            // Once the capability is added, we'll make sure the player's bounding box is a GravityAxisAlignedBB
-            return old;
-        }
-        return new GravityAxisAlignedBB(gravityCapability, old);
-    }
-
     public static void registerCapability() {
         CapabilityManager.INSTANCE.register(IGravityDirectionCapability.class, new GravityDirectionCapabilityStorage(), GravityDirectionCapabilityImpl::new);
         MinecraftForge.EVENT_BUS.register(GravityDirectionCapabilityEventHandler.class);

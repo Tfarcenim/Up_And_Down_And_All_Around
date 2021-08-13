@@ -9,22 +9,14 @@ import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import tfar.gravitymod.GravityMod;
 import tfar.gravitymod.common.capabilities.gravitydirection.GravityDirectionCapability;
 import tfar.gravitymod.common.listeners.ItemStackUseListener;
-import tfar.gravitymod.common.listeners.ItemStackUseListener.EnumItemStackUseCompat;
 
 import java.io.File;
 import java.util.*;
-import java.util.regex.Pattern;
 
 /**
  * Created by Mysteryem on 07/03/2017.
  */
 public class ConfigHandler {
-
-    public static final String CATEGORY_MOD_COMPAT = newCategory("modcompat");
-    public static String[] modCompatUseGeneral;
-    public static String[] modCompatOnStoppedUsing;
-    //<mod id>:<item name>[:damage][:damage][...],<compatibility modifier>:[compatibility modifier]
-    public static final Pattern modCompatPattern = Pattern.compile("[^:]+:[^:]+(:[\\d]+)*,[a-zA-Z]+(:[a-zA-Z]+)?");
 
     public static final String CATEGORY_GRAVITY = newCategory("gravity");
     public static float oppositeDirectionFallDistanceMultiplier;
@@ -61,53 +53,6 @@ public class ConfigHandler {
         else {
             GravityMod.logInfo("Reloading config");
         }
-
-        nextCategory(CATEGORY_MOD_COMPAT);
-
-        prop = config.get(category, EnumItemStackUseCompat.GENERAL.configName, new String[]{"tconstruct:rapier,relativeMotionAll:relativeRotation"}, "Adding an " +
-                "item to this list will " +
-                "apply the compatibility when the item is right clicked on air, or on a block that doesn't open a chest/machine GUI or otherwise change " +
-                "state, such as right clicking on a vanilla lever. Specifically when the item's \"onItemRightClick\" method is called from within " +
-                "ItemStack::useItemRightClick.\n" +
-
-                "The Tinkers' Construct Rapier makes the player jump upwards and backwards slightly when right clicked. We want the player to jump upwards " +
-                "relative to their view of the world, so we will need at least use relative Y motion for this compatibility. We also want the player to jump " +
-                "backwards relative to their view of the world. The rapier uses the player's pitch and yaw rotations to calculate the backwards direction and" +
-                " modifies X and Z motion accordingly, so we need them to be relative too.", modCompatPattern);
-        modCompatUseGeneral = process().getStringList();
-
-        prop = config.get(category, EnumItemStackUseCompat.STOPPED_USING.configName, new String[]{"tconstruct:longsword,relativeMotionAll:relativeRotation"}, "Adding an " +
-                        "item to this list " +
-                        "will apply the compatibility when a player stops 'using' an item. For bows, this is when you release right click to fire an arrow.\n",
-                modCompatPattern);
-        modCompatOnStoppedUsing = process().getStringList();
-
-        config.setCategoryComment(category,
-                "Up And Down changes how player motion is used to move the player. Some items may move the player in unexpected ways when used. If that's the" +
-                        " case, try adding them to one of the below lists. The format is (text in square brackets is optional) \"<mod id>:<item " +
-                        "name>[:damage][:damage][...],<compatibility modifier>:[compatibility modifier]\"\n" +
-
-                        "Where a compatibility modifier is case insensitive and one of: relativeRotation, relativeMotionAll, relativeMotionX, " +
-                        "relativeMotionY, relativeMotionZ, absoluteMotionX, absoluteMotionY or absoluteMotionZ\n" +
-
-                        "These modify the player's rotation and/or motion before the item is used (and then puts the rotation/motion back to normal, taking " +
-                        "into account any changes to motion, but NOT taking into account any changes to rotation).\n" +
-
-                        "You may use a max of one type of modifier per entry (up to 1 motion modifier and up to 1 rotation modifier).\n" +
-
-                        "The default state when using items is that both rotation and motion are absolute (as if the player currently has downwards gravity)" +
-                        ".\n" +
-
-                        "Using relativeMotionX implies that Z and Y motion will be absolute.\n" +
-
-                        "Likewise, using absoluteMotionY implies that X and Z motion will be relative.\n" +
-
-                        "So if you wanted both X and Y motion to be relative, you would use absoluteMotionZ.\n" +
-
-                        "Examples:\n" +
-                        "'minecraft:stick:0:4,relativeMotionX' - Adds a relative X motion modifier to vanilla sticks with damage values 0 and 4.\n" +
-                        "'tconstruct:longsword,relativeMotionAll:relativeRotation' - Adds a relative X, Y and Z motion modifier combined with a relative " +
-                        "rotation modifier to all damage values of Tinkers' Construct Longswords.");
 
         nextCategory(CATEGORY_GRAVITY);
 

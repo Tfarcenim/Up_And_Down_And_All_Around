@@ -17,6 +17,7 @@ import tfar.gravitymod.api.events.GravityTransitionEvent;
 import tfar.gravitymod.common.capabilities.gravitydirection.GravityDirectionCapability;
 import tfar.gravitymod.common.listeners.GravityManagerCommon;
 import tfar.gravitymod.common.packets.PacketHandler;
+import tfar.gravitymod.common.packets.gravitychange.EnumChangePacketType;
 import tfar.gravitymod.common.packets.gravitychange.GravityChangeMessage;
 
 import java.util.UUID;
@@ -31,16 +32,13 @@ public class GravityManagerClient extends GravityManagerCommon {
 
     @Override
     public void handlePacket(GravityChangeMessage message, MessageContext context) {
-        switch (message.getPacketType()) {
-            case SINGLE:
-                if (GravityMod.GENERAL_DEBUG) {
-                    GravityMod.logInfo("Received gravity data for %s", message.getStringData());
-                }
-                this.setClientSideGravityDirection(message.getStringData(), message.getNewGravityDirection(), message.getNoTimeout());
-                break;
-            default:
-                super.handlePacket(message, context);
-                break;
+        if (message.getPacketType() == EnumChangePacketType.SINGLE) {
+            if (GravityMod.GENERAL_DEBUG) {
+                GravityMod.logInfo("Received gravity data for %s", message.getStringData());
+            }
+            this.setClientSideGravityDirection(message.getStringData(), message.getNewGravityDirection(), message.getNoTimeout());
+        } else {
+            super.handlePacket(message, context);
         }
 
     }
