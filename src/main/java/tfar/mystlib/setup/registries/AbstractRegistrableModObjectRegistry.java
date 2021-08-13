@@ -4,7 +4,7 @@ import net.minecraft.item.Item;
 import net.minecraftforge.event.RegistryEvent;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
-import tfar.mystlib.setup.singletons.IModObject;
+import tfar.mystlib.setup.IFMLStaged;
 import tfar.mystlib.setup.singletons.IModRegistryEntry;
 
 import java.util.Collection;
@@ -12,7 +12,7 @@ import java.util.Collection;
 /**
  * Created by Mysteryem on 15/10/2017.
  */
-public abstract class AbstractRegistrableModObjectRegistry<SINGLETON extends IModObject & IModRegistryEntry<?>, COLLECTION extends Collection<SINGLETON>>
+public abstract class AbstractRegistrableModObjectRegistry<SINGLETON extends IModRegistryEntry<?> & IFMLStaged, COLLECTION extends Collection<SINGLETON>>
         extends AbstractModObjectRegistry<SINGLETON, COLLECTION> {
 
     public AbstractRegistrableModObjectRegistry(COLLECTION modObjects) {

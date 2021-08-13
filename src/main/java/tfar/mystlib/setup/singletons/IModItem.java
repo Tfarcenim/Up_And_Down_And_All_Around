@@ -1,14 +1,11 @@
 package tfar.mystlib.setup.singletons;
 
-import net.minecraft.client.renderer.block.model.ModelResourceLocation;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.item.Item;
 import net.minecraft.util.ResourceLocation;
-import net.minecraftforge.client.model.ModelLoader;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
 import net.minecraftforge.registries.IForgeRegistry;
 import tfar.gravitymod.GravityMod;
+import tfar.mystlib.setup.IFMLStaged;
 
 /**
  * It may be frowned upon, but this is so I can have some item classes that extend Item and some that extend ItemArmor
@@ -16,7 +13,7 @@ import tfar.gravitymod.GravityMod;
  * <p>
  * Created by Mysteryem on 2016-11-05.
  */
-public interface IModItem<T extends Item & IModItem<T>> extends IModObject, IModRegistryEntry<Item> {
+public interface IModItem<T extends Item & IModItem<T>> extends IModRegistryEntry<Item>, IFMLStaged {
 
     @Override
     default void register(IForgeRegistry<Item> registry) {

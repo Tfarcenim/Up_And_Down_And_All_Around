@@ -1,11 +1,7 @@
 package tfar.gravitymod.common.items.tools;
 
-import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.block.model.ModelBakery;
 import net.minecraft.client.renderer.block.model.ModelResourceLocation;
-import net.minecraft.client.resources.I18n;
-import net.minecraft.client.settings.KeyBinding;
-import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayerMP;
@@ -23,40 +19,13 @@ import tfar.gravitymod.api.API;
 import tfar.gravitymod.api.EnumGravityDirection;
 import tfar.gravitymod.common.registries.GravityPriorityRegistry;
 import tfar.gravitymod.common.registries.IGravityModItem;
-import tfar.mystlib.util.KeyBindingUtil;
 
-import javax.annotation.Nullable;
-import java.util.List;
 import java.util.Locale;
 
 /**
  * Created by Mysteryem on 2016-11-03.
  */
 public class ItemGravityAnchor extends Item implements IGravityModItem<ItemGravityAnchor> {
-
-    // From EntityItem::onUpdate
-    private static final double GRAVITY_DOWNWARDS_MOTION = 0.04D;
-
-    @SideOnly(Side.CLIENT)
-    @Override
-    public void addInformation(ItemStack stack, @Nullable World worldIn, List<String> tooltip, ITooltipFlag flagIn) {
-        KeyBinding keyBindSneak = Minecraft.getMinecraft().gameSettings.keyBindSneak;
-        if (KeyBindingUtil.isKeyPressed(keyBindSneak)) {
-//            tooltip.add("Affects gravity in inventory or on mouse cursor");
-            tooltip.add(I18n.format("mouseovertext.mysttmtgravitymod.gravityanchor.sneak.line1"));
-//            tooltip.add("Take care when crafting");
-            tooltip.add(I18n.format("mouseovertext.mysttmtgravitymod.gravityanchor.sneak.line2"));
-        }
-        else {
-            tooltip.add(I18n.format("mouseovertext.mysttmtgravitymod.gravityanchor.line1"));
-            tooltip.add(keyBindSneak.getDisplayName() + I18n.format("mouseovertext.mysttmtgravitymod.presskeyfordetails"));
-        }
-    }
-
-    @Override
-    public String getModObjectName() {
-        return "gravityanchor";
-    }
 
     @Override
     public EnumRarity getRarity(ItemStack stack) {
@@ -71,12 +40,6 @@ public class ItemGravityAnchor extends Item implements IGravityModItem<ItemGravi
                 items.add(new ItemStack(this, 1, damage));
             }
         }
-    }
-
-    @Override
-    public String getUnlocalizedName(ItemStack stack) {
-        int i = stack.getItemDamage();
-        return super.getUnlocalizedName() + "." + EnumGravityDirection.getSafeDirectionFromOrdinal(i).getName();
     }
 
     @Override
