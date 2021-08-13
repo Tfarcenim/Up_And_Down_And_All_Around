@@ -13,7 +13,6 @@ import tfar.gravitymod.client.listeners.PlayerCameraListener;
 /**
  * Created by Mysteryem on 2016-08-04.
  */
-@SideOnly(Side.CLIENT)
 public class ClientProxy extends CommonProxy {
 
     @Override

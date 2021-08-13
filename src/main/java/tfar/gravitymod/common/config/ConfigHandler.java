@@ -21,7 +21,6 @@ import java.util.regex.Pattern;
 public class ConfigHandler {
 
     public static final String CATEGORY_MOD_COMPAT = newCategory("modcompat");
-    public static String[] modCompatUseOnBlock;
     public static String[] modCompatUseGeneral;
     public static String[] modCompatOnStoppedUsing;
     //<mod id>:<item name>[:damage][:damage][...],<compatibility modifier>:[compatibility modifier]
@@ -64,12 +63,6 @@ public class ConfigHandler {
         }
 
         nextCategory(CATEGORY_MOD_COMPAT);
-
-        prop = config.get(category, EnumItemStackUseCompat.BLOCK.configName, new String[0], "Adding an item to this list will apply the " +
-                "compatibility " +
-                "when the item is right clicked " +
-                "on a block. Specifically when the item's \"onItemUse\" method is called from within ItemStack::onItemUse.", modCompatPattern);
-        modCompatUseOnBlock = process().getStringList();
 
         prop = config.get(category, EnumItemStackUseCompat.GENERAL.configName, new String[]{"tconstruct:rapier,relativeMotionAll:relativeRotation"}, "Adding an " +
                 "item to this list will " +

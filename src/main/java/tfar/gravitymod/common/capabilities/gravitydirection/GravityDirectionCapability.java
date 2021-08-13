@@ -16,6 +16,7 @@ import tfar.gravitymod.common.util.boundingboxes.GravityAxisAlignedBB;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+import java.util.UUID;
 
 /**
  * Created by Mysteryem on 2016-08-14.
@@ -30,7 +31,7 @@ public class GravityDirectionCapability {
     @CapabilityInject(IGravityDirectionCapability.class)
     public static Capability<IGravityDirectionCapability> GRAVITY_CAPABILITY_INSTANCE = null;
 
-    public static EnumGravityDirection getGravityDirection(String playerName, World world) {
+    public static EnumGravityDirection getGravityDirection(UUID playerName, World world) {
         return getGravityDirection(getGravityCapability(playerName, world));
     }
 
@@ -39,9 +40,8 @@ public class GravityDirectionCapability {
     }
 
     @Nullable
-    private static IGravityDirectionCapability getGravityCapability(@Nonnull String playerName, @Nonnull World world) {
-        world.getPlayerEntityByName(playerName);
-        EntityPlayer playerByUsername = world.getPlayerEntityByName(playerName);
+    private static IGravityDirectionCapability getGravityCapability(@Nonnull UUID playerName, @Nonnull World world) {
+        EntityPlayer playerByUsername = world.getPlayerEntityByUUID(playerName);
         return playerByUsername == null ? null : getGravityCapability(playerByUsername);
     }
 

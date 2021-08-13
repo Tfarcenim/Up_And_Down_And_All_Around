@@ -21,8 +21,8 @@ public interface IModItem<T extends Item & IModItem<T>> extends IModObject, IMod
     @Override
     default void register(IForgeRegistry<Item> registry) {
         T cast = this.getItem();
-        cast.setUnlocalizedName(GravityMod.MOD_ID + "." + this.getModObjectName());
-        cast.setRegistryName(new ResourceLocation(GravityMod.MOD_ID, this.getModObjectName()));
+        cast.setUnlocalizedName(GravityMod.MOD_ID + ".gravityanchor");
+        cast.setRegistryName(new ResourceLocation(GravityMod.MOD_ID, "gravityanchor"));
         CreativeTabs creativeTab = CreativeTabs.TOOLS;
         if (creativeTab != null) {
             cast.setCreativeTab(creativeTab);

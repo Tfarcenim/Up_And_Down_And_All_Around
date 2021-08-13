@@ -19,6 +19,8 @@ import tfar.gravitymod.common.listeners.GravityManagerCommon;
 import tfar.gravitymod.common.packets.PacketHandler;
 import tfar.gravitymod.common.packets.gravitychange.GravityChangeMessage;
 
+import java.util.UUID;
+
 /**
  * Used to control/record the gravity of all players
  * <p>
@@ -43,9 +45,9 @@ public class GravityManagerClient extends GravityManagerCommon {
 
     }
 
-    private void setClientSideGravityDirection(String playerName, EnumGravityDirection direction, boolean noTimeout) {
+    private void setClientSideGravityDirection(UUID playerName, EnumGravityDirection direction, boolean noTimeout) {
         //TODO: Switch to UUIDs instead of names?
-        EntityPlayer playerEntityByName = Minecraft.getMinecraft().world.getPlayerEntityByName(playerName);
+        EntityPlayer playerEntityByName = Minecraft.getMinecraft().world.getPlayerEntityByUUID(playerName);
 
         if (playerEntityByName instanceof AbstractClientPlayer) {
             AbstractClientPlayer player = (AbstractClientPlayer)playerEntityByName;
@@ -77,12 +79,12 @@ public class GravityManagerClient extends GravityManagerCommon {
                 if (GravityMod.GENERAL_DEBUG) {
                     GravityMod.logInfo("Requesting gravity data for %s", player.getName());
                 }
-                this.requestGravityDirectionFromServer(player.getName());
+                this.requestGravityDirectionFromServer(player.getGameProfile().getId());
             }
         }
     }
 
-    private void requestGravityDirectionFromServer(String nameOfPlayerRequested) {
+    private void requestGravityDirectionFromServer(UUID nameOfPlayerRequested) {
         PacketHandler.INSTANCE.sendToServer(new GravityChangeMessage(nameOfPlayerRequested));
     }
 }

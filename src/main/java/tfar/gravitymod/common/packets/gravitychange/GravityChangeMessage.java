@@ -5,6 +5,8 @@ import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
 import tfar.gravitymod.api.EnumGravityDirection;
 import tfar.mystlib.annotations.UsedReflexively;
 
+import java.util.UUID;
+
 /**
  * Created by Mysteryem on 2016-08-07.
  */
@@ -12,20 +14,20 @@ public class GravityChangeMessage implements IMessage {
 
     EnumGravityDirection newGravityDirection;
     boolean noTimeout;
-    String toSend;
+    UUID toSend;
     private EnumChangePacketType packetType;
 
     @UsedReflexively
     public GravityChangeMessage() {/**/}
 
-    public GravityChangeMessage(String stringToSend, EnumGravityDirection newGravityDirection, boolean noTimeout) {
+    public GravityChangeMessage(UUID stringToSend, EnumGravityDirection newGravityDirection, boolean noTimeout) {
         this.toSend = stringToSend;
         this.newGravityDirection = newGravityDirection;
         this.noTimeout = noTimeout;
         this.packetType = EnumChangePacketType.SINGLE;
     }
 
-    public GravityChangeMessage(String playerToRequest) {
+    public GravityChangeMessage(UUID playerToRequest) {
         this.toSend = playerToRequest;
         this.packetType = EnumChangePacketType.CLIENT_REQUEST_GRAVITY_OF_PLAYER;
     }
@@ -56,7 +58,7 @@ public class GravityChangeMessage implements IMessage {
         return this.packetType;
     }
 
-    public String getStringData() {
+    public UUID getStringData() {
         return this.toSend;
     }
 

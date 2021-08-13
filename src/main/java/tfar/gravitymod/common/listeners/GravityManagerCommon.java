@@ -50,7 +50,7 @@ public class GravityManagerCommon {
     public void onPlayerChangeDimension(PlayerEvent.PlayerChangedDimensionEvent event) {
         if (event.player instanceof EntityPlayerMP) {
             PacketHandler.INSTANCE.sendTo(
-                    new GravityChangeMessage(event.player.getName(), GravityDirectionCapability.getGravityDirection(event.player), true),
+                    new GravityChangeMessage(event.player.getGameProfile().getId(), GravityDirectionCapability.getGravityDirection(event.player), true),
                     (EntityPlayerMP)event.player
             );
         }
@@ -63,7 +63,7 @@ public class GravityManagerCommon {
         if (clone instanceof EntityPlayerMP && original instanceof EntityPlayerMP) {
             if (event.isWasDeath()) {
                 PacketHandler.INSTANCE.sendTo(
-                        new GravityChangeMessage(clone.getName(), GravityDirectionCapability.getGravityDirection(clone), true),
+                        new GravityChangeMessage(clone.getGameProfile().getId(), GravityDirectionCapability.getGravityDirection(clone), true),
                         (EntityPlayerMP)clone
                 );
             }
@@ -105,7 +105,7 @@ public class GravityManagerCommon {
             // Default gravity is down when players are created server/client side
             if (gravityDirection != EnumGravityDirection.DOWN) {
                 PacketHandler.INSTANCE.sendTo(
-                        new GravityChangeMessage(event.player.getName(), gravityDirection, true),
+                        new GravityChangeMessage(event.player.getGameProfile().getId(), gravityDirection, true),
                         (EntityPlayerMP)event.player
                 );
                 // When the client receives the gravity change packet, their position changes client side, we teleport them back via a packet
@@ -187,19 +187,7 @@ public class GravityManagerCommon {
                     // gravityCapability::tick will still be called, so timeOut will get decremented
                     gravityCapability.setReverseTimeoutTicks(GravityDirectionCapability.DEFAULT_REVERSE_TIMEOUT);
                 }
-
-//                // Old code
-//                if (timeOut == 0) {
-//                    if (currentDirection != pendingDirection) {
-//                        doGravityTransition(pendingDirection, (EntityPlayerMP)player, false);
-//                    }
-//                }
-                // Resets pending direction and priority
                 gravityCapability.tickServer();
-            }
-            else {
-                // Does nothing by default
-                gravityCapability.tickClient();
             }
             //decrements timeOut on both client and server
             gravityCapability.tickCommon();
@@ -235,26 +223,11 @@ public class GravityManagerCommon {
             // For some reason, the Forge guys made the method return a Set<? extends EntityPlayer> instead of Set<? extends EntityPlayerMP>
             Set<? extends EntityPlayerMP> trackingPlayers = (Set<? extends EntityPlayerMP>)entityTracker.getTrackingPlayers(player);
             for (EntityPlayerMP trackingPlayer : trackingPlayers) {
-                PacketHandler.INSTANCE.sendTo(new GravityChangeMessage(player.getName(), newGravityDirection, noTimeout), trackingPlayer);
+                PacketHandler.INSTANCE.sendTo(new GravityChangeMessage(player.getGameProfile().getId(), newGravityDirection, noTimeout), trackingPlayer);
             }
             // Players don't track themselves, so they need to be sent the packet too
-            PacketHandler.INSTANCE.sendTo(new GravityChangeMessage(player.getName(), newGravityDirection, noTimeout), player);
+            PacketHandler.INSTANCE.sendTo(new GravityChangeMessage(player.getGameProfile().getId(), newGravityDirection, noTimeout), player);
         }
-
-        //Leaving this here for the time being, it might be useful for sending block related packets (assuming it works as I expect)
-//        if (player.worldObj instanceof WorldServer) {
-//            WorldServer worldServer = (WorldServer)player.worldObj;
-//            Chunk chunkFromBlockCoords = worldServer.getChunkFromBlockCoords(new BlockPos(player));
-//            GravityChangeMessage gravityChangeMessage = new GravityChangeMessage(player.getName(), newGravityDirection, noTimeout);
-//            for (EntityPlayer otherPlayer : player.worldObj.playerEntities) {
-//                if (otherPlayer instanceof EntityPlayerMP) {
-//                    EntityPlayerMP otherPlayerMP = (EntityPlayerMP)otherPlayer;
-//                    if (worldServer.getPlayerChunkMap().isPlayerWatchingChunk(otherPlayerMP, chunkFromBlockCoords.xPosition, chunkFromBlockCoords.zPosition)) {
-//                        PacketHandler.INSTANCE.sendTo(gravityChangeMessage, otherPlayerMP);
-//                    }
-//                }
-//            }
-//        }
     }
 
     public void prepareGravityTransition(@Nonnull EnumGravityDirection newDirection, @Nonnull EntityPlayerMP player, int priority) {

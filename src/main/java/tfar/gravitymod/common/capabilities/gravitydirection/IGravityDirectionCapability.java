@@ -52,5 +52,4 @@ public interface IGravityDirectionCapability {
 
     default void tickServer() {}
 
-    default void tickClient() {}
 }
