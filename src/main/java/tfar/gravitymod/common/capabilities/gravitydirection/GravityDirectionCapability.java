@@ -68,8 +68,6 @@ public class GravityDirectionCapability {
         EnumGravityDirection oldDirection = capability.getDirection();
         // Get the current eye position (used when there's no safe position to put the player)
         Vec3d oldEyePos = player.getPositionVector().addVector(0, player.getEyeHeight(), 0);
-        // Apply any changes the old direction needs to make before the direction gets changed
-        oldDirection.preModifyPlayerOnGravityChange(player, newDirection);
         // Set the new direction
         setGravityDirection(capability, newDirection, noTimeout);
         // Apply any changes the new direction needs to make now that the direction has been changed
@@ -115,5 +113,4 @@ public class GravityDirectionCapability {
             }
         }
     }
-
 }

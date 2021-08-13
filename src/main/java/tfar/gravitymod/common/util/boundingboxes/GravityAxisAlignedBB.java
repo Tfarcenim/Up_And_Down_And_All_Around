@@ -32,20 +32,12 @@ public class GravityAxisAlignedBB extends AxisAlignedBB {
         return bb.minY;
     }
 
-    @SuppressWarnings("SuspiciousNameCombination")
     public double getRelativeBottom() {
         switch (this.getDirection()) {
             case UP:
                 return -this.maxY;
             case DOWN:
                 return this.minY;
-            case SOUTH:
-                return -this.maxZ;
-            case WEST:
-                return this.minX;
-            case NORTH:
-                return this.minZ;
-//                case EAST:
             default:
                 return -this.maxX;
         }
@@ -127,14 +119,6 @@ public class GravityAxisAlignedBB extends AxisAlignedBB {
         switch (this.gravityCapability.getDirection()) {
             case UP:
                 return new Vec3d(this.getCentreX(), this.maxY, this.getCentreZ());
-            case SOUTH:
-                return new Vec3d(this.getCentreX(), this.getCentreY(), this.maxZ);
-            case WEST:
-                return new Vec3d(this.minX, this.getCentreY(), this.getCentreZ());
-            case NORTH:
-                return new Vec3d(this.getCentreX(), this.getCentreY(), this.minZ);
-            case EAST:
-                return new Vec3d(this.maxX, this.getCentreY(), this.getCentreZ());
             default://case DOWN:
                 return new Vec3d(this.getCentreX(), this.minY, this.getCentreZ());
         }
@@ -146,10 +130,6 @@ public class GravityAxisAlignedBB extends AxisAlignedBB {
 
     private double getCentreZ() {
         return (this.minZ + this.maxZ) / 2d;
-    }
-
-    private double getCentreY() {
-        return (this.minY + this.maxY) / 2d;
     }
 
 }
