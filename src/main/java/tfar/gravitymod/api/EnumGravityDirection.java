@@ -62,11 +62,6 @@ public enum EnumGravityDirection implements IStringSerializable {
         }
 
         @Override
-        public float getEntityEyeHeight(EntityLivingBase entityLivingBase) {
-            return -API.getStandardEyeHeight(entityLivingBase);
-        }
-
-        @Override
         public void resetPositionToBB(EntityLivingBase entityLivingBase, AxisAlignedBB bb) {
             entityLivingBase.posX = (bb.minX + bb.maxX) / 2.0D;
             entityLivingBase.posY = bb.maxY;
@@ -98,15 +93,6 @@ public enum EnumGravityDirection implements IStringSerializable {
             };
         }
 
-        @Override
-        public EnumGravityDirection getRelativePositiveX() {
-            return WEST;
-        }
-
-        @Override
-        public EnumGravityDirection getRelativePositiveZ() {
-            return SOUTH;
-        }
     },
     DOWN(new Vec3i(0, 0, 0), "down", EnumFacing.DOWN) {
         @Override
@@ -148,11 +134,6 @@ public enum EnumGravityDirection implements IStringSerializable {
         }
 
         @Override
-        public float getEntityEyeHeight(EntityLivingBase entityLivingBase) {
-            return API.getStandardEyeHeight(entityLivingBase);
-        }
-
-        @Override
         public void resetPositionToBB(EntityLivingBase entityLivingBase, AxisAlignedBB bb) {
             entityLivingBase.posX = (bb.minX + bb.maxX) / 2.0D;
             entityLivingBase.posY = bb.minY;
@@ -164,15 +145,6 @@ public enum EnumGravityDirection implements IStringSerializable {
             return blockPos;
         }
 
-        @Override
-        public EnumGravityDirection getRelativePositiveX() {
-            return EAST;
-        }
-
-        @Override
-        public EnumGravityDirection getRelativePositiveZ() {
-            return SOUTH;
-        }
     },
     NORTH(new Vec3i(90, 0, 0), "north", EnumFacing.NORTH) {
         @Override
@@ -248,15 +220,6 @@ public enum EnumGravityDirection implements IStringSerializable {
             };
         }
 
-        @Override
-        public EnumGravityDirection getRelativePositiveX() {
-            return EAST;
-        }
-
-        @Override
-        public EnumGravityDirection getRelativePositiveZ() {
-            return DOWN;
-        }
     },
     EAST(new Vec3i(0, 0, 90), "east", EnumFacing.EAST) {
         @Override
@@ -329,15 +292,6 @@ public enum EnumGravityDirection implements IStringSerializable {
             };
         }
 
-        @Override
-        public EnumGravityDirection getRelativePositiveX() {
-            return UP;
-        }
-
-        @Override
-        public EnumGravityDirection getRelativePositiveZ() {
-            return SOUTH;
-        }
     },
     SOUTH(new Vec3i(-90, 0, 0), "south", EnumFacing.SOUTH) {
         @Override
@@ -408,15 +362,6 @@ public enum EnumGravityDirection implements IStringSerializable {
             };
         }
 
-        @Override
-        public EnumGravityDirection getRelativePositiveX() {
-            return EAST;
-        }
-
-        @Override
-        public EnumGravityDirection getRelativePositiveZ() {
-            return UP;
-        }
     },
     WEST(new Vec3i(0, 0, -90), "west", EnumFacing.WEST) {
         @Override
@@ -487,25 +432,14 @@ public enum EnumGravityDirection implements IStringSerializable {
             };
         }
 
-        @Override
-        public EnumGravityDirection getRelativePositiveX() {
-            return DOWN;
-        }
-
-        @Override
-        public EnumGravityDirection getRelativePositiveZ() {
-            return SOUTH;
-        }
     };
 
     private final Vec3i cameraTransformVars;
-    private final EnumFacing facingEquivalent;
     private final String name;
 
     EnumGravityDirection(Vec3i cameraTransformVars, String name, EnumFacing facingEquivalent) {
         this.cameraTransformVars = cameraTransformVars;
         this.name = name;
-        this.facingEquivalent = facingEquivalent;
     }
 
     public static EnumGravityDirection fromEnumFacing(EnumFacing enumFacing) {
@@ -552,40 +486,9 @@ public enum EnumGravityDirection implements IStringSerializable {
 
     public abstract double[] adjustXYZValues(double x, double y, double z);
 
-    // Overridden in UP and DOWN
-    public float getEntityEyeHeight(EntityLivingBase entityLivingBase) {
-        return 0f;
-    }
-
-    public EnumFacing getFacingEquivalent() {
-        return this.facingEquivalent;
-    }
-
     @Override
     public String getName() {
         return this.name;
-    }
-
-    public EnumGravityDirection getRelativeDown() {
-        return this.getRelativeNegativeY();
-    }
-
-    public EnumGravityDirection getRelativeNegativeY() {
-        return this;
-    }
-
-    public EnumGravityDirection getRelativeEast() {
-        return this.getRelativePositiveX();
-    }
-
-    public abstract EnumGravityDirection getRelativePositiveX();
-
-    public EnumGravityDirection getRelativeNorth() {
-        return this.getRelativeNegativeZ();
-    }
-
-    public EnumGravityDirection getRelativeNegativeZ() {
-        return this.getRelativePositiveZ().getOpposite();
     }
 
     /**
@@ -597,13 +500,7 @@ public enum EnumGravityDirection implements IStringSerializable {
         return this.getInverseAdjustmentFromDOWNDirection();
     }
 
-    public abstract EnumGravityDirection getRelativePositiveZ();
-
     public abstract EnumGravityDirection getInverseAdjustmentFromDOWNDirection();
-
-    public boolean isValidLadderDirection(EnumFacing ladderFacing) {
-        return ladderFacing != this.facingEquivalent && ladderFacing.getOpposite() != this.facingEquivalent;
-    }
 
     public void postModifyPlayerOnGravityChange(EntityPlayer player, EnumGravityDirection oldDirection, Vec3d inputEyePos) {
 
