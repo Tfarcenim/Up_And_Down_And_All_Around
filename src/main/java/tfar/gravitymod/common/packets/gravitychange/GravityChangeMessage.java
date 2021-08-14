@@ -2,7 +2,6 @@ package tfar.gravitymod.common.packets.gravitychange;
 
 import io.netty.buffer.ByteBuf;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
-import tfar.gravitymod.api.EnumGravityDirection;
 import tfar.mystlib.annotations.UsedReflexively;
 
 import java.util.UUID;
